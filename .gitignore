@@ -2,8 +2,7 @@
 # Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
 ################################################################################
 
-/StockMaster/StockMaster/obj/Debug
+/StockMaster/StockMaster/obj
+/StockMaster/StockMaster/bin
 /StockMaster/.vs
-/StockMAster/StockMaster/bin
-
-/StockMaster/StockMaster/bin/Debug
+/.vs
