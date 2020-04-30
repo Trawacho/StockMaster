@@ -4,35 +4,51 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StockMaster"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        FontFamily="Bahnschrift" FontStretch="SemiCondensed">
-    <StackPanel>
-        <Button Content="Print" Click="ButtonPrint_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
-        <Line StrokeThickness="5" Stroke="Black" Stretch="Fill" Margin="0,10" X1="0" Y1="0" Y2="0" X2="1"/>
-        <Grid Margin="50,50" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="20"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
-                <TextBlock Text="Spiel" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock.LayoutTransform>
-                        <RotateTransform Angle="-90"/>
-                    </TextBlock.LayoutTransform>
-                </TextBlock>
-            </Border>
-            
-        </Grid>
+        xmlns:mo="clr-namespace:StockMaster.Models"
+        xmlns:co="clr-namespace:StockMaster.Converter"
         
-    
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800"
+        FontFamily="Bahnschrift" FontStretch="SemiCondensed">
+    <Window.DataContext>
+        <mo:TournamentModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <co:TupleValue_Team_Converter x:Key="TVC"/>
+    </Window.Resources>
+
+    <StackPanel >
+        <Button Content="Print" Click="ButtonPrint_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
+        <Button Content="Refresh" Click="ButtonRefresh_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
+        <Line StrokeThickness="5" Stroke="Black" Stretch="Fill" Margin="0,10" X1="0" Y1="0" Y2="0" X2="1"/>
+        <Viewbox>
+            <DataGrid
+            ItemsSource="{Binding Path=Ergebnisliste, Mode=OneWay}"
+            AutoGenerateColumns="False">
+                <DataGrid.Columns >
+                    <DataGridTextColumn Header="Platz" 
+                                    Binding="{Binding Converter={StaticResource TVC},
+                                                                     ConverterParameter=Platzierung}"/>
+                    <DataGridTextColumn Header="Name" 
+                                    Binding="{Binding Converter={StaticResource TVC}, 
+                                                      ConverterParameter=TeamName}"
+                                    Foreground="Black"/>
+                    <DataGridTextColumn Header="Punkte" 
+                                    Binding="{Binding Converter={StaticResource TVC},
+                                                                      ConverterParameter=SpielPunkte}"/>
+                    <DataGridTextColumn Header="Stockpunkte" 
+                                    Binding="{Binding Converter={StaticResource TVC},
+                                                                         ConverterParameter=StockPunkte}"/>
+                    <DataGridTextColumn Header="Stocknote" 
+                                    Binding="{Binding Converter={StaticResource TVC},
+                                                                         ConverterParameter=StockNote}"/>
+                    <DataGridTextColumn Header="Differenz" 
+                                    Binding="{Binding Converter={StaticResource TVC},
+                                                                         ConverterParameter=StockPunkteDifferenz}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Viewbox>
+
     </StackPanel>
 </Window>

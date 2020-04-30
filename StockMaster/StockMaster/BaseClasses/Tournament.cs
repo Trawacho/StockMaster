@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public class Tournament
+    public class Tournament: INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #region Properties
         /// <summary>
         /// Liste aller Teams
         /// </summary>
@@ -16,7 +27,7 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Liste aller Spiele
         /// </summary>
-        public List<Game> Games { get; set; }
+        //public List<Game> Games { get; set; }
 
         /// <summary>
         /// Veranstaltungsort
@@ -47,40 +58,54 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Anzahl der Stockbahnen / Spielfächen
         /// </summary>
-        public int CountOfAreas { get; set; }
+        public int CountOfCourts { get; set; }
+
+        #endregion
+
+        #region Constructor
 
         public Tournament()
         {
             this.Teams = new Teams();
-            this.Games = new List<Game>();
+            //this.Games = new List<Game>();
         }
 
-        public List<Game> GetGamesOfTeam(int StartNumber)
+        #endregion
+
+        public IEnumerable<Game> Games
         {
-            List<Game> games = new List<Game>();
-
-            var x = Games.Where(k => k.Team1.StartNumber == StartNumber || k.Team2.StartNumber == StartNumber);
-
-            foreach (var g in x.Where(k => k.Team2.StartNumber == StartNumber))
+            get
             {
-                //Die Startnummer von Team2 mit Team1 tauschen. Das Anpsiel muss dann auch getauscht werden
-                var t1 = g.Team2;
-                g.Team2 = g.Team1;
-                g.Team1 = t1;
-                if (g.StartOfPlayTeam1)
-                    g.StartOfPlayTeam1 = false;
-                else
-                    g.StartOfPlayTeam1 = true;
-            }
+                return Teams.SelectMany(g => g.Games);
+                           // .Where(h => h.StartOfPlayTeam1);
 
-            foreach (var g in x)
-            {
-                games.Add(g);
+                //return from t in Teams
+                //       from g in t.Games
+                //       where g.StartOfPlayTeam1 == true
+                //       orderby g.GameNumber, g.CourtNumber
+                //       select g;
             }
-
-            return games.OrderBy(p => p.GameNumber).ToList();
         }
-        
+
+
+        public IEnumerable<Game> GetGamesOfTeam(int startNumber)
+        {
+            return Teams.First(t => t.StartNumber == startNumber)?.Games;
+        }
+
+        public IEnumerable<Team> Ergebnisliste
+        {
+            get
+            {
+                return Teams
+                        .Where(v => !v.IsVirtual)
+                        .OrderByDescending(t => t.SpielPunkte.positiv)
+                        .ThenByDescending(p => p.StockNote)
+                        .ThenByDescending(d => d.StockPunkteDifferenz);
+            }
+        }
+
+
         internal void CreateGames(bool HasTwoPause = false)
         {
             /*
@@ -113,8 +138,8 @@ namespace StockMaster.BaseClasses
             {
                 Game game = new Game
                 {
-                    Team1 = Teams.GetByStartnummer(Teams.Count),
-                    Team2 = Teams.GetByStartnummer(i),
+                    TeamB = Teams.GetByStartnummer(Teams.Count),
+                    TeamA = Teams.GetByStartnummer(i),
                     GameNumber = Teams.Count - i
                 };
 
@@ -122,19 +147,19 @@ namespace StockMaster.BaseClasses
 
                 if (game.IsPauseGame)
                 {
-                    game.NumberOfArea = 0;
+                    game.CourtNumber = 0;
                 }
                 else
                 {
                     if (i <= Teams.Count / 2)
                     {
-                        game.NumberOfArea = (Teams.Count / 2) - i + 1;
+                        game.CourtNumber = (Teams.Count / 2) - i + 1;
                     }
                     else
                     {
-                        game.NumberOfArea = i - (Teams.Count / 2) + 1;
+                        game.CourtNumber = i - (Teams.Count / 2) + 1;
                     }
-                    iBahnCor = game.NumberOfArea;
+                    iBahnCor = game.CourtNumber;
                 }
 
                 #endregion
@@ -152,7 +177,9 @@ namespace StockMaster.BaseClasses
 
                 #endregion
 
-                Games.Add(game);
+                game.TeamA.Games.Add(game);
+                game.TeamB.Games.Add(game);
+                //Games.Add(game);
 
                 for (int k = 1; k <= (Teams.Count / 2 - 1); k++)
                 {
@@ -165,7 +192,7 @@ namespace StockMaster.BaseClasses
 
                     if ((i + k) % (Teams.Count - 1) == 0)
                     {
-                        game.Team1 = Teams.GetByStartnummer(Teams.Count - 1);
+                        game.TeamB = Teams.GetByStartnummer(Teams.Count - 1);
                     }
                     else
                     {
@@ -174,7 +201,7 @@ namespace StockMaster.BaseClasses
                         {
                             nrTb = (Teams.Count - 1) + nrTb;
                         }
-                        game.Team1 = Teams.GetByStartnummer(nrTb);
+                        game.TeamB = Teams.GetByStartnummer(nrTb);
                     }
 
                     #endregion
@@ -183,7 +210,7 @@ namespace StockMaster.BaseClasses
 
                     if ((i - k) % (Teams.Count - 1) == 0)
                     {
-                        game.Team2 = Teams.GetByStartnummer(Teams.Count - 1);
+                        game.TeamA = Teams.GetByStartnummer(Teams.Count - 1);
                     }
                     else
                     {
@@ -192,7 +219,7 @@ namespace StockMaster.BaseClasses
                         {
                             nrTa = Teams.Count - 1 + nrTa;
                         }
-                        game.Team2 = Teams.GetByStartnummer(nrTa);
+                        game.TeamA = Teams.GetByStartnummer(nrTa);
                     }
 
                     #endregion
@@ -201,17 +228,17 @@ namespace StockMaster.BaseClasses
 
                     if (game.IsPauseGame)
                     {
-                        game.NumberOfArea = 0;
+                        game.CourtNumber = 0;
                     }
                     else
                     {
                         if (iBahnCor != k)
                         {
-                            game.NumberOfArea = k;
+                            game.CourtNumber = k;
                         }
                         else
                         {
-                            game.NumberOfArea = Teams.Count / 2;
+                            game.CourtNumber = Teams.Count / 2;
                         }
                     }
 
@@ -230,32 +257,36 @@ namespace StockMaster.BaseClasses
 
                     #endregion
 
-                    Games.Add(game);
+                    game.TeamA.Games.Add(game);
+                    game.TeamB.Games.Add(game);
+
+                    //Games.Add(game);
+
                 }
             }
 
         }
 
-        internal void MultiplicateGames(int count, bool ChangeStartOfPlay = false)
-        {
-            var originalGamesList = new Game[Games.Count];
-            this.Games.CopyTo(originalGamesList);
+        //internal void MultiplicateGames(int count, bool ChangeStartOfPlay = false)
+        //{
+        //    var originalGamesList = new Game[Games.Count()];
+        //    this.Games.CopyTo(originalGamesList);
 
-            for (int i = 1; i < count; i++)
-            {
-                foreach (var game in originalGamesList)
-                {
-                    if (i % 2 == 0 && ChangeStartOfPlay)
-                    {
-                        if (game.StartOfPlayTeam1)
-                            game.StartOfPlayTeam1 = false;
-                        else
-                            game.StartOfPlayTeam1 = true;
-                    }
-                    Games.Add(game);
-                }
-            }
-        }
+        //    for (int i = 1; i < count; i++)
+        //    {
+        //        foreach (var game in originalGamesList)
+        //        {
+        //            if (i % 2 == 0 && ChangeStartOfPlay)
+        //            {
+        //                if (game.StartOfPlayTeam1)
+        //                    game.StartOfPlayTeam1 = false;
+        //                else
+        //                    game.StartOfPlayTeam1 = true;
+        //            }
+        //            Games.Add(game);
+        //        }
+        //    }
+        //}
 
         #region CodeFromOldSourceCode
         //--------------

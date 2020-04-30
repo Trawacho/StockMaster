@@ -31,7 +31,7 @@ namespace StockMaster.BaseClasses
         }
         public void AddVirtualTeam()
         {
-            Add(new Team(teams.Count + 1, "Virtual Team", 4)
+            Add(new Team(teams.Count + 1, "Virtual Team")
             {
                 IsVirtual = true
             });

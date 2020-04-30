@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -11,14 +12,6 @@ namespace StockMaster.Output
 {
     public class Spiegel
     {
-        //public static void Printing()
-        //{
-        //    PrintDialog pd = new PrintDialog();
-        //    if (pd.ShowDialog() == true)
-        //    {
-        //        // pd.PrintDocument(doc(new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight)).DocumentPaginator, "My First Print");
-        //    }
-        //}
 
         private FixedPage GetNewPage(Size pageSize)
         {
@@ -34,8 +27,9 @@ namespace StockMaster.Output
 
             document.DocumentPaginator.PageSize = sz;
 
-            foreach (var team in tournament.Teams)  //Für jedes Team eine Spiegel-Karte
+            foreach (var team in tournament.Teams.OrderBy(t=> t.StartNumber).Where(v => !v.IsVirtual) ) //Für jedes Team eine Spiegel-Karte
             {
+
                 //alles was eine Karte braucht, kommt in ein StackPanel
                 var panel = new StackPanel();   
 
@@ -43,12 +37,11 @@ namespace StockMaster.Output
                 panel.Children.Add(new SpiegelHeader(team));
 
                 //Überschriften der Spalten
-                panel.Children.Add(new SpiegelHeaderGrid());   
+                panel.Children.Add(new SpiegelHeaderGrid());
 
-                foreach (var game in tournament.GetGamesOfTeam(team.StartNumber))   
+                foreach (var game in team.Games.OrderBy(g=>g.GameNumber))
                 {
-                    //Jede Spielrunde anfügen
-                    panel.Children.Add(new GameGrid(game));
+                    panel.Children.Add(new GameGrid(game, team.StartNumber));
                 }
 
                 //Eine Summenzeile
@@ -73,8 +66,8 @@ namespace StockMaster.Output
                 teamPanels.Add(panel);
             }
 
-
             var pagePanel = new StackPanel();
+
             foreach (var teamPanel in teamPanels)
             {
                 pagePanel.Children.Add(teamPanel);
@@ -104,7 +97,6 @@ namespace StockMaster.Output
         }
 
         private List<StackPanel> teamPanels = new List<StackPanel>();
-
 
     }
 

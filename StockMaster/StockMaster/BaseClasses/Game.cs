@@ -1,50 +1,65 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public class Game
+    public class Game : IComparable
     {
+        public int CompareTo(object obj)
+        {
+
+            if (this.RoundOfGame == ((Game)obj).RoundOfGame &&
+                this.CourtNumber == ((Game)obj).CourtNumber &&
+                this.GameNumber == ((Game)obj).GameNumber)
+            {
+                return 0;
+            }
+            else
+            {
+                return -1;
+            }
+
+        }
+
+
+        #region Properties
+
+        /// <summary>
+        /// SpielRunde (für DoppelRunde oder mehrfachrunden)
+        /// </summary>
+        public int RoundOfGame { get; set; }
+
+
+        /// <summary>
+        /// Nummer vom laufenden Spiel
+        /// </summary>
         public int GameNumber { get; set; }
 
-        private Team teamA;
-
-        public Team Team2
-        {
-            get { return teamA; }
-            set { teamA = value; }
-        }
-
-        private Team teamB;
-
-        public Team Team1
-        {
-            get { return teamB; }
-            set { teamB = value; }
-        }
-
-        private bool startOfPlayTeamA;
-        /// <summary>
-        /// Das Team A hat Anspiel
-        /// </summary>
-        public bool StartOfPlayTeam1
-        {
-            get { return startOfPlayTeamA; }
-            set { startOfPlayTeamA = value; }
-        }
-
-        private int numberOfArea;
         /// <summary>
         /// Nummer der Spielbahn
         /// </summary>
-        public int NumberOfArea
-        {
-            get { return numberOfArea; }
-            set { numberOfArea = value; }
-        }
+        public int CourtNumber { get; set; }
+
+        /// <summary>
+        /// Team A - 1 - Rechts
+        /// </summary>
+        public Team TeamA { get; set; }
+
+
+        /// <summary>
+        /// Team B - 2 Links
+        /// </summary>
+        public Team TeamB { get; set; }
+
+        /// <summary>
+        /// Das Team A hat Anspiel
+        /// </summary>
+        public bool StartOfPlayTeam1 { get; set; }
 
         /// <summary>
         /// Dieses Spiel ist ein Aussetzer, der Gegner ist ein Virtueller
@@ -53,80 +68,85 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                if (Team2.IsVirtual || Team1.IsVirtual)
+                if (TeamA.IsVirtual || TeamB.IsVirtual)
                     return true;
                 else
                     return false;
             }
         }
 
-        public int RoundOfGame { get; set; }
+        object _l = new object();
 
-
-        private List<Turn> turns;
         /// <summary>
         /// Liste der Kehren
         /// </summary>
-        public List<Turn> Turns
+        public ConcurrentStack<Turn> Turns { get; set; }
+
+        /// <summary>
+        /// Summe der Stockpunkte von TeamB in diesem Spiel
+        /// </summary>
+        public int StockPointsTeamB
         {
-            get { return turns; }
-            internal set { turns = value; }
+            get
+            {
+                return Turns.Sum(x => x.PointsTeamB);
+            }
         }
 
         /// <summary>
-        /// Summe der Stockpunkte von Team A
+        /// Summe der Stockpunkte von TeamA in diesem Spiel
         /// </summary>
-        /// <returns></returns>
-        public int GetStockPointsTeamA()
+        public int StockPointsTeamA
         {
-            return turns.Select(x => x.PointsTeamA).Sum();
+            get
+            {
+                return Turns.Sum(x => x.PointsTeamA);
+            }
         }
 
         /// <summary>
-        /// Summe der Stockpunkte von Team B
+        /// Spielpunkte von TeamA in diesem Spiel
         /// </summary>
-        /// <returns></returns>
-        public int GetStockPointsTeamB()
+        public int SpielPunkteTeamA
         {
-            return turns.Select(x => x.PointsTeamB).Sum();
-        }
+            get
+            {
+                if (Turns.Count == 0)
+                    return 0;
 
-        /// <summary>
-        /// Spielpunkte von Team A (2, 1 oder 0)
-        /// </summary>
-        /// <returns></returns>
-        public int GetPlayPointsTeamA()
-        {
-            var spa = GetStockPointsTeamA();
-            var spb = GetStockPointsTeamB();
-            if (spa > spb)
-                return 2;
-            else if (spa == spb)
+                if (StockPointsTeamA > StockPointsTeamB)
+                    return 2;
+                if (StockPointsTeamB > StockPointsTeamA)
+                    return 0;
                 return 1;
-            else
-                return 0;
+            }
         }
 
         /// <summary>
-        /// Spielpunkte von Team B (2, 1 oder 0)
+        /// Spielpunkte von TeamB in diesem Spiel
         /// </summary>
-        /// <returns></returns>
-        public int GetPlayPointsTeamB()
+        public int SpielPunkteTeamB
         {
-            var pta = GetStockPointsTeamA();
+            get
+            {
+                if (Turns.Count == 0)
+                    return 0;
 
-            if (pta == 0)
-                return 2;
-            else if (pta == 1)
+                if (StockPointsTeamA > StockPointsTeamB)
+                    return 0;
+                if (StockPointsTeamB > StockPointsTeamA)
+                    return 2;
                 return 1;
-            else
-                return 0;
+            }
         }
+
+        #endregion
 
 
         public Game()
         {
             RoundOfGame = 1;
+            this.Turns = new ConcurrentStack<Turn>();
         }
 
         /// <summary>
@@ -143,14 +163,56 @@ namespace StockMaster.BaseClasses
             {
                 throw new ArgumentNullException("nullvalue not allowed for TeamA or TeamB");
             }
-            this.NumberOfArea = NumberOfArea;
+            this.CourtNumber = NumberOfArea;
             this.StartOfPlayTeam1 = StartOfPlayTeamA;
 
-            this.Turns = new List<Turn>();
             for (int i = 1; i <= TurnCount; i++)
             {
-                this.Turns.Add(new Turn(i));
+                this.Turns.Push(new Turn(i));
             }
         }
+
+
+        public override string ToString()
+        {
+            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber} -- {TeamA.StartNumber}:{TeamB.StartNumber} T1A:{StartOfPlayTeam1}  P:{IsPauseGame} ";
+        }
+
+        public int GetStockPunkte(Team team)
+        {
+            if (team == TeamA)
+                return StockPointsTeamA;
+            if (team == TeamB)
+                return StockPointsTeamB;
+            return 0;
+        }
+
+        public int GetStockPunkteGegner(Team team)
+        {
+            if (team == TeamA)
+                return StockPointsTeamB;
+            if (team == TeamB)
+                return StockPointsTeamA;
+            return 0;
+        }
+
+        public int GetSpielPunkte(Team team)
+        {
+            if (team == TeamA)
+                return SpielPunkteTeamA;
+            if (team == TeamB)
+                return SpielPunkteTeamB;
+            return 0;
+        }
+        public int GetSpielPunkteGegner(Team team)
+        {
+            if (team == TeamA)
+                return SpielPunkteTeamB;
+            if (team == TeamB)
+                return SpielPunkteTeamA;
+            return 0;
+        }
+
+
     }
 }

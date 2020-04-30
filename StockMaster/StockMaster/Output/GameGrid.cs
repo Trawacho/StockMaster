@@ -16,12 +16,12 @@ namespace StockMaster.Output
         public string Anspiel { get; set; }
         public string Gegner { get; set; }
 
-        public GameGrid(Game game)
+        public GameGrid(Game game, int startNumber)
         {
             string NumberOfGame = game.GameNumber.ToString();
-            string NumberOfArea = game.NumberOfArea.ToString();
-            string Opponent = game.Team2.StartNumber.ToString();
-            string StartOfGame = game.StartOfPlayTeam1 ? game.Team1.StartNumber.ToString() : game.Team2.StartNumber.ToString();
+            string NumberOfArea = game.CourtNumber.ToString();
+            string Opponent = startNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
+            string StartOfGame = game.StartOfPlayTeam1 ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
 
             RowDefinitions.Add(new System.Windows.Controls.RowDefinition()
             {
