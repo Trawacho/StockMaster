@@ -11,18 +11,17 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="SingleBorderWindow"
         FontFamily="Bahnschrift" FontStretch="SemiCondensed">
-    <Window.DataContext>
-        <mo:TournamentModel />
-    </Window.DataContext>
-
+    <!--<Window.DataContext>
+        --><!--<d:DesignData mo:MainViewModel/>--><!--
+    </Window.DataContext>-->
     <Window.Resources>
         <co:TupleValue_Team_Converter x:Key="TVC"/>
     </Window.Resources>
 
     <DockPanel >
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button Content="Print" Click="ButtonPrint_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
-            <Button Content="Refresh" Click="ButtonRefresh_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
+            <!--<Button Content="Print" Click="ButtonPrint_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>-->
+            <Button Content="Show LiveView" Command="{Binding ShowLiveResultCommand}"  Margin="10" Padding="10"   HorizontalAlignment="Left"/>
             <Button Content="{Binding Path=UdpButtonContent}" 
                     Command="{Binding Path=StartStopUdpReceiverCommand}" 
                     Margin="10"
@@ -30,33 +29,8 @@
                     Width="80" 
                     HorizontalAlignment="Left"/>
         </StackPanel>
-        <!--<Line StrokeThickness="5" Stroke="Black" Stretch="Fill" Margin="0,10" X1="0" Y1="0" Y2="0" X2="1"/>-->
         <Viewbox DockPanel.Dock="Left">
-            <DataGrid
-            ItemsSource="{Binding Path=Ergebnisliste, Mode=OneWay}"
-            AutoGenerateColumns="False">
-                <DataGrid.Columns >
-                    <DataGridTextColumn Header="Platz" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                     ConverterParameter=Platzierung}"/>
-                    <DataGridTextColumn Header="Name" 
-                                    Binding="{Binding Converter={StaticResource TVC}, 
-                                                      ConverterParameter=TeamName}"
-                                    Foreground="Black"/>
-                    <DataGridTextColumn Header="Punkte" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                      ConverterParameter=SpielPunkte}"/>
-                    <DataGridTextColumn Header="Stockpunkte" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                         ConverterParameter=StockPunkte}"/>
-                    <DataGridTextColumn Header="Stocknote" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                         ConverterParameter=StockNote}"/>
-                    <DataGridTextColumn Header="Differenz" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                         ConverterParameter=StockPunkteDifferenz}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+           
         </Viewbox>
 
 

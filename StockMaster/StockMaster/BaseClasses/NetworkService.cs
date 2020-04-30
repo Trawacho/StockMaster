@@ -73,7 +73,6 @@ namespace StockMaster.BaseClasses
 
         void ReceiveCallback(IAsyncResult ar)
         {
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToLongTimeString()}  New ReceiveCallback ");
             try
             {
                 UdpClient u = ((UdpState)ar.AsyncState).udpClient;

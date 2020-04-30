@@ -66,6 +66,18 @@
     <Compile Include="BaseClasses\Player.cs" />
     <Compile Include="BaseClasses\Settings.cs" />
     <Compile Include="BaseClasses\Team.cs" />
+    <Compile Include="Dialogs\DialogCloseRequestedEventArgs.cs" />
+    <Compile Include="Dialogs\DialogService.cs" />
+    <Compile Include="Dialogs\IDialog.cs" />
+    <Compile Include="Dialogs\IDialogRequestClose.cs" />
+    <Compile Include="Dialogs\IDialogService.cs" />
+    <Compile Include="Dialogs\IWindow.cs" />
+    <Compile Include="Dialogs\WindowService.cs" />
+    <Compile Include="Models\LiveResultViewModel.cs" />
+    <Compile Include="Models\MainViewModel.cs" />
+    <Compile Include="Views\LiveResultView.xaml.cs">
+      <DependentUpon>LiveResultView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -85,6 +97,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Output\PrintPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LiveResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
