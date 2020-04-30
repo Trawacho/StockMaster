@@ -25,10 +25,12 @@ namespace StockMaster.BaseClasses
 
 
         }
+       
         public void Insert(int index, Team team)
         {
             teams.Insert(index, team);
         }
+        
         public void AddVirtualTeam()
         {
             Add(new Team(teams.Count + 1, "Virtual Team")
@@ -37,18 +39,11 @@ namespace StockMaster.BaseClasses
             });
         }
 
-        public Team Last
-        {
-            get
-            {
-                return teams.Last<Team>();
-            }
-        }
-
         public Team GetByStartnummer(int StartNumber)
         {
             return teams.First(x => x.StartNumber == StartNumber);
         }
+
         public Team GetTeamWithHighestStartNumber()
         {
             var startnumbers = teams.Select(x => x.StartNumber);

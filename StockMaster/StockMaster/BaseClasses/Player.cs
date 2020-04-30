@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StockMaster.BaseClasses
+﻿namespace StockMaster.BaseClasses
 {
-    public class Player
+    public class Player : TBaseClass
     {
         private string firstname;
 
         public string FirstName
         {
             get { return firstname; }
-            set { firstname = value; }
+            set
+            {
+                if (firstname == value)
+                    return;
+
+                firstname = value;
+                RaisePropertyChanged();
+            }
         }
 
         private string lastname;
@@ -21,22 +22,36 @@ namespace StockMaster.BaseClasses
         public string LastName
         {
             get { return lastname; }
-            set { lastname = value; }
+            set
+            {
+                if (lastname == value)
+                    return;
+
+                lastname = value;
+                RaisePropertyChanged();
+            }
         }
 
-        private string licencenumber;
+        private string licensenumber;
 
-        public string LicenceNumber
+        public string LicenseNumber
         {
-            get { return licencenumber; }
-            set { licencenumber = value; }
+            get { return licensenumber; }
+            set
+            {
+                if (licensenumber == value)
+                    return;
+                licensenumber = value;
+                RaisePropertyChanged();
+
+            }
         }
 
-        public Player(string LastName, string FirstName)
+        public Player(string LastName = "lastname", string FirstName = "firstname")
         {
             this.FirstName = FirstName;
             this.LastName = LastName;
-            this.LicenceNumber = string.Empty;
+            this.LicenseNumber = string.Empty;
         }
     }
 }

@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:StockMaster"
         xmlns:mo="clr-namespace:StockMaster.Models"
         xmlns:co="clr-namespace:StockMaster.Converter"
-        
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800"
+        Title="MainWindow" Height="788.062" Width="1351.988"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="SingleBorderWindow"
         FontFamily="Bahnschrift" FontStretch="SemiCondensed">
     <Window.DataContext>
         <mo:TournamentModel />
@@ -18,11 +19,19 @@
         <co:TupleValue_Team_Converter x:Key="TVC"/>
     </Window.Resources>
 
-    <StackPanel >
-        <Button Content="Print" Click="ButtonPrint_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
-        <Button Content="Refresh" Click="ButtonRefresh_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
-        <Line StrokeThickness="5" Stroke="Black" Stretch="Fill" Margin="0,10" X1="0" Y1="0" Y2="0" X2="1"/>
-        <Viewbox>
+    <DockPanel >
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Content="Print" Click="ButtonPrint_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
+            <Button Content="Refresh" Click="ButtonRefresh_Clicked" Margin="10,10" Width="50" HorizontalAlignment="Left"/>
+            <Button Content="{Binding Path=UdpButtonContent}" 
+                    Command="{Binding Path=StartStopUdpReceiverCommand}" 
+                    Margin="10"
+                    Padding="10"
+                    Width="80" 
+                    HorizontalAlignment="Left"/>
+        </StackPanel>
+        <!--<Line StrokeThickness="5" Stroke="Black" Stretch="Fill" Margin="0,10" X1="0" Y1="0" Y2="0" X2="1"/>-->
+        <Viewbox DockPanel.Dock="Left">
             <DataGrid
             ItemsSource="{Binding Path=Ergebnisliste, Mode=OneWay}"
             AutoGenerateColumns="False">
@@ -50,5 +59,7 @@
             </DataGrid>
         </Viewbox>
 
-    </StackPanel>
+
+    </DockPanel>
+
 </Window>

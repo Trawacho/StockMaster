@@ -4,9 +4,14 @@ using System.Linq;
 
 namespace StockMaster.BaseClasses
 {
-    public class Team
+    public class Team : TBaseClass
     {
+        private string teamName;
+        private int startNumber;
+        private bool isVirtual;
+
         #region Standard-Properties
+
         /// <summary>
         /// Liste aller Spieler
         /// </summary>
@@ -15,17 +20,50 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Teamname
         /// </summary>
-        public string TeamName { get; set; }
+        public string TeamName
+        {
+            get => teamName;
+            set
+            {
+                if (teamName == value)
+                    return;
+
+                teamName = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Startnummer
         /// </summary>
-        public int StartNumber { get; set; }
+        public int StartNumber
+        {
+            get => startNumber;
+            set
+            {
+                if (startNumber == value)
+                    return;
+
+                startNumber = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Team wird nur zur Berechnung verwendet
         /// </summary>
-        public bool IsVirtual { get; set; }
+        public bool IsVirtual
+        {
+            get => isVirtual;
+            set
+            {
+                if (isVirtual == value)
+                    return;
+
+                isVirtual = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Liste aller Spiele 
@@ -34,7 +72,7 @@ namespace StockMaster.BaseClasses
 
         #endregion
 
-       
+
 
         public (int positiv, int negativ) SpielPunkte
         {
@@ -62,7 +100,7 @@ namespace StockMaster.BaseClasses
                 if (StockPunkte.negativ == 0)
                     return StockPunkte.positiv;
 
-                return (double)StockPunkte.positiv / StockPunkte.negativ;
+                return Math.Round((double)StockPunkte.positiv / StockPunkte.negativ, 3);
 
             }
         }
@@ -121,18 +159,8 @@ namespace StockMaster.BaseClasses
 
         public override string ToString()
         {
-            return $"{StartNumber}: { TeamName}";
+            return $"{StartNumber}. {TeamName}";
         }
 
-        public string InfoString
-        {
-            get
-            {
-                return String.Format("{0,-3} {1,30} {2,8} {3,5} {4,8}",
-                    StartNumber, TeamName, SpielPunkte, StockNote, StockPunkteDifferenz);
-                //return String.Format("{0,-10} | {1,-10} | {2,5}", StartNumber, "Gates", 51);
-                //return String.Format($"{StartNumber}: {TeamName} \t\t{SpielPunkte.positiv}:{SpielPunkte.negativ}\t{StockNote}\t{StockPunkteDifferenz}");
-            }
-        }
     }
 }

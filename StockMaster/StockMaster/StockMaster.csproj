@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseClasses\TBaseClass.cs" />
     <Compile Include="BaseClasses\Game.cs" />
     <Compile Include="BaseClasses\NetworkService.cs" />
     <Compile Include="BaseClasses\Player.cs" />
@@ -76,6 +77,8 @@
     <Compile Include="BaseClasses\Teams.cs" />
     <Compile Include="BaseClasses\Tournament.cs" />
     <Compile Include="BaseClasses\Turn.cs" />
+    <Compile Include="Commands\AsyncRelayCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converter\TupleValue_Team_Converter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

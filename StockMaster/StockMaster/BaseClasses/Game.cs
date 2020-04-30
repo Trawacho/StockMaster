@@ -8,23 +8,34 @@ using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public class Game : IComparable
+    public class Game : TBaseClass, IEquatable<Game>
     {
-        public int CompareTo(object obj)
+        private int roundOfGame;
+        private int gameNumber;
+        private int courtNumber;
+        private bool startOfPlayTeam1;
+
+        #region IEquatable Implementation
+
+        public bool Equals(Game other)
         {
-
-            if (this.RoundOfGame == ((Game)obj).RoundOfGame &&
-                this.CourtNumber == ((Game)obj).CourtNumber &&
-                this.GameNumber == ((Game)obj).GameNumber)
-            {
-                return 0;
-            }
-            else
-            {
-                return -1;
-            }
-
+            return (this.RoundOfGame == other.RoundOfGame
+                 && this.CourtNumber == other.CourtNumber
+                 && this.GameNumber == other.GameNumber);
         }
+        public override bool Equals(object obj)
+        {
+            return (this.RoundOfGame == ((Game)obj).RoundOfGame
+                 && this.CourtNumber == ((Game)obj).CourtNumber
+                 && this.GameNumber == ((Game)obj).GameNumber);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        #endregion
 
 
         #region Properties
@@ -32,24 +43,55 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// SpielRunde (für DoppelRunde oder mehrfachrunden)
         /// </summary>
-        public int RoundOfGame { get; set; }
+        public int RoundOfGame
+        {
+            get => roundOfGame;
+            set
+            {
+                if (roundOfGame == value)
+                    return;
+                roundOfGame = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         /// <summary>
         /// Nummer vom laufenden Spiel
         /// </summary>
-        public int GameNumber { get; set; }
+        public int GameNumber
+        {
+            get => gameNumber; set
+            {
+                if (gameNumber == value)
+                    return;
+
+                gameNumber = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Nummer der Spielbahn
         /// </summary>
-        public int CourtNumber { get; set; }
+        public int CourtNumber
+        {
+            get => courtNumber;
+            set
+            {
+                if (courtNumber == value)
+                    return;
+
+                courtNumber = value;
+                RaisePropertyChanged();
+            }
+
+        }
 
         /// <summary>
         /// Team A - 1 - Rechts
         /// </summary>
         public Team TeamA { get; set; }
-
 
         /// <summary>
         /// Team B - 2 Links
@@ -59,7 +101,18 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Das Team A hat Anspiel
         /// </summary>
-        public bool StartOfPlayTeam1 { get; set; }
+        public bool StartOfPlayTeam1
+        {
+            get => startOfPlayTeam1;
+            set
+            {
+                if (startOfPlayTeam1 == value)
+                    return;
+
+                startOfPlayTeam1 = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Dieses Spiel ist ein Aussetzer, der Gegner ist ein Virtueller
@@ -75,7 +128,6 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        object _l = new object();
 
         /// <summary>
         /// Liste der Kehren
@@ -89,7 +141,7 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return Turns.Sum(x => x.PointsTeamB);
+                return Turns?.Sum(x => x.PointsTeamB) ?? 0;
             }
         }
 
@@ -100,7 +152,28 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return Turns.Sum(x => x.PointsTeamA);
+                return Turns?.Sum(x => x.PointsTeamA) ?? 0;
+            }
+        }
+
+
+        /// <summary>
+        /// Spielpunkte von TeamB in diesem Spiel
+        /// </summary>
+        public int SpielPunkteTeamB
+        {
+            get
+            {
+                if (Turns.Count == 0)
+                    return 0;
+
+                if (StockPointsTeamA > StockPointsTeamB)
+                    return 0;
+
+                if (StockPointsTeamB > StockPointsTeamA)
+                    return 2;
+
+                return 1;
             }
         }
 
@@ -116,67 +189,39 @@ namespace StockMaster.BaseClasses
 
                 if (StockPointsTeamA > StockPointsTeamB)
                     return 2;
+
                 if (StockPointsTeamB > StockPointsTeamA)
                     return 0;
-                return 1;
-            }
-        }
 
-        /// <summary>
-        /// Spielpunkte von TeamB in diesem Spiel
-        /// </summary>
-        public int SpielPunkteTeamB
-        {
-            get
-            {
-                if (Turns.Count == 0)
-                    return 0;
-
-                if (StockPointsTeamA > StockPointsTeamB)
-                    return 0;
-                if (StockPointsTeamB > StockPointsTeamA)
-                    return 2;
                 return 1;
             }
         }
 
         #endregion
 
+        #region Constructor
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public Game()
         {
             RoundOfGame = 1;
             this.Turns = new ConcurrentStack<Turn>();
         }
 
-        /// <summary>
-        /// Ein Spiel von zwei Teams of einer Bahn
-        /// </summary>
-        /// <param name="NumberOfArea">Nummer der Bahn</param>
-        /// <param name="TeamA">Mannschaft A</param>
-        /// <param name="TeamB">Mannschat B</param>
-        /// <param name="StartOfPlayTeamA">Hat Team A das Anspiel</param>
-        /// <param name="TurnCount">Anzahl der zu spielenden Kehren</param>
-        public Game(int NumberOfArea, Team TeamA, Team TeamB, bool StartOfPlayTeamA, int TurnCount = 6) : this()
-        {
-            if (TeamA == null || TeamB == null)
-            {
-                throw new ArgumentNullException("nullvalue not allowed for TeamA or TeamB");
-            }
-            this.CourtNumber = NumberOfArea;
-            this.StartOfPlayTeam1 = StartOfPlayTeamA;
 
-            for (int i = 1; i <= TurnCount; i++)
-            {
-                this.Turns.Push(new Turn(i));
-            }
-        }
+
+        #endregion
 
 
         public override string ToString()
         {
             return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber} -- {TeamA.StartNumber}:{TeamB.StartNumber} T1A:{StartOfPlayTeam1}  P:{IsPauseGame} ";
         }
+
+
+        #region Public Functions
 
         public int GetStockPunkte(Team team)
         {
@@ -204,6 +249,7 @@ namespace StockMaster.BaseClasses
                 return SpielPunkteTeamB;
             return 0;
         }
+
         public int GetSpielPunkteGegner(Team team)
         {
             if (team == TeamA)
@@ -213,6 +259,6 @@ namespace StockMaster.BaseClasses
             return 0;
         }
 
-
+        #endregion
     }
 }

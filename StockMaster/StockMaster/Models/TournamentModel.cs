@@ -1,43 +1,78 @@
 ﻿using StockMaster.BaseClasses;
+using StockMaster.Commands;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StockMaster.Models
 {
-    public class TournamentModel:IDisposable, INotifyPropertyChanged
+    public class TournamentModel : TBaseClass, INotifyPropertyChanged
     {
-        static NetworkService ns;
+        private NetworkService _NetworkService;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public  void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        private RelayCommand _StartStopUdpReceiverCommand;
+        public RelayCommand StartStopUdpReceiverCommand
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get
+            {
+                return _StartStopUdpReceiverCommand ?? (_StartStopUdpReceiverCommand =
+                    new RelayCommand(
+                            (p) =>
+                            {
+                                if (_NetworkService == null)
+                                {
+                                    _NetworkService = new NetworkService(Tournament, ()=> { RaisePropertyChanged(nameof(Ergebnisliste)); });
+                                    _NetworkService.Start();
+                                }
+                                else
+                                {
+                                    if (_NetworkService.IsRunning())
+                                        _NetworkService.Stop();
+                                    else
+                                        _NetworkService.Start();
+                                }
+                                RaisePropertyChanged(nameof(UdpButtonContent));
+                            },
+                            (o) => { return true; }
+                            ));
+            }
+        }
 
+        public string UdpButtonContent
+        {
+            get
+            {
+                if (_NetworkService == null)
+                    return "Start";
+
+                return _NetworkService.IsRunning() ? "Stop" : "Start";
+            }
         }
 
         public TournamentModel()
         {
             CreateNewTournament();
+            
             this.Tournament.PropertyChanged += Tournament_PropertyChanged;
+            
+            //_NetworkService = new NetworkService(this.Tournament);
         }
 
         private void Tournament_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(this.Ergebnisliste));
+            RaisePropertyChanged(nameof(this.Ergebnisliste));
         }
 
-        public BaseClasses.Tournament Tournament { get; set; }
+        public Tournament Tournament { get; set; }
         public void CreateNewTournament()
         {
-            Tournament = new BaseClasses.Tournament();
-            Tournament.CountOfCourts = 4; // 4 Bahnen
+            Tournament = new Tournament
+            {
+                CountOfCourts = 4 // 4 Bahnen
+            };
             Tournament.Teams.Add(new BaseClasses.Team(1, "ESF Hankofen"));
             Tournament.Teams.Add(new BaseClasses.Team(2, "EC Pilsting"));
             Tournament.Teams.Add(new BaseClasses.Team(3, "DJK Leiblfing"));
@@ -51,33 +86,17 @@ namespace StockMaster.Models
             Tournament.CreateGames(true);
 
 
-            foreach (var item in Tournament.Games.OrderBy(x=>x.CourtNumber).OrderBy(y=>y.GameNumber))
-            {
-                System.Diagnostics.Debug.Print(
-                    $"Spiel: {item.GameNumber}  \r\n" +
-                    $"Team1: {item.TeamB.StartNumber} - {item.TeamB.TeamName}\r\n" +
-                    $"Team2: {item.TeamA.StartNumber} - {item.TeamA.TeamName}\r\n" +
-                    $"Anspiel Team1: {item.StartOfPlayTeam1} \r\n" +
-                    $"Bahn: {item.CourtNumber} \r\n");
-            }
-            //BaseClasses.NetworkService.ReceiveBroadcast();
-            ns = new NetworkService(Tournament);
-            ns.ReceiveBroadcast();
-            System.Diagnostics.Debug.WriteLine("....done....and listen...");
         }
 
-        public void Dispose()
-        {
-            ns.Dispose();
-        }
+        
 
-        public ObservableCollection<(int Platzierung, BaseClasses.Team Team)> Ergebnisliste
+        public ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste
         {
             get
             {
-                var liste = new ObservableCollection<(int _platzierung, BaseClasses.Team _team)>();
+                var liste = new ObservableCollection<(int _platzierung, Team _team)>();
                 int i = 1;
-                foreach (var t in Tournament.Ergebnisliste)
+                foreach (var t in Tournament.GetTeamsRanked())
                 {
                     liste.Add((i, t));
                     i++;

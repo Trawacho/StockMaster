@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public class Tournament: INotifyPropertyChanged
+    public class Tournament : INotifyPropertyChanged
     {
+        #region INotifyPropertyChanged Implementiation
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -18,16 +18,14 @@ namespace StockMaster.BaseClasses
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        #endregion
+
         #region Properties
+
         /// <summary>
         /// Liste aller Teams
         /// </summary>
         public Teams Teams { get; set; }
-
-        /// <summary>
-        /// Liste aller Spiele
-        /// </summary>
-        //public List<Game> Games { get; set; }
 
         /// <summary>
         /// Veranstaltungsort
@@ -43,7 +41,6 @@ namespace StockMaster.BaseClasses
         /// Datum / Zeit des Turniers
         /// </summary>
         public DateTime DateOfTournament { get; set; }
-
 
         /// <summary>
         /// Durchführer
@@ -72,39 +69,46 @@ namespace StockMaster.BaseClasses
 
         #endregion
 
-        public IEnumerable<Game> Games
-        {
-            get
-            {
-                return Teams.SelectMany(g => g.Games);
-                           // .Where(h => h.StartOfPlayTeam1);
+        #region Functions
 
-                //return from t in Teams
-                //       from g in t.Games
-                //       where g.StartOfPlayTeam1 == true
-                //       orderby g.GameNumber, g.CourtNumber
-                //       select g;
-            }
+        public IEnumerable<Game> GetAllGames()
+        {
+            return Teams.SelectMany(g => g.Games);
         }
 
+        public void DeleteAllTurnsInEveryGame()
+        {
+            Parallel.ForEach(GetAllGames(), (g) =>
+            {
+                g.Turns.Clear();
+            });
+        }
+
+        public IEnumerable<Game> GetGamesOfCourt(int courtNumber)
+        {
+            return Teams.SelectMany(g => g.Games)
+                .Distinct()
+                .Where(c => c.CourtNumber == courtNumber)
+                .OrderBy(r => r.RoundOfGame)
+                .ThenBy(s => s.GameNumber);
+        }
 
         public IEnumerable<Game> GetGamesOfTeam(int startNumber)
         {
             return Teams.First(t => t.StartNumber == startNumber)?.Games;
         }
 
-        public IEnumerable<Team> Ergebnisliste
+
+        public IEnumerable<Team> GetTeamsRanked()
         {
-            get
-            {
                 return Teams
                         .Where(v => !v.IsVirtual)
                         .OrderByDescending(t => t.SpielPunkte.positiv)
                         .ThenByDescending(p => p.StockNote)
                         .ThenByDescending(d => d.StockPunkteDifferenz);
-            }
         }
 
+        #endregion
 
         internal void CreateGames(bool HasTwoPause = false)
         {
@@ -267,26 +271,6 @@ namespace StockMaster.BaseClasses
 
         }
 
-        //internal void MultiplicateGames(int count, bool ChangeStartOfPlay = false)
-        //{
-        //    var originalGamesList = new Game[Games.Count()];
-        //    this.Games.CopyTo(originalGamesList);
-
-        //    for (int i = 1; i < count; i++)
-        //    {
-        //        foreach (var game in originalGamesList)
-        //        {
-        //            if (i % 2 == 0 && ChangeStartOfPlay)
-        //            {
-        //                if (game.StartOfPlayTeam1)
-        //                    game.StartOfPlayTeam1 = false;
-        //                else
-        //                    game.StartOfPlayTeam1 = true;
-        //            }
-        //            Games.Add(game);
-        //        }
-        //    }
-        //}
 
         #region CodeFromOldSourceCode
         //--------------

@@ -1,79 +1,99 @@
-﻿using System;
+﻿using StockMaster.Models;
+using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using Microsoft.SqlServer.Server;
-using System.Resources;
-using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    internal class NetworkService : IDisposable
+    internal class NetworkService
     {
-        public static UdpClient udpClient = new UdpClient(Settings.Instanze.BroadcastPort);
-        public static UdpState state;//= new UdpState();
-        public class UdpState
+        private UdpClient udpClient;
+        private UdpState state;
+        private readonly Tournament tournament;
+        private readonly Action _CallBackAfterUpdateAction;
+
+
+        private class UdpState
         {
             public UdpClient udpClient;
             public IPEndPoint ipEndPoint;
             public IAsyncResult result;
-            public bool cancel;
         }
 
-        private readonly Tournament tournament;
 
-        public NetworkService(Tournament tournament)
+        public NetworkService(Tournament tournament, Action callBackAfterUpdateAction)
         {
             this.tournament = tournament;
-            udpClient.Client.ReceiveTimeout = 1000;
+            this._CallBackAfterUpdateAction = callBackAfterUpdateAction;
         }
 
-        public void ReceiveBroadcast()
+        public void Start()
         {
-            //SendOnePacket();
-            //Thread.Sleep(1000);
-            state = new UdpState()
+            if (udpClient == null)
             {
-                udpClient = udpClient,
-                ipEndPoint = new IPEndPoint(IPAddress.Any, Settings.Instanze.BroadcastPort),
-                cancel = false
-            };
+                udpClient = new UdpClient(Settings.Instanze.BroadcastPort);
+                udpClient.Client.ReceiveTimeout = 500;
+                udpClient.EnableBroadcast = true;
+                udpClient.Client.Blocking = false;
 
+            }
+            if (state == null)
+            {
+                state = new UdpState()
+                {
+                    udpClient = udpClient,
+                    ipEndPoint = new IPEndPoint(IPAddress.Any, Settings.Instanze.BroadcastPort),
+                };
+            }
+            
+            ReceiveBroadcast();
+        }
+
+        public void Stop()
+        {
+            udpClient.Dispose();
+            udpClient = null;
+            state.udpClient = null;
+            state = null;
+        }
+
+        public bool IsRunning()
+        {
+            return (udpClient != null);
+        }
+
+
+        private void ReceiveBroadcast()
+        {
             state.result = state.udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), state);
         }
 
         void ReceiveCallback(IAsyncResult ar)
         {
+            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToLongTimeString()}  New ReceiveCallback ");
             try
             {
                 UdpClient u = ((UdpState)ar.AsyncState).udpClient;
                 IPEndPoint e = ((UdpState)ar.AsyncState).ipEndPoint;
                 IAsyncResult r = ((UdpState)ar.AsyncState).result;
-                bool c = ((UdpState)ar.AsyncState).cancel;
 
-                byte[] receiveBytes = u.EndReceive(ar, ref e);
-                if (receiveBytes.Length > 1)
+                byte[] receiveBytes = u?.EndReceive(ar, ref e);
+                if (receiveBytes?.Length > 1)
                 {
                     DeSerialize(DeCompress(receiveBytes));
                 }
                 else
                 {
-                    if (receiveBytes[0] == byte.MaxValue)
+                    if (receiveBytes?[0] == byte.MaxValue)
                     {
-                        Parallel.ForEach(tournament.Games, (g) =>
-                        {
-                            g.Turns.Clear();
-                        });
-                       
+                        tournament.DeleteAllTurnsInEveryGame();
                     }
                 }
 
-                if (!c)
-                    r = u.BeginReceive(new AsyncCallback(ReceiveCallback), state);
+                r = u?.BeginReceive(new AsyncCallback(ReceiveCallback), state);
             }
             catch (ObjectDisposedException e)
             {
@@ -83,6 +103,9 @@ namespace StockMaster.BaseClasses
 
         static byte[] DeCompress(byte[] data)
         {
+            if (data == null)
+                return null;
+
             MemoryStream input = new MemoryStream(data);
             MemoryStream output = new MemoryStream();
             using (var datastream = new DeflateStream(input, CompressionMode.Decompress))
@@ -111,21 +134,17 @@ namespace StockMaster.BaseClasses
              * 
              */
 
+            if (data == null)
+                return;
+
             byte bahnNumber = data[0];
-           
-
-            var courtGames = tournament.Games.Where(g => g.CourtNumber == bahnNumber).Distinct();
-
+            var courtGames = tournament.GetGamesOfCourt(bahnNumber);
 
             byte turnLength = data[1];
-
-            // turnier.Games.RemoveAll(g => g.BahnNumber == bahnNumber);
 
             //Die ersten beiden Byte aus dem Array werden nicht mehr benötigt, Daten in ein neues Array kopieren
             byte[] newData = new byte[data.Length - 2];
             Array.Copy(data, 2, newData, 0, data.Length - 2);
-
-            //var g = new Game(bahnNumber);
 
             //Jede verfügbare Kehre im Datagramm durchgehen, i+2, da immer 2 Bytes pro Kehre
             // Zähler für die Spiele mitzählen
@@ -152,30 +171,12 @@ namespace StockMaster.BaseClasses
                 kehrenZähler++;
 
             }
-            tournament.RaisePropertyChanged(nameof(Tournament.Ergebnisliste));
-
+         
+            _CallBackAfterUpdateAction();
         }
 
-        public void Dispose()
-        {
-            state.cancel = true;
-            state.udpClient.Close();
-            state.udpClient.Dispose();
-            udpClient.Close();
-            udpClient.Dispose();
-        }
+        
 
-        public void SendOnePacket()
-        {
 
-            using (var c = new UdpClient())
-            {
-                IPEndPoint ip = new IPEndPoint(IPAddress.Parse("192.168.100.255"), 4711);
-                byte[] bytes = Encoding.ASCII.GetBytes("STOP");
-                c.Send(bytes, bytes.Length, ip);
-                c.Close();
-            }
-
-        }
     }
 }

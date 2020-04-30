@@ -12,13 +12,12 @@ namespace StockMaster
         public MainWindow()
         {
             InitializeComponent();
-                     
         }
         
         private void ButtonRefresh_Clicked(object sender, RoutedEventArgs e)
         {
             var t = this.DataContext as TournamentModel;
-            t.OnPropertyChanged(nameof(t.Ergebnisliste));
+            t.RaisePropertyChanged(nameof(t.Ergebnisliste));
         }
 
         private void ButtonPrint_Clicked(object sender, RoutedEventArgs e)
