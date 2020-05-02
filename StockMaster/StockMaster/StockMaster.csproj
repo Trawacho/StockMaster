@@ -66,19 +66,34 @@
     <Compile Include="BaseClasses\Player.cs" />
     <Compile Include="BaseClasses\Settings.cs" />
     <Compile Include="BaseClasses\Team.cs" />
+    <Compile Include="Behaviours\SelectAllFocusBehavior.cs" />
     <Compile Include="Dialogs\DialogCloseRequestedEventArgs.cs" />
     <Compile Include="Dialogs\DialogService.cs" />
     <Compile Include="Dialogs\IDialog.cs" />
     <Compile Include="Dialogs\IDialogRequestClose.cs" />
     <Compile Include="Dialogs\IDialogService.cs" />
-    <Compile Include="Dialogs\IWindow.cs" />
-    <Compile Include="Dialogs\WindowService.cs" />
-    <Compile Include="Models\LiveResultViewModel.cs" />
-    <Compile Include="Models\MainViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\GamesViewModel.cs" />
+    <Compile Include="ViewModels\LiveResultViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\TeamsViewModel.cs" />
+    <Compile Include="Views\GamesView.xaml.cs">
+      <DependentUpon>GamesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LiveResultView.xaml.cs">
       <DependentUpon>LiveResultView.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Views\TemsView.xaml.cs">
+      <DependentUpon>TemsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TournamentView.xaml.cs">
+      <DependentUpon>TournamentView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\GamesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -91,12 +106,12 @@
     <Compile Include="BaseClasses\Turn.cs" />
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Converter\TupleValue_Team_Converter.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Converters\TupleValue_Team_Converter.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Output\PrintPreview.xaml">
+    <Page Include="Output\TurnCards\PrintPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -104,20 +119,28 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TemsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TournamentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\TournamentModel.cs" />
-    <Compile Include="Output\SpiegelFeld.cs" />
-    <Compile Include="Output\GameGrid.cs" />
-    <Compile Include="Output\GameSummaryGrid.cs" />
-    <Compile Include="Output\SpiegelGrid.cs" />
-    <Compile Include="Output\SpiegelHeader.cs" />
-    <Compile Include="Output\SpiegelHeaderGrid.cs" />
-    <Compile Include="Output\PrintPreview.xaml.cs">
+    <Compile Include="ViewModels\TournamentViewModel.cs" />
+    <Compile Include="Output\TurnCards\SpiegelFeld.cs" />
+    <Compile Include="Output\TurnCards\GameGrid.cs" />
+    <Compile Include="Output\TurnCards\GameSummaryGrid.cs" />
+    <Compile Include="Output\TurnCards\SpiegelGrid.cs" />
+    <Compile Include="Output\TurnCards\SpiegelHeader.cs" />
+    <Compile Include="Output\TurnCards\SpiegelHeaderGrid.cs" />
+    <Compile Include="Output\TurnCards\PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Output\pxConverter.cs" />
-    <Compile Include="Output\Spiegel.cs" />
+    <Compile Include="Converters\pxConverter.cs" />
+    <Compile Include="Output\TurnCards\Spiegel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

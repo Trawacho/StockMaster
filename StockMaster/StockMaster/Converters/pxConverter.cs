@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StockMaster.Output
+﻿namespace StockMaster.Converters
 {
     public class pxConverter
     {

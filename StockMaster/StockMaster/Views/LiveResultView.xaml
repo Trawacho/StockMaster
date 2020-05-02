@@ -4,49 +4,84 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StockMaster.Views"
-        xmlns:co="clr-namespace:StockMaster.Converter"
-        xmlns:mo="clr-namespace:StockMaster.Models"
+        xmlns:co="clr-namespace:StockMaster.Converters"
+        xmlns:mo="clr-namespace:StockMaster.ViewModels"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=mo:LiveResultViewModel, IsDesignTimeCreatable=False}" 
-        Title="LiveResultView" Height="450" Width="800">
+        d:DataContext="{d:DesignInstance 
+                            Type=mo:LiveResultDesignViewModel, 
+                            IsDesignTimeCreatable=True}" 
+        Title="Live-Ergebnis" 
+        Height="607.676" Width="1039.004"
+        FontFamily="Verdana"
+        WindowStyle="ToolWindow"
+        >
 
     <Window.Resources>
         <co:TupleValue_Team_Converter x:Key="TVC"/>
+
+        <Style x:Key="CenterAligned" TargetType="DataGridCell">
+            <Style.Setters>
+                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="TeamNameStyle" TargetType="DataGridCell">
+            <Style.Setters>
+                <Setter Property="TextBlock.TextAlignment" Value="Left" />
+                <Setter Property="TextBlock.Margin" Value="0" />
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="0"/>
+            </Style.Setters>
+        </Style>
     </Window.Resources>
 
-    <DockPanel>
-        <Button Content="OK" 
-                DockPanel.Dock="Top"
-                Command="{Binding OkCommand}"
-                Margin="10" Padding="10"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        
 
-        <Viewbox DockPanel.Dock="Top">
+        <Viewbox VerticalAlignment="Top" Margin="10" Grid.Row="0" HorizontalAlignment="Stretch">
+
             <DataGrid ItemsSource="{Binding Path=Ergebnisliste, Mode=OneWay}"
                       RowHeaderWidth="0"
-                      Margin="5"
-                      AutoGenerateColumns="False">
-                <DataGrid.Columns >
-                    <DataGridTextColumn Header="Platz" 
+                      Margin="0"
+                      CanUserSortColumns="False"
+                      AutoGenerateColumns="False"
+                      >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Platz"
                                     Binding="{Binding Converter={StaticResource TVC},
                                                                      ConverterParameter=Platzierung}"/>
                     <DataGridTextColumn Header="Name" 
-                                    Binding="{Binding Converter={StaticResource TVC}, 
+                                        CellStyle="{StaticResource TeamNameStyle}"
+                                        Binding="{Binding Converter={StaticResource TVC}, 
                                                       ConverterParameter=TeamName}"
-                                    Foreground="Black"/>
-                    <DataGridTextColumn Header="Punkte" 
+                                        Foreground="Black"/>
+
+
+                    <DataGridTextColumn Header="Punkte" CellStyle="{StaticResource CenterAligned}" 
                                     Binding="{Binding Converter={StaticResource TVC},
                                                                       ConverterParameter=SpielPunkte}"/>
-                    <DataGridTextColumn Header="Stockpunkte" 
+                    <DataGridTextColumn Header="Stockpunkte" CellStyle="{StaticResource CenterAligned}" 
                                     Binding="{Binding Converter={StaticResource TVC},
                                                                          ConverterParameter=StockPunkte}"/>
-                    <DataGridTextColumn Header="Stocknote" 
+                    <DataGridTextColumn Header="Stocknote" CellStyle="{StaticResource CenterAligned}" 
                                     Binding="{Binding Converter={StaticResource TVC},
                                                                          ConverterParameter=StockNote}"/>
-                    <DataGridTextColumn Header="Differenz" 
+                    <DataGridTextColumn Header="Differenz" CellStyle="{StaticResource CenterAligned}" 
                                     Binding="{Binding Converter={StaticResource TVC},
                                                                          ConverterParameter=StockPunkteDifferenz}"/>
                 </DataGrid.Columns>
             </DataGrid>
+
         </Viewbox>
-    </DockPanel>
+        
+        <Button Content="Close" 
+                Grid.Row="1"
+                Command="{Binding CloseCommand}"
+                Margin="10" Padding="10" />
+    </Grid>
 </Window>

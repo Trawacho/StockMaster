@@ -1,4 +1,4 @@
-﻿using StockMaster.Models;
+﻿using StockMaster.ViewModels;
 using StockMaster.Output;
 using System.Windows;
 

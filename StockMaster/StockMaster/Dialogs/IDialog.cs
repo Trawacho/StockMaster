@@ -14,6 +14,8 @@ namespace StockMaster.Dialogs
         Window Owner { get; set; }
         void Close();
         bool? ShowDialog();
+
+        void Show();
     }
 
    

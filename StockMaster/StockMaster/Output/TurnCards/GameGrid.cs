@@ -1,13 +1,8 @@
 ﻿using StockMaster.BaseClasses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using StockMaster.Converters;
 using System.Windows.Media;
 
-namespace StockMaster.Output
+namespace StockMaster.Output.TurnCards
 {
     public class GameGrid : SpiegelGrid
     {

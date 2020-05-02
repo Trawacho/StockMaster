@@ -1,42 +1,75 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public class Teams: IEnumerable<Team>
+    public class Teams : TBaseClass, IEnumerable<Team> //, IQueryable<Team>
     {
-        List<Team> teams;
+        readonly List<Team> teams;
         public Teams()
         {
             this.teams = new List<Team>();
         }
 
+        /// <summary>
+        /// Hinzufügen eines Teams, es werden alle Virtuellen Teams gelöscht, es werden alle Spiele der Teams gelöscht
+        /// </summary>
+        /// <param name="team"></param>
         public void Add(Team team)
         {
-            if (teams.Any(x => x.StartNumber == team.StartNumber))
+            if (team.StartNumber == 0)
             {
-                throw new Exception("Startnumber is already existing. Team not added to list of teams");
+                teams.RemoveAll(t => t.IsVirtual);
             }
-            this.teams.Add(team);
+            Parallel.ForEach(teams, (t) => t.Games.Clear());
 
+            //Re-Organize Startnumbers
+            for (int i = 0; i < teams.Count; i++)
+            {
+                teams[i].StartNumber = i + 1;
+            }
+
+            team.StartNumber = teams.Count + 1;
+
+            this.teams.Add(team);
+            team.PropertyChanged += Team_PropertyChanged;
+            RaisePropertyChanged(nameof(Teams));
 
         }
-       
+
+        private void Team_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(Teams));
+        }
+
         public void Insert(int index, Team team)
         {
             teams.Insert(index, team);
+            RaisePropertyChanged(nameof(Teams));
+
         }
-        
+
+        public void Remove(Team team)
+        {
+            teams.Remove(team);
+            //Re-Organize Startnumbers
+            for (int i = 0; i < teams.Count; i++)
+            {
+                teams[i].StartNumber = i + 1;
+            }
+            RaisePropertyChanged(nameof(Teams));
+        }
+
+
         public void AddVirtualTeam()
         {
-            Add(new Team(teams.Count + 1, "Virtual Team")
+            Add(new Team("Virtual Team")
             {
                 IsVirtual = true
             });
+            RaisePropertyChanged(nameof(Teams));
         }
 
         public Team GetByStartnummer(int StartNumber)
@@ -70,6 +103,8 @@ namespace StockMaster.BaseClasses
             set
             {
                 teams[index] = value;
+                RaisePropertyChanged(nameof(Teams));
+
             }
         }
 
@@ -80,5 +115,7 @@ namespace StockMaster.BaseClasses
                 return this.teams.Count;
             }
         }
+
+
     }
 }

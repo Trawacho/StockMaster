@@ -33,7 +33,7 @@ namespace StockMaster.Dialogs
             EventHandler<DialogCloseRequestedEventArgs> handler = null;
             handler = (sender, e) =>
             {
-                viewModel.CloseRequested -= handler;
+                viewModel.DialogCloseRequested -= handler;
                 if (e.DialogResult.HasValue)
                 {
                     dialog.DialogResult = e.DialogResult;
@@ -44,12 +44,37 @@ namespace StockMaster.Dialogs
                 }
             };
 
-            viewModel.CloseRequested += handler;
+            viewModel.DialogCloseRequested += handler;
             dialog.DataContext = viewModel;
             dialog.Owner = owner;
 
             return dialog.ShowDialog();
 
+        }
+
+        public void Show<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose
+        {
+            Type viewType = Mappings[typeof(TViewModel)];
+            IDialog dialog = (IDialog)Activator.CreateInstance(viewType);
+            EventHandler<WindowCloseRequestedEventArgs> handler = null;
+            handler = (sender, e) =>
+            {
+                viewModel.WindowCloseRequested -= handler;
+                //if (e.DialogResult.HasValue)
+                //{
+                //    dialog.DialogResult = e.DialogResult;
+                //}
+                //else
+                //{
+                dialog.Close();
+                //}
+            };
+
+            viewModel.WindowCloseRequested += handler;
+            dialog.DataContext = viewModel;
+            dialog.Owner = owner;
+
+            dialog.Show();
         }
     }
 

@@ -4,7 +4,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using StockMaster.BaseClasses;
 
-namespace StockMaster.Output
+namespace StockMaster.Output.TurnCards
 {
     public class SpiegelHeader : SpiegelGrid
     {

@@ -9,8 +9,11 @@ namespace StockMaster.Dialogs
 {
     public interface IDialogRequestClose
     {
-        event EventHandler<DialogCloseRequestedEventArgs> CloseRequested;
+        event EventHandler<DialogCloseRequestedEventArgs> DialogCloseRequested;
+        event EventHandler<WindowCloseRequestedEventArgs> WindowCloseRequested;
     }
+
+    
 
    
 

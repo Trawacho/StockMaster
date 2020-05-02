@@ -1,24 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public class Tournament : INotifyPropertyChanged
+    public class Tournament : TBaseClass
     {
-        #region INotifyPropertyChanged Implementiation
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
+        
 
         #region Properties
 
@@ -55,7 +44,22 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Anzahl der Stockbahnen / Spielfächen
         /// </summary>
-        public int CountOfCourts { get; set; }
+        public int NumberOfCourts { get; set; }
+
+        /// <summary>
+        /// Number of rounds to play (default 1) 
+        /// </summary>
+        public int NumberOfGameRounds { get; set; }
+
+        /// <summary>
+        /// True, if Court#1 is on the right. Team with StartNumber 1 is also on right side and goes to left for 2nd game (default True)
+        /// </summary>
+        public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
+
+        /// <summary>
+        /// Default 1. How often a Team has a Pause. Should depending on Number of Teams
+        /// </summary>
+        public int NumberOfPauseGames { get; set; }
 
         #endregion
 
@@ -64,7 +68,9 @@ namespace StockMaster.BaseClasses
         public Tournament()
         {
             this.Teams = new Teams();
-            //this.Games = new List<Game>();
+            this.IsDirectionOfCourtsFromRightToLeft = true;
+            this.NumberOfGameRounds = 1;
+            DateOfTournament = DateTime.Now;
         }
 
         #endregion

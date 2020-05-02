@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StockMaster.Converters;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
-namespace StockMaster.Output
+namespace StockMaster.Output.TurnCards
 {
     public class SpiegelHeaderGrid : SpiegelGrid
     {

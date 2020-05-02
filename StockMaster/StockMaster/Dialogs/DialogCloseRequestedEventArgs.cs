@@ -11,4 +11,13 @@ namespace StockMaster.Dialogs
 
         public bool? DialogResult { get; }
     }
+
+    public class WindowCloseRequestedEventArgs : EventArgs
+    {
+        public WindowCloseRequestedEventArgs()
+        {
+
+        }
+    }
+
 }

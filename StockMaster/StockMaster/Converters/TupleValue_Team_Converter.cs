@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace StockMaster.Converter
+namespace StockMaster.Converters
 {
     class TupleValue_Team_Converter : IValueConverter
     {
@@ -32,7 +32,7 @@ namespace StockMaster.Converter
                 }
                 if (p == nameof(t.Item2.StockNote))
                 {
-                    return t.Item2.StockNote.ToString("F2");
+                    return t.Item2.StockNote.ToString("F3");
                 }
                 if (p == nameof(t.Item2.StockPunkteDifferenz))
                 {

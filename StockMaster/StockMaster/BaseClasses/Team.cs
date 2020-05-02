@@ -72,7 +72,7 @@ namespace StockMaster.BaseClasses
 
         #endregion
 
-
+        #region ReadOnly Result Properties 
 
         public (int positiv, int negativ) SpielPunkte
         {
@@ -113,6 +113,7 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        #endregion 
 
 
         #region Constructor
@@ -120,9 +121,10 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Default-Constructor
         /// </summary>
-        private Team()
+        public Team()
         {
             this.IsVirtual = false;
+            this.StartNumber = 0;
             this.Players = new List<Player>();
             for (int i = 0; i < 4; i++) // default 4 Spieler erzeugen
             {
@@ -134,12 +136,10 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Constructor 
         /// </summary>
-        /// <param name="StartNumber"></param>
         /// <param name="TeamName"></param>
         /// <param name="CountOfDefaultPlayer"></param>
-        public Team(int StartNumber, string TeamName) : this()
+        public Team(string TeamName) : this()
         {
-            this.StartNumber = StartNumber;
             this.TeamName = TeamName;
 
         }
@@ -150,7 +150,7 @@ namespace StockMaster.BaseClasses
         /// <param name="StartNumber"></param>
         /// <param name="TeamName"></param>
         /// <param name="Players"></param>
-        public Team(int StartNumber, string TeamName, List<Player> Players) : this(StartNumber, TeamName)
+        public Team(string TeamName, List<Player> Players) : this(TeamName)
         {
             this.Players = Players;
         }
@@ -160,6 +160,16 @@ namespace StockMaster.BaseClasses
         public override string ToString()
         {
             return $"{StartNumber}. {TeamName}";
+        }
+
+        public Team CopyWithoutGamesOrPlayers()
+        {
+            var copy = (Team)this.MemberwiseClone();
+            Games = new List<Game>();
+            Players = new List<Player>();
+
+            return copy;
+
         }
 
     }

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace StockMaster.Output
+namespace StockMaster.Output.TurnCards
 {
     public class SpiegelFeld : Border
     {

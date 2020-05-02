@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using StockMaster.BaseClasses;
+using StockMaster.Converters;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,9 +8,8 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using StockMaster.BaseClasses;
 
-namespace StockMaster.Output
+namespace StockMaster.Output.TurnCards
 {
     public class Spiegel
     {

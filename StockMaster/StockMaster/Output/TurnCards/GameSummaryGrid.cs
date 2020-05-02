@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿using StockMaster.Converters;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace StockMaster.Output
+namespace StockMaster.Output.TurnCards
 {
     public class GameSummaryGrid : SpiegelGrid
     {

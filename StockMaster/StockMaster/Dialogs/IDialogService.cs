@@ -12,13 +12,16 @@ namespace StockMaster.Dialogs
                                            where TView : IDialog;
 
         bool? ShowDialog<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose;
-    }
-
-    public interface IWindowService
-    {
-        void Register<TViewModel, TView>() where TViewModel : IDialogRequestClose
-                                          where TView : IWindow;
 
         void Show<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose;
+
     }
+
+    //public interface IWindowService
+    //{
+    //    void Register<TViewModel, TView>() where TViewModel : IDialogRequestClose
+    //                                      where TView : IWindow;
+
+    //    void Show<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose;
+    //}
 }

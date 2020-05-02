@@ -1,12 +1,7 @@
 ﻿using StockMaster.Dialogs;
-using StockMaster.Models;
+using StockMaster.ViewModels;
 using StockMaster.Views;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace StockMaster
@@ -20,18 +15,20 @@ namespace StockMaster
         {
             base.OnStartup(e);
 
-            //IDialogService dialogService = new DialogService(MainWindow);
-            //dialogService.Register<LiveResultViewModel, LiveResultView>();
+            IDialogService dialogService = new DialogService(MainWindow);
+            dialogService.Register<LiveResultViewModel, LiveResultView>();
 
-            IWindowService windowServie = new WindowService(MainWindow);
-            windowServie.Register<LiveResultViewModel, LiveResultView>();
-
-            var viewModel = new MainViewModel(windowServie);
+            var viewModel = new MainViewModel(dialogService);
             var view = new MainWindow() { DataContext = viewModel };
+            viewModel.ExitApplicationAction = new Action(view.Close);
             
             view.ShowDialog();
-            
-            // https://www.youtube.com/watch?v=OqKaV4d4PXg
+        }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+         
+            Application.Current.Shutdown(0);
         }
     }
 }
