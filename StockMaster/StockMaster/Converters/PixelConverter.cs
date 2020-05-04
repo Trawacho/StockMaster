@@ -1,6 +1,6 @@
 ﻿namespace StockMaster.Converters
 {
-    public class pxConverter
+    public class PixelConverter
     {
         private struct PixelUnitFactor
         {

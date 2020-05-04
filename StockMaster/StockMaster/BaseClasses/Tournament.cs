@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,14 +8,19 @@ namespace StockMaster.BaseClasses
 {
     public class Tournament : TBaseClass
     {
-        
+
 
         #region Properties
+
+        private readonly List<Team> _teams;
+        private int numberOfPauseGames;
+        private int numberOfGameRounds;
+        private int numberOfCourts;
 
         /// <summary>
         /// Liste aller Teams
         /// </summary>
-        public Teams Teams { get; set; }
+        public ReadOnlyCollection<Team> Teams { get; private set; }
 
         /// <summary>
         /// Veranstaltungsort
@@ -44,12 +50,40 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Anzahl der Stockbahnen / Spielfächen
         /// </summary>
-        public int NumberOfCourts { get; set; }
+        public int NumberOfCourts
+        {
+            get
+            {
+                return numberOfCourts;
+            }
+            set
+            {
+                if (numberOfCourts == value) return;
+                if (value < 1 | value > 7) return;
+
+                numberOfCourts = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Number of rounds to play (default 1) 
         /// </summary>
-        public int NumberOfGameRounds { get; set; }
+        public int NumberOfGameRounds
+        {
+            get
+            {
+                return numberOfGameRounds;
+            }
+            set
+            {
+                if (numberOfGameRounds == value) return;
+                if (value < 1 || value > 3) return;
+
+                numberOfGameRounds = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// True, if Court#1 is on the right. Team with StartNumber 1 is also on right side and goes to left for 2nd game (default True)
@@ -57,9 +91,35 @@ namespace StockMaster.BaseClasses
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
 
         /// <summary>
-        /// Default 1. How often a Team has a Pause. Should depending on Number of Teams
+        /// Always 1 if Number of Real Teams are odd
         /// </summary>
-        public int NumberOfPauseGames { get; set; }
+        public int NumberOfPauseGames
+        {
+            get
+            {
+                if (Teams.Count(t => !t.IsVirtual) % 2 != 0)
+                {
+                    return 1;
+                }
+                return numberOfPauseGames;
+            }
+            set
+            {
+                if (numberOfPauseGames == value) return;
+                if (value < -1 || value > 2) return;
+
+                numberOfPauseGames = value;
+                RaisePropertyChanged();
+            }
+        }
+
+      
+
+        /// <summary>
+        /// True, wenn bei einer Mehrfachrunde das Anspiel bei jeder Runde gewechselt wird
+        /// </summary>
+        public bool StartOfTeamChange { get; set; }
+
 
         #endregion
 
@@ -67,10 +127,14 @@ namespace StockMaster.BaseClasses
 
         public Tournament()
         {
-            this.Teams = new Teams();
             this.IsDirectionOfCourtsFromRightToLeft = true;
             this.NumberOfGameRounds = 1;
+            this.NumberOfPauseGames = 1;
+            this.NumberOfCourts = 1;
+            StartOfTeamChange = false;
             DateOfTournament = DateTime.Now;
+            this._teams = new List<Team>();
+            this.Teams = _teams.AsReadOnly();
         }
 
         #endregion
@@ -99,142 +163,127 @@ namespace StockMaster.BaseClasses
                 .ThenBy(s => s.GameNumber);
         }
 
-        public IEnumerable<Game> GetGamesOfTeam(int startNumber)
-        {
-            return Teams.First(t => t.StartNumber == startNumber)?.Games;
-        }
-
-
         public IEnumerable<Team> GetTeamsRanked()
         {
-                return Teams
-                        .Where(v => !v.IsVirtual)
-                        .OrderByDescending(t => t.SpielPunkte.positiv)
-                        .ThenByDescending(p => p.StockNote)
-                        .ThenByDescending(d => d.StockPunkteDifferenz);
+            return Teams
+                    .Where(v => !v.IsVirtual)
+                    .OrderByDescending(t => t.SpielPunkte.positiv)
+                    .ThenByDescending(p => p.StockNote)
+                    .ThenByDescending(d => d.StockPunkteDifferenz);
         }
 
         #endregion
 
-        internal void CreateGames(bool HasTwoPause = false)
+        public void AddVirtualTeam()
+        {
+            AddTeam(new Team("Virtual Team")
+            {
+                IsVirtual = true
+            });
+        }
+
+        internal void RemoveAllVirtualTeams()
+        {
+            _teams.RemoveAll(t => t.IsVirtual);
+            RaisePropertyChanged(nameof(Teams));
+        }
+        /// <summary>
+        /// Adds a Team to the Tournament. 
+        /// - If Team has StartNumber "0" all Teams were deleted. 
+        /// - Startnumbers were reOrganized
+        /// - Number of Courts is new Caluclated
+        /// </summary>
+        /// <param name="team"></param>
+        public void AddTeam(Team team)
+        {
+            Parallel.ForEach(_teams, (t) => t.ClearGames());
+
+            ReOrganizeTeamStartNumbers();
+
+            team.StartNumber = _teams.Count + 1;
+
+            this._teams.Add(team);
+
+            //Number of courts 
+            NumberOfCourts = Teams.Count / 2;
+            RaisePropertyChanged(nameof(Teams));
+
+        }
+
+        /// <summary>
+        /// Removes the Team from the Tournament
+        /// - Startnumbers were reOrganized
+        /// - Number of courts is new calculated
+        /// </summary>
+        /// <param name="team"></param>
+        public void RemoveTeam(Team team)
+        {
+            this._teams.Remove(team);
+
+            Parallel.ForEach(_teams, (t) => t.ClearGames());
+
+            ReOrganizeTeamStartNumbers();
+
+            //Number of courts 
+            NumberOfCourts = Teams.Count / 2;
+            RaisePropertyChanged(nameof(Teams));
+        }
+
+        /// <summary>
+        /// ReOrganize Startnumbers of each Team in List as index-based
+        /// </summary>
+        private void ReOrganizeTeamStartNumbers()
+        {
+            //Re-Organize Startnumbers
+            for (int i = 0; i < _teams.Count; i++)
+            {
+                _teams[i].StartNumber = i + 1;
+            }
+        }
+
+        internal void CreateGames()
         {
             /*
              *  Auf dieser Seite findet man Informationen bzgl der Berchnung eines Spielplans
              *  http://www-i1.informatik.rwth-aachen.de/~algorithmus/algo36.php
              * 
              */
+            RemoveAllVirtualTeams();
 
             int iBahnCor = 0;               //Korrektur-Wert für Bahn
 
             //Bei ungerade Zahl an Teams ein virtuelles Team hinzufügen
             if (Teams.Count % 2 == 1)
             {
-                Teams.AddVirtualTeam();
+                AddVirtualTeam();
             }
             else
             {
                 //Gerade Anzahl an Mannschaften
                 //Entweder kein Aussetzer oder ZWEI Aussetzer
-                if (HasTwoPause)
+                if (NumberOfPauseGames == 2)
                 {
-                    Teams.AddVirtualTeam();
-                    Teams.AddVirtualTeam();
+                    AddVirtualTeam();
+                    AddVirtualTeam();
                 }
             }
 
-
-            //Über Schleifen die Spiele erstellen, Teams, Bahnen und Anspiel festlegen
-            for (int i = 1; i < Teams.Count; i++)
+            System.Diagnostics.Debug.WriteLine($"Schleifenstart");
+            for (int spielRunde = 1; spielRunde <= this.NumberOfGameRounds; spielRunde++)
             {
-                Game game = new Game
-                {
-                    TeamB = Teams.GetByStartnummer(Teams.Count),
-                    TeamA = Teams.GetByStartnummer(i),
-                    GameNumber = Teams.Count - i
-                };
 
-                #region Bahn Berechnen
-
-                if (game.IsPauseGame)
+                //Über Schleifen die Spiele erstellen, Teams, Bahnen und Anspiel festlegen
+                for (int i = 1; i < Teams.Count; i++)
                 {
-                    game.CourtNumber = 0;
-                }
-                else
-                {
-                    if (i <= Teams.Count / 2)
+                    Game game = new Game
                     {
-                        game.CourtNumber = (Teams.Count / 2) - i + 1;
-                    }
-                    else
-                    {
-                        game.CourtNumber = i - (Teams.Count / 2) + 1;
-                    }
-                    iBahnCor = game.CourtNumber;
-                }
-
-                #endregion
-
-                #region Anspiel festlegen
-
-                if (i % 2 == 0)
-                {
-                    game.StartOfPlayTeam1 = false;
-                }
-                else
-                {
-                    game.StartOfPlayTeam1 = true;
-                }
-
-                #endregion
-
-                game.TeamA.Games.Add(game);
-                game.TeamB.Games.Add(game);
-                //Games.Add(game);
-
-                for (int k = 1; k <= (Teams.Count / 2 - 1); k++)
-                {
-                    game = new Game
-                    {
-                        GameNumber = Teams.Count - i
+                        TeamB = Teams.First(t => t.StartNumber == Teams.Count),
+                        TeamA = Teams.First(t => t.StartNumber == i),
+                        GameNumber = Teams.Count - i,
+                        RoundOfGame = spielRunde
                     };
 
-                    #region Team1 festlegen
-
-                    if ((i + k) % (Teams.Count - 1) == 0)
-                    {
-                        game.TeamB = Teams.GetByStartnummer(Teams.Count - 1);
-                    }
-                    else
-                    {
-                        var nrTb = (i + k) % (Teams.Count - 1);
-                        if (nrTb < 0)
-                        {
-                            nrTb = (Teams.Count - 1) + nrTb;
-                        }
-                        game.TeamB = Teams.GetByStartnummer(nrTb);
-                    }
-
-                    #endregion
-
-                    #region Team2 festlegen
-
-                    if ((i - k) % (Teams.Count - 1) == 0)
-                    {
-                        game.TeamA = Teams.GetByStartnummer(Teams.Count - 1);
-                    }
-                    else
-                    {
-                        var nrTa = (i - k) % (Teams.Count - 1);
-                        if (nrTa < 0)
-                        {
-                            nrTa = Teams.Count - 1 + nrTa;
-                        }
-                        game.TeamA = Teams.GetByStartnummer(nrTa);
-                    }
-
-                    #endregion
-
-                    #region Bahn berechnen
+                    #region Bahn Berechnen
 
                     if (game.IsPauseGame)
                     {
@@ -242,36 +291,105 @@ namespace StockMaster.BaseClasses
                     }
                     else
                     {
-                        if (iBahnCor != k)
+                        if (i <= Teams.Count / 2)
                         {
-                            game.CourtNumber = k;
+                            game.CourtNumber = (Teams.Count / 2) - i + 1;
                         }
                         else
                         {
-                            game.CourtNumber = Teams.Count / 2;
+                            game.CourtNumber = i - (Teams.Count / 2) + 1;
                         }
+                        iBahnCor = game.CourtNumber;
                     }
 
                     #endregion
 
-                    #region Anspiel berechnen
+                    #region Anspiel festlegen
 
-                    if (k % 2 == 0)
-                    {
-                        game.StartOfPlayTeam1 = false;
-                    }
-                    else
-                    {
-                        game.StartOfPlayTeam1 = true;
-                    }
+                    game.StartOfPlayTeamA = !(i % 2 == 0);
 
                     #endregion
 
-                    game.TeamA.Games.Add(game);
-                    game.TeamB.Games.Add(game);
+                    System.Diagnostics.Debug.WriteLine(game.ToString());
 
-                    //Games.Add(game);
+                    game.TeamA.AddGame(game);
+                    game.TeamB.AddGame(game);
 
+                    for (int k = 1; k <= (Teams.Count / 2 - 1); k++)
+                    {
+                        game = new Game
+                        {
+                            GameNumber = Teams.Count - i,
+                            RoundOfGame = spielRunde
+                        };
+
+                        #region Team A festlegen
+
+                        if ((i + k) % (Teams.Count - 1) == 0)
+                        {
+                            game.TeamA = Teams.First(t => t.StartNumber == (Teams.Count - 1));
+                        }
+                        else
+                        {
+                            var nrTb = (i + k) % (Teams.Count - 1);
+                            if (nrTb < 0)
+                            {
+                                nrTb = (Teams.Count - 1) + nrTb;
+                            }
+                            game.TeamA = Teams.First(t => t.StartNumber == nrTb);
+                        }
+
+                        #endregion
+
+                        #region Team B festlegen
+
+                        if ((i - k) % (Teams.Count - 1) == 0)
+                        {
+                            game.TeamB = Teams.First(t => t.StartNumber == (Teams.Count - 1));
+                        }
+                        else
+                        {
+                            var nrTa = (i - k) % (Teams.Count - 1);
+                            if (nrTa < 0)
+                            {
+                                nrTa = Teams.Count - 1 + nrTa;
+                            }
+                            game.TeamB = Teams.First(t => t.StartNumber == nrTa);
+
+                        }
+
+                        #endregion
+
+                        #region Bahn berechnen
+
+                        if (game.IsPauseGame)
+                        {
+                            game.CourtNumber = 0;
+                        }
+                        else
+                        {
+                            if (iBahnCor != k)
+                            {
+                                game.CourtNumber = k;
+                            }
+                            else
+                            {
+                                game.CourtNumber = Teams.Count / 2;
+                            }
+                        }
+
+                        #endregion
+
+                        #region Anspiel berechnen  
+
+                        game.StartOfPlayTeamA = !(k % 2 == 0);
+
+                        #endregion
+                        System.Diagnostics.Debug.WriteLine(game.ToString());
+
+                        game.TeamA.AddGame(game);
+                        game.TeamB.AddGame(game);
+                    }
                 }
             }
 

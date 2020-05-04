@@ -25,9 +25,15 @@ namespace StockMaster.BaseClasses
         }
         public override bool Equals(object obj)
         {
-            return (this.RoundOfGame == ((Game)obj).RoundOfGame
-                 && this.CourtNumber == ((Game)obj).CourtNumber
-                 && this.GameNumber == ((Game)obj).GameNumber);
+            if (obj is Game game)
+            {
+                return this.Equals(game);
+                //return (this.RoundOfGame == game.RoundOfGame
+                //      && this.CourtNumber == game.CourtNumber
+                //      && this.GameNumber == game.GameNumber);
+            }
+
+            return false;
         }
 
         public override int GetHashCode()
@@ -54,7 +60,6 @@ namespace StockMaster.BaseClasses
                 RaisePropertyChanged();
             }
         }
-
 
         /// <summary>
         /// Nummer vom laufenden Spiel
@@ -89,19 +94,19 @@ namespace StockMaster.BaseClasses
         }
 
         /// <summary>
-        /// Team A - 1 - Rechts
+        /// Team A - 1
         /// </summary>
         public Team TeamA { get; set; }
 
         /// <summary>
-        /// Team B - 2 Links
+        /// Team B - 2
         /// </summary>
         public Team TeamB { get; set; }
 
         /// <summary>
         /// Das Team A hat Anspiel
         /// </summary>
-        public bool StartOfPlayTeam1
+        public bool StartOfPlayTeamA
         {
             get => startOfPlayTeam1;
             set
@@ -112,6 +117,27 @@ namespace StockMaster.BaseClasses
                 startOfPlayTeam1 = value;
                 RaisePropertyChanged();
             }
+        }
+
+        /// <summary>
+        /// Das anspielende Team
+        /// </summary>
+        public Team StartingTeam
+        {
+            get
+            {
+                return StartOfPlayTeamA ? TeamA : TeamB;
+            }
+        }
+
+        /// <summary>
+        /// Wer ist der Gegner
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        public Team GetOpponent(Team team)
+        {
+            return team == TeamA ? TeamB : TeamA;
         }
 
         /// <summary>
@@ -127,7 +153,13 @@ namespace StockMaster.BaseClasses
                     return false;
             }
         }
-
+        public bool IsNotPauseGame
+        {
+            get
+            {
+                return !IsPauseGame;
+            }
+        }
 
         /// <summary>
         /// Liste der Kehren
@@ -217,7 +249,7 @@ namespace StockMaster.BaseClasses
 
         public override string ToString()
         {
-            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber} -- {TeamA.StartNumber}:{TeamB.StartNumber} T1A:{StartOfPlayTeam1}  P:{IsPauseGame} ";
+            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber} -- {TeamA.StartNumber} : {TeamB.StartNumber}    T1A:{StartOfPlayTeamA}     P:{IsPauseGame} ";
         }
 
 

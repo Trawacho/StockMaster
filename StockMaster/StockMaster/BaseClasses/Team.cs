@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace StockMaster.BaseClasses
@@ -65,11 +66,12 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        private readonly List<Game> _games;
         /// <summary>
         /// Liste aller Spiele 
         /// </summary>
-        public List<Game> Games { get; set; }
-
+        public ReadOnlyCollection<Game> Games { get; private set; }
+        
         #endregion
 
         #region ReadOnly Result Properties 
@@ -130,7 +132,8 @@ namespace StockMaster.BaseClasses
             {
                 Players.Add(new Player("LastName", "FirstName"));
             }
-            this.Games = new List<Game>();
+            this._games = new List<Game>();
+            this.Games = _games.AsReadOnly();
         }
 
         /// <summary>
@@ -157,20 +160,46 @@ namespace StockMaster.BaseClasses
 
         #endregion
 
+        /// <summary>
+        /// Deletes alle Games
+        /// </summary>
+        public void ClearGames()
+        {
+            this._games.Clear();
+            RaisePropertyChanged(nameof(Games));
+        }
+
+        public void AddGame(Game game)
+        {
+            this._games.Add(game);
+            RaisePropertyChanged(nameof(Games));
+        }
+
+        public IOrderedEnumerable<IGrouping<int,Game>> GetGamesGroupedByRound()
+        {
+            return from game in Games.OrderBy(r => r.RoundOfGame)
+                                     .ThenBy(g => g.GameNumber)
+                    group game by game.RoundOfGame into grGames
+                    orderby grGames.Key
+                    select grGames;
+        }
+
         public override string ToString()
         {
             return $"{StartNumber}. {TeamName}";
         }
 
+        [Obsolete]
         public Team CopyWithoutGamesOrPlayers()
         {
             var copy = (Team)this.MemberwiseClone();
-            Games = new List<Game>();
+            //Games = new List<Game>();
             Players = new List<Player>();
 
             return copy;
 
         }
 
+        
     }
 }

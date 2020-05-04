@@ -3,27 +3,143 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:local="clr-namespace:StockMaster.Views"
+             xmlns:converters="clr-namespace:StockMaster.Converters"
              xmlns:viewmodels="clr-namespace:StockMaster.ViewModels"
+             xmlns:self="clr-namespace:StockMaster.BaseClasses"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:GamesDesignViewModel, 
                             IsDesignTimeCreatable=True}" 
-             d:DesignHeight="450" d:DesignWidth="800">
-             
-    <Grid Background="WhiteSmoke">
+             d:DesignHeight ="1024"
+             d:DesignWidth="1280"
+             Background="WhiteSmoke"
+             >
+    <UserControl.Resources>
+        <converters:GamesSortingConverter x:Key="gamesSorter"/>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+        <converters:TeamToOpponentConverter x:Key="teamToOpponentConverter"/>
+
+        <CollectionViewSource x:Key="sortedTeams" Source="{Binding Path=Teams}">
+            <CollectionViewSource.SortDescriptions >
+                <scm:SortDescription PropertyName="StartNumber" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+
+    </UserControl.Resources>
+    <Grid Margin="25">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25"/>
+            <ColumnDefinition Width="auto" MinWidth="400"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="25"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition Height="25"/>
+            <RowDefinition />
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         
+
+
+        <TreeView ItemsSource="{Binding Source={StaticResource sortedTeams}}"
+                  Grid.Row="0" Grid.Column="0"
+                  Grid.RowSpan="3" 
+                  Padding="10">
+            <TreeView.Resources>
+
+                <HierarchicalDataTemplate DataType="{x:Type self:Team}" x:Name="tlNode"
+                                          ItemsSource="{Binding Games, Converter={StaticResource gamesSorter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="(" />
+                        <TextBlock Text="{Binding StartNumber}"/>
+                        <TextBlock Text=") " />
+                        <TextBlock Text="{Binding TeamName}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <DataTemplate DataType="{x:Type self:Game}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Runde: " />
+                        <TextBlock Text="{Binding RoundOfGame}"/>
+                        <TextBlock Text=" - Spiel: " />
+                        <TextBlock Text="{Binding GameNumber}"/>
+                       
+                        
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsNotPauseGame, Converter={StaticResource boolToVisibilityConverter}}">
+                            <TextBlock Text=" - Bahn: " />
+                            <TextBlock Text="{Binding CourtNumber}"/>
+                            <TextBlock Text=" - Anspiel: " />
+                            <TextBlock Text="{Binding Path=StartingTeam.TeamName}"/>
+                            <TextBlock Text=" - Gegner: " />
+                           
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource teamToOpponentConverter}">
+                                        <Binding  Path="DataContext" RelativeSource="{RelativeSource 
+                                                                        Mode=FindAncestor, 
+                                                                        AncestorType={x:Type TreeViewItem}, 
+                                                                        AncestorLevel=2}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource 
+                                                                        Mode=FindAncestor, 
+                                                                        AncestorType={x:Type TreeViewItem}, 
+                                                                        AncestorLevel=1}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+
+                        </StackPanel>
+
+                        <TextBlock Text=" - Setzt Aus" Visibility="{Binding Path=IsPauseGame, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+
+                    </StackPanel>
+                </DataTemplate>
+
+            </TreeView.Resources>
+        </TreeView>
+        
+        <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" Margin="20">
+            <Button Content="Erzeuge Spiele" Command="{Binding Path=CreateGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
+            <Button Content="Lösche alle Spiele" Command="{Binding Path=RemoveAllGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
+        </StackPanel>
+
+        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                    <Setter Property="Margin" Value="10"/>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="MinWidth" Value="50"/>
+                </Style>
+            </Grid.Resources>
+
+            <Label Content="Anzahl der Spielrunden:" Grid.Row="0" Grid.Column="0"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=NumberOfGameRounds, Mode=TwoWay}"/>
+            <Label Content="Anzahl der Bahnen:" Grid.Row="1" Grid.Column="0" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=NumberOfCourts, Mode=TwoWay}"/>
+            <Label Content="Anzahl der Aussetzer:" Grid.Row="2" Grid.Column="0" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=NumberOfPauseGames, Mode=TwoWay}"/>
+
+        </Grid>
+
     </Grid>
 </UserControl>

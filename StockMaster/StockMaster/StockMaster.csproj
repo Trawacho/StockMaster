@@ -67,6 +67,8 @@
     <Compile Include="BaseClasses\Settings.cs" />
     <Compile Include="BaseClasses\Team.cs" />
     <Compile Include="Behaviours\SelectAllFocusBehavior.cs" />
+    <Compile Include="Converters\GamesSortingConverter.cs" />
+    <Compile Include="Converters\TeamToOpponentConverter.cs" />
     <Compile Include="Dialogs\DialogCloseRequestedEventArgs.cs" />
     <Compile Include="Dialogs\DialogService.cs" />
     <Compile Include="Dialogs\IDialog.cs" />
@@ -101,7 +103,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaseClasses\Teams.cs" />
     <Compile Include="BaseClasses\Tournament.cs" />
     <Compile Include="BaseClasses\Turn.cs" />
     <Compile Include="Commands\AsyncRelayCommand.cs" />
@@ -139,7 +140,7 @@
     <Compile Include="Output\TurnCards\PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\pxConverter.cs" />
+    <Compile Include="Converters\PixelConverter.cs" />
     <Compile Include="Output\TurnCards\Spiegel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

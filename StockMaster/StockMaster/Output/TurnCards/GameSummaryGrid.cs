@@ -11,7 +11,7 @@ namespace StockMaster.Output.TurnCards
         {
             RowDefinitions.Add(new RowDefinition()
             {
-                Height = new GridLength(pxConverter.CmToPx(0.6))
+                Height = new GridLength(PixelConverter.CmToPx(0.6))
             });
             
             var textBlockGesamt = new TextBlockGesamt();

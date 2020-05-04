@@ -78,9 +78,9 @@
                Grid.Row="6" Grid.Column="1"
                HorizontalAlignment="Right"
                Margin="5"/>
-        <CheckBox Content="{Binding Path=DirectionOfCourtsDesctiption}"
+        <CheckBox Content="{Binding Path=DirectionOfCourtsDesctiption, Mode=OneWay}"
                   Grid.Row="6" Grid.Column="2"
-                  IsChecked="{Binding Path=IsDirectionOfCourtsFromRightToLeft}"
+                  IsChecked="{Binding Path=IsDirectionOfCourtsFromRightToLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   IsThreeState="False"
                   HorizontalAlignment="Left"
                   VerticalContentAlignment="Center"

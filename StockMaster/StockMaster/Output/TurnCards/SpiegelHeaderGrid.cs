@@ -9,8 +9,8 @@ namespace StockMaster.Output.TurnCards
         public SpiegelHeaderGrid()
         {
             //Two Rows
-            RowDefinitions.Add(new RowDefinition() { Height = new GridLength(pxConverter.CmToPx(0.60)) });
-            RowDefinitions.Add(new RowDefinition() { Height = new GridLength(pxConverter.CmToPx(0.60)) });
+            RowDefinitions.Add(new RowDefinition() { Height = new GridLength(PixelConverter.CmToPx(0.60)) });
+            RowDefinitions.Add(new RowDefinition() { Height = new GridLength(PixelConverter.CmToPx(0.60)) });
            
 
             #region Texte  Moarschaft

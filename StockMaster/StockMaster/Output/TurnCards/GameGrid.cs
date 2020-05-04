@@ -16,11 +16,11 @@ namespace StockMaster.Output.TurnCards
             string NumberOfGame = game.GameNumber.ToString();
             string NumberOfArea = game.CourtNumber.ToString();
             string Opponent = startNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
-            string StartOfGame = game.StartOfPlayTeam1 ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
+            string StartOfGame = game.StartOfPlayTeamA ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
 
             RowDefinitions.Add(new System.Windows.Controls.RowDefinition()
             {
-                Height = new System.Windows.GridLength(pxConverter.CmToPx(0.6))
+                Height = new System.Windows.GridLength(PixelConverter.CmToPx(0.6))
             });
 
             if (game.IsPauseGame)

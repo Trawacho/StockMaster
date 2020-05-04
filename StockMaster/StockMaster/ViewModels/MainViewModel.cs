@@ -19,8 +19,10 @@ namespace StockMaster.ViewModels
         public MainViewModel()
         {
             CreateNewTournament();
+            //this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
+
         public MainViewModel(IDialogService dialogService) : this()
         {
             this.dialogService = dialogService;
@@ -116,6 +118,7 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         this.ViewModel = new GamesViewModel(tournament);
+                        RaisePropertyChanged(nameof(ViewModel));
                     }
                     ));
             }
@@ -155,19 +158,21 @@ namespace StockMaster.ViewModels
         {
             tournament = new Tournament
             {
-                NumberOfCourts = 4 // 4 Bahnen
+                NumberOfCourts = 4, // 4 Bahnen
+                NumberOfGameRounds = 1,
+                NumberOfPauseGames = 2
             };
-            tournament.Teams.Add(new BaseClasses.Team("ESF Hankofen"));
-            tournament.Teams.Add(new BaseClasses.Team("EC Pilsting"));
-            tournament.Teams.Add(new BaseClasses.Team("DJK Leiblfing"));
-            tournament.Teams.Add(new BaseClasses.Team("ETSV Hainsbach"));
-            tournament.Teams.Add(new BaseClasses.Team("SV Salching"));
-            tournament.Teams.Add(new BaseClasses.Team("SV Haibach"));
-            tournament.Teams.Add(new BaseClasses.Team("TSV Bogen"));
-            tournament.Teams.Add(new BaseClasses.Team("EC EBRA Aiterhofen"));
-            tournament.Teams.Add(new BaseClasses.Team("EC Welchenberg"));
+            tournament.AddTeam(new Team("ESF Hankofen"));
+            tournament.AddTeam(new Team("EC Pilsting"));
+            tournament.AddTeam(new Team("DJK Leiblfing"));
+            tournament.AddTeam(new Team("ETSV Hainsbach"));
+            tournament.AddTeam(new Team("SV Salching"));
+            tournament.AddTeam(new Team("SV Haibach"));
+            tournament.AddTeam(new Team("TSV Bogen"));
+            tournament.AddTeam(new Team("EC EBRA Aiterhofen"));
+            //tournament.AddTeam(new Team("EC Welchenberg"));
 
-            tournament.CreateGames(true);
+            tournament.CreateGames();
 
         }
 

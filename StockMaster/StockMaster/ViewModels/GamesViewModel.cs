@@ -2,6 +2,7 @@
 using StockMaster.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace StockMaster.ViewModels
         int NumberOfCourts { get; set; }
         int NumberOfGameRounds { get; set; }
         int NumberOfPauseGames { get; set; }
+        ObservableCollection<Team> Teams { get; }
+        ICommand RemoveAllGamesCommand { get; }
+        ICommand CreateGamesCommand { get; }
     }
 
     public class GamesViewModel : BaseViewModel, IGamesViewModel
@@ -36,8 +40,6 @@ namespace StockMaster.ViewModels
             }
             set
             {
-                if (tournament.NumberOfCourts == value) return;
-
                 tournament.NumberOfCourts = value;
                 RaisePropertyChanged();
             }
@@ -54,8 +56,6 @@ namespace StockMaster.ViewModels
             }
             set
             {
-                if (tournament.NumberOfPauseGames == value) return;
-
                 tournament.NumberOfPauseGames = value;
                 RaisePropertyChanged();
             }
@@ -72,12 +72,20 @@ namespace StockMaster.ViewModels
             }
             set
             {
-                if (tournament.NumberOfGameRounds == value) return;
-
                 tournament.NumberOfGameRounds = value;
                 RaisePropertyChanged();
             }
         }
+
+
+        public ObservableCollection<Team> Teams
+        {
+            get
+            {
+                return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
+            }
+        }
+
 
 
         private ICommand _createGamesCommand;
@@ -88,9 +96,12 @@ namespace StockMaster.ViewModels
                 return _createGamesCommand ?? (_createGamesCommand = new RelayCommand(
                     (p) =>
                     {
-                        CreateGamesAction();
+                        Parallel.ForEach(tournament.Teams, (t) => t.ClearGames());
+                        tournament.CreateGames();
+                        RaisePropertyChanged(nameof(Teams));
                     }
                     ));
+
             }
         }
 
@@ -102,31 +113,34 @@ namespace StockMaster.ViewModels
                 return _removeAllGamesCommand ?? (_removeAllGamesCommand = new RelayCommand(
                     (p) =>
                     {
-                        Parallel.ForEach(tournament.Teams, (t) =>
-                        {
-                            t.Games.Clear();
-                        });
+                        Parallel.ForEach(tournament.Teams, (t) => t.ClearGames());
+                        tournament.RemoveAllVirtualTeams();
+                        RaisePropertyChanged(nameof(Teams));
                     }
                     ));
             }
         }
 
-
-        private void CreateGamesAction()
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class GamesDesignViewModel : IGamesViewModel
     {
+        private readonly Tournament t = new Tournament();
+
+
         public GamesDesignViewModel()
         {
-
+            t.CreateGames();
         }
 
         public int NumberOfCourts { get; set; } = 4;
         public int NumberOfPauseGames { get; set; } = 1;
         public int NumberOfGameRounds { get; set; } = 1;
+
+        public ObservableCollection<Team> Teams { get { return new ObservableCollection<Team>(t.Teams.Where(t => !t.IsVirtual)); } }
+
+        public ICommand RemoveAllGamesCommand { get; }
+        public ICommand CreateGamesCommand { get; }
+
     }
 }

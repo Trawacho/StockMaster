@@ -16,9 +16,11 @@ namespace StockMaster.Output.TurnCards
 
         private FixedPage GetNewPage(Size pageSize)
         {
-            FixedPage page = new FixedPage();
-            page.Width = pageSize.Width;
-            page.Height = pageSize.Height;
+            FixedPage page = new FixedPage
+            {
+                Width = pageSize.Width,
+                Height = pageSize.Height
+            };
             return page;
         }
 
@@ -58,11 +60,11 @@ namespace StockMaster.Output.TurnCards
                     Stretch = Stretch.Fill,
                     Stroke = Brushes.Black,
                     StrokeThickness = 1,
-                    Margin = new Thickness(0, pxConverter.CmToPx(0.75), 0, 0)
+                    Margin = new Thickness(0, PixelConverter.CmToPx(0.75), 0, 0)
                 });   
                 
                 //Das Panel braucht nach unten noch ein wenig Abstand
-                panel.Margin = new Thickness(0, 0, 0, pxConverter.CmToPx(0.75));
+                panel.Margin = new Thickness(0, 0, 0, PixelConverter.CmToPx(0.75));
 
                 teamPanels.Add(panel);
             }
@@ -81,8 +83,8 @@ namespace StockMaster.Output.TurnCards
                     var newPage = GetNewPage(document.DocumentPaginator.PageSize);
 
                     //Wenn die aktuelle Höhe + die neue Höhe > seiten-Höhe
-                    FixedPage.SetTop(pagePanel, pxConverter.CmToPx(1));
-                    FixedPage.SetLeft(pagePanel, pxConverter.CmToPx(0.7));
+                    FixedPage.SetTop(pagePanel, PixelConverter.CmToPx(1));
+                    FixedPage.SetLeft(pagePanel, PixelConverter.CmToPx(0.7));
                     newPage.Children.Add(pagePanel);
 
                     PageContent content = new PageContent();
@@ -97,7 +99,7 @@ namespace StockMaster.Output.TurnCards
             return document;
         }
 
-        private List<StackPanel> teamPanels = new List<StackPanel>();
+        private readonly List<StackPanel> teamPanels = new List<StackPanel>();
 
     }
 

@@ -8,7 +8,7 @@ namespace StockMaster.Output.TurnCards
 {
     public class SpiegelHeader : SpiegelGrid
     {
-        private FontFamily fnt = new FontFamily("Consolas");
+        private readonly FontFamily fnt = new FontFamily("Consolas");
 
         public string StartNummer { get; set; }
         public SpiegelHeader(Team team)

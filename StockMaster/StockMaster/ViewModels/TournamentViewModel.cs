@@ -129,6 +129,7 @@ namespace StockMaster.ViewModels
 
                 Tournament.IsDirectionOfCourtsFromRightToLeft = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged(nameof(DirectionOfCourtsDesctiption));
             }
         }
 

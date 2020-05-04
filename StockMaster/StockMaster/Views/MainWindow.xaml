@@ -6,7 +6,7 @@
         xmlns:converters="clr-namespace:StockMaster.Converters"
         xmlns:viewmodels="clr-namespace:StockMaster.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="640"
+        Title="MainWindow" Height="1024" Width="1280"
         WindowStartupLocation="CenterOwner"
         WindowStyle="SingleBorderWindow"
         FontFamily="Verdana" >
@@ -15,9 +15,9 @@
         <converters:TupleValue_Team_Converter x:Key="TVC"/>
     </Window.Resources>
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <viewmodels:MainViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <DockPanel >
         <Menu DockPanel.Dock="Top" Padding="5">
@@ -59,6 +59,7 @@
                     Command="{Binding Path=ShowTeamsViewCommand}"
                     Margin="10,5"/>
             <Button Content="Spiele" 
+                    Command="{Binding Path=ShowGamesViewCommand}"
                     Margin="10,5"/>
             <Button Content="Live Ergebnisse" 
                     Margin="10,5"/>

@@ -27,7 +27,7 @@ namespace StockMaster.ViewModels
                 },
                 (o) =>
                 {
-                    return Teams.Count(t=> !t.IsVirtual) < 15;
+                    return Teams.Count(t => !t.IsVirtual) < 15;
                 }
                 );
 
@@ -42,7 +42,7 @@ namespace StockMaster.ViewModels
                 }
                 );
 
-            tournament.Teams.PropertyChanged += Teams_PropertyChanged;
+            //tournament.x_Teams.PropertyChanged += Teams_PropertyChanged;
         }
 
         private void Teams_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -64,19 +64,24 @@ namespace StockMaster.ViewModels
 
         private void RemoveTeamAction()
         {
-            tournament.Teams.Remove(SelectedTeam);
-           // RaisePropertyChanged(nameof(Teams));
+            tournament.RemoveTeam(SelectedTeam);
+            //tournament.x_Teams.Remove(SelectedTeam);
+            RaisePropertyChanged(nameof(Teams));
         }
 
 
         public ICommand AddTeamCommand { get; }
         private void AddTeamAction()
         {
-            tournament.Teams.Add(new Team
+            tournament.AddTeam(new Team()
             {
-                TeamName = "default"
+                TeamName = $"default {tournament.Teams.Count + 1}"
             });
-          //  RaisePropertyChanged(nameof(Teams));
+            //tournament.x_Teams.Add(new Team
+            //{
+            //    TeamName = "default"
+            //});
+            RaisePropertyChanged(nameof(Teams));
         }
     }
 
