@@ -12,6 +12,7 @@ namespace StockMaster.BaseClasses
     {
         private int roundOfGame;
         private int gameNumber;
+        private int gameNumberOverall;
         private int courtNumber;
         private bool startOfPlayTeam1;
 
@@ -72,6 +73,20 @@ namespace StockMaster.BaseClasses
                     return;
 
                 gameNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Nummer des Spiels über alle Runden hinweg
+        /// </summary>
+        public int GameNumberOverAll
+        {
+            get => gameNumberOverall;
+            set
+            {
+                if (gameNumberOverall == value) return;
+                gameNumberOverall = value;
                 RaisePropertyChanged();
             }
         }
@@ -249,7 +264,7 @@ namespace StockMaster.BaseClasses
 
         public override string ToString()
         {
-            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber} -- {TeamA.StartNumber} : {TeamB.StartNumber}    T1A:{StartOfPlayTeamA}     P:{IsPauseGame} ";
+            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber}({GameNumberOverAll}) -- {TeamA.StartNumber} : {TeamB.StartNumber}    T1A:{StartOfPlayTeamA}     P:{IsPauseGame} ";
         }
 
 

@@ -6,8 +6,13 @@
         xmlns:converters="clr-namespace:StockMaster.Converters"
         xmlns:viewmodels="clr-namespace:StockMaster.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1024" Width="1280"
-        WindowStartupLocation="CenterOwner"
+        d:DataContext="{d:DesignInstance 
+                            Type=viewmodels:MainViewModel, 
+                            IsDesignTimeCreatable=True}" 
+        d:DesignHeight ="1024"
+        d:DesignWidth="1280"
+        Title="StockMaster" Height="1024" Width="1280"
+        WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         FontFamily="Verdana" >
 
@@ -29,20 +34,13 @@
                 <MenuItem Header="Beenden" Command="{Binding Path=ExitApplicationCommand}"/>
             </MenuItem>
             <MenuItem Header="Extras">
-                <MenuItem Header="Live Ergebnisse..."
-                          Command="{Binding Path=ShowLiveResultCommand}"/>
-                <MenuItem Header="Listener On/Off"/>
+                <MenuItem Header="Live Ergebnisse...">
+                    <MenuItem Header="{Binding Path=UdpButtonContent, Mode=OneWay}" 
+                              Command="{Binding Path=StartStopUdpReceiverCommand}"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
 
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button Content="Show LiveView" 
-                    Command="{Binding ShowLiveResultCommand}"    
-                    HorizontalAlignment="Left"/>
-            <Button Content="{Binding Path=UdpButtonContent}" 
-                    Command="{Binding Path=StartStopUdpReceiverCommand}" 
-                    HorizontalAlignment="Left"/>
-        </StackPanel>
 
         <StackPanel DockPanel.Dock="Left" Margin="5" Background="#FF0E3A59">
             <StackPanel.Resources>
@@ -61,7 +59,8 @@
             <Button Content="Spiele" 
                     Command="{Binding Path=ShowGamesViewCommand}"
                     Margin="10,5"/>
-            <Button Content="Live Ergebnisse" 
+            <Button Content="Live Ergebnisse"
+                    Command="{Binding Path=ShowLiveResultCommand}"
                     Margin="10,5"/>
 
         </StackPanel>

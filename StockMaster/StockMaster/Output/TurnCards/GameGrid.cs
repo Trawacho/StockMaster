@@ -1,19 +1,15 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Converters;
 using System.Windows.Media;
+using System.Linq;
 
 namespace StockMaster.Output.TurnCards
 {
     public class GameGrid : SpiegelGrid
     {
-        public string SpielNummer { get; set; }
-        public string Bahn { get; set; }
-        public string Anspiel { get; set; }
-        public string Gegner { get; set; }
-
         public GameGrid(Game game, int startNumber)
         {
-            string NumberOfGame = game.GameNumber.ToString();
+            string NumberOfGame = game.GameNumberOverAll.ToString();
             string NumberOfArea = game.CourtNumber.ToString();
             string Opponent = startNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
             string StartOfGame = game.StartOfPlayTeamA ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
@@ -26,7 +22,7 @@ namespace StockMaster.Output.TurnCards
             if (game.IsPauseGame)
             {
                 //In Spalte 14 die Spielnummer eintragen
-                var b1 = new SpiegelFeld(game.GameNumber.ToString(), 0);
+                var b1 = new SpiegelFeld(NumberOfGame, 0);
                 SetColumn(b1, 14);
                 Children.Add(b1);
 

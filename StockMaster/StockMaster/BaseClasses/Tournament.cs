@@ -56,7 +56,7 @@ namespace StockMaster.BaseClasses
             {
                 return numberOfCourts;
             }
-            set
+            internal set
             {
                 if (numberOfCourts == value) return;
                 if (value < 1 | value > 7) return;
@@ -107,13 +107,14 @@ namespace StockMaster.BaseClasses
             {
                 if (numberOfPauseGames == value) return;
                 if (value < -1 || value > 2) return;
+                if (value == 1 && Teams?.Count(t => !t.IsVirtual) % 2 == 0) return;
 
                 numberOfPauseGames = value;
                 RaisePropertyChanged();
             }
         }
 
-      
+
 
         /// <summary>
         /// True, wenn bei einer Mehrfachrunde das Anspiel bei jeder Runde gewechselt wird
@@ -135,7 +136,18 @@ namespace StockMaster.BaseClasses
             DateOfTournament = DateTime.Now;
             this._teams = new List<Team>();
             this.Teams = _teams.AsReadOnly();
+            this.PropertyChanged += Tournament_PropertyChanged;
         }
+
+        private void Tournament_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Teams))
+            {
+                ReCalculateNumberOfCourts();
+            }
+        }
+
+
 
         #endregion
 
@@ -172,14 +184,25 @@ namespace StockMaster.BaseClasses
                     .ThenByDescending(d => d.StockPunkteDifferenz);
         }
 
+
+        private void ReCalculateNumberOfCourts()
+        {
+            NumberOfCourts = (Teams.Count(t => !t.IsVirtual) / 2);
+        }
+
+
         #endregion
 
-        public void AddVirtualTeam()
+        public void AddVirtualTeams(int count)
         {
-            AddTeam(new Team("Virtual Team")
+            for (int i = 0; i < count; i++)
             {
-                IsVirtual = true
-            });
+                AddTeam(new Team("Virtual Team")
+                {
+                    IsVirtual = true
+                }, 
+                i > 0);
+            }
         }
 
         internal void RemoveAllVirtualTeams()
@@ -194,8 +217,12 @@ namespace StockMaster.BaseClasses
         /// - Number of Courts is new Caluclated
         /// </summary>
         /// <param name="team"></param>
-        public void AddTeam(Team team)
+        /// <param name="force">TRUE, all virtual teams get deleted first</param>
+        public void AddTeam(Team team, bool force = false)
         {
+            if (!force)
+                RemoveAllVirtualTeams();
+
             Parallel.ForEach(_teams, (t) => t.ClearGames());
 
             ReOrganizeTeamStartNumbers();
@@ -255,7 +282,7 @@ namespace StockMaster.BaseClasses
             //Bei ungerade Zahl an Teams ein virtuelles Team hinzufügen
             if (Teams.Count % 2 == 1)
             {
-                AddVirtualTeam();
+                AddVirtualTeams(1);
             }
             else
             {
@@ -263,8 +290,7 @@ namespace StockMaster.BaseClasses
                 //Entweder kein Aussetzer oder ZWEI Aussetzer
                 if (NumberOfPauseGames == 2)
                 {
-                    AddVirtualTeam();
-                    AddVirtualTeam();
+                    AddVirtualTeams(2);
                 }
             }
 
@@ -280,7 +306,8 @@ namespace StockMaster.BaseClasses
                         TeamB = Teams.First(t => t.StartNumber == Teams.Count),
                         TeamA = Teams.First(t => t.StartNumber == i),
                         GameNumber = Teams.Count - i,
-                        RoundOfGame = spielRunde
+                        RoundOfGame = spielRunde,
+                        GameNumberOverAll = (spielRunde - 1) * (Teams.Count - 1) + (Teams.Count - i)
                     };
 
                     #region Bahn Berechnen
@@ -320,7 +347,8 @@ namespace StockMaster.BaseClasses
                         game = new Game
                         {
                             GameNumber = Teams.Count - i,
-                            RoundOfGame = spielRunde
+                            RoundOfGame = spielRunde,
+                            GameNumberOverAll = (spielRunde - 1) * (Teams.Count - 1) + (Teams.Count - i)
                         };
 
                         #region Team A festlegen

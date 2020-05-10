@@ -13,60 +13,27 @@ namespace StockMaster.Output.TurnCards
 {
     public class Spiegel
     {
-
-        private FixedPage GetNewPage(Size pageSize)
+        FixedDocument document;
+        public Spiegel()
         {
-            FixedPage page = new FixedPage
-            {
-                Width = pageSize.Width,
-                Height = pageSize.Height
-            };
-            return page;
+
+            
         }
 
-        public FixedDocument Document(Size sz, Tournament tournament)
+        public FixedDocument GetDocument(Size sz, Tournament tournament, bool printTeamName, bool concatRounds)
         {
-            var document = new FixedDocument();
-
+            document = new FixedDocument();
             document.DocumentPaginator.PageSize = sz;
 
-            foreach (var team in tournament.Teams.OrderBy(t=> t.StartNumber).Where(v => !v.IsVirtual) ) //Für jedes Team eine Spiegel-Karte
+            var teamPanels = new List<StackPanel>();
+
+            foreach (var team in tournament.Teams.Where(v => !v.IsVirtual)
+                                                 .OrderBy(t => t.StartNumber)) //Für jedes Team eine Spiegel-Karte
             {
-
-                //alles was eine Karte braucht, kommt in ein StackPanel
-                var panel = new StackPanel();   
-
-                //Überschhrift-Zeile mit Mannschaften
-                panel.Children.Add(new SpiegelHeader(team));
-
-                //Überschriften der Spalten
-                panel.Children.Add(new SpiegelHeaderGrid());
-
-                foreach (var game in team.Games.OrderBy(g=>g.GameNumber))
+                if (concatRounds)
                 {
-                    panel.Children.Add(new GameGrid(game, team.StartNumber));
+                    teamPanels.Add(GetTeamPanel(team, printTeamName));
                 }
-
-                //Eine Summenzeile
-                panel.Children.Add(new GameSummaryGrid());  
-
-                //Eine Linie zum Schneiden bzw Trennen zur nächsten Spiegelkarte
-                panel.Children.Add(new Line()
-                {
-                    X1 = 0,
-                    X2 = 1,
-                    Y1 = 0,
-                    Y2 = 0,
-                    Stretch = Stretch.Fill,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1,
-                    Margin = new Thickness(0, PixelConverter.CmToPx(0.75), 0, 0)
-                });   
-                
-                //Das Panel braucht nach unten noch ein wenig Abstand
-                panel.Margin = new Thickness(0, 0, 0, PixelConverter.CmToPx(0.75));
-
-                teamPanels.Add(panel);
             }
 
             var pagePanel = new StackPanel();
@@ -79,27 +46,67 @@ namespace StockMaster.Output.TurnCards
 
                 if (pagePanel.ActualHeight + teamPanel.ActualHeight > document.DocumentPaginator.PageSize.Height)
                 {
-                    //Neue Seite
-                    var newPage = GetNewPage(document.DocumentPaginator.PageSize);
-
-                    //Wenn die aktuelle Höhe + die neue Höhe > seiten-Höhe
-                    FixedPage.SetTop(pagePanel, PixelConverter.CmToPx(1));
-                    FixedPage.SetLeft(pagePanel, PixelConverter.CmToPx(0.7));
-                    newPage.Children.Add(pagePanel);
-
-                    PageContent content = new PageContent();
-                    ((IAddChild)content).AddChild(newPage);
-                    document.Pages.Add(content);
-
+                    SetPagePanelToDocument(pagePanel);
                     pagePanel = new StackPanel();
-
                 }
+            }
+            if (pagePanel.Children.Count > 0)
+            {
+                SetPagePanelToDocument(pagePanel);
             }
 
             return document;
         }
 
-        private readonly List<StackPanel> teamPanels = new List<StackPanel>();
+        private void SetPagePanelToDocument(StackPanel panel)
+        {
+            var newPage = GetNewPage(document.DocumentPaginator.PageSize);
+
+            //Wenn die aktuelle Höhe + die neue Höhe > seiten-Höhe
+            FixedPage.SetTop(panel, PixelConverter.CmToPx(1));
+            FixedPage.SetLeft(panel, PixelConverter.CmToPx(0.7));
+            newPage.Children.Add(panel);
+
+            PageContent content = new PageContent();
+            ((IAddChild)content).AddChild(newPage);
+            document.Pages.Add(content);
+        }
+
+        private FixedPage GetNewPage(Size pageSize)
+        {
+            FixedPage page = new FixedPage
+            {
+                Width = pageSize.Width,
+                Height = pageSize.Height
+            };
+            return page;
+        }
+
+        private StackPanel GetTeamPanel(Team team, bool printTeamName)
+        {
+            //alles was eine Karte braucht, kommt in ein StackPanel
+            var panel = new StackPanel();
+
+            //Überschhrift-Zeile mit Mannschaften
+            panel.Children.Add(new SpiegelHeader(team, printTeamName));
+            //Überschriften der Spalten
+            panel.Children.Add(new SpiegelHeaderGrid());
+
+            foreach (var game in team.Games.OrderBy(r => r.GameNumberOverAll))
+            {
+                panel.Children.Add(new GameGrid(game, team.StartNumber));
+            }
+
+            //Eine Summenzeile
+            panel.Children.Add(new GameSummaryGrid());
+            //Eine Linie zum Schneiden bzw Trennen zur nächsten Spiegelkarte
+            panel.Children.Add(Tools.CutterLine());
+            //Das Panel braucht nach unten noch ein wenig Abstand
+            panel.Margin = new Thickness(0, 0, 0, PixelConverter.CmToPx(0.75));
+
+            return panel;
+        }
+
 
     }
 

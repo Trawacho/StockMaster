@@ -8,25 +8,70 @@ namespace StockMaster.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+
+        #region Fields
+
         private readonly IDialogService dialogService;
 
         private NetworkService _NetworkService;
         private Tournament tournament;
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Holds the ViewModel for the UserControl in the mid of the page
+        /// </summary>
         public BaseViewModel ViewModel { get; set; }
 
+        /// <summary>
+        /// Action to Close the Application
+        /// </summary>
+        public Action ExitApplicationAction { get; set; }
 
+
+        /// <summary>
+        /// Content for the ListenerButton with state related content
+        /// </summary>
+        public string UdpButtonContent
+        {
+            get
+            {
+                if (_NetworkService == null)
+                    return "Start Listener";
+
+                return _NetworkService.IsRunning()
+                            ? "Stop Listener"
+                            : "Start Listener";
+            }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Parameterless Constructror for DesignView and as BaseConstructor
+        /// </summary>
         public MainViewModel()
         {
             CreateNewTournament();
             //this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
-
+        /// <summary>
+        /// Default-Constructor
+        /// </summary>
+        /// <param name="dialogService"></param>
         public MainViewModel(IDialogService dialogService) : this()
         {
             this.dialogService = dialogService;
         }
+
+        #endregion
+
+        #region Commands
 
         private ICommand _showLiveResultCommand;
         public ICommand ShowLiveResultCommand
@@ -59,7 +104,6 @@ namespace StockMaster.ViewModels
                                         () =>
                                         {
                                             tournament.RaisePropertyChanged("");
-                                            //RaisePropertyChanged(nameof(Ergebnisliste));
                                         });
                                     _NetworkService.Start();
                                 }
@@ -132,27 +176,14 @@ namespace StockMaster.ViewModels
                 return _exitApplicationCommand ?? (_exitApplicationCommand = new RelayCommand(
                     (p) =>
                     {
-                        ExitApplicationAction();  
+                        ExitApplicationAction();
                     }));
             }
         }
 
+        #endregion
 
-        public Action ExitApplicationAction { get; set; }
-
-
-        public string UdpButtonContent
-        {
-            get
-            {
-                if (_NetworkService == null)
-                    return "Start";
-
-                return _NetworkService.IsRunning() ? "Stop" : "Start";
-            }
-        }
-
-
+        #region Functions
 
         private void CreateNewTournament()
         {
@@ -176,6 +207,6 @@ namespace StockMaster.ViewModels
 
         }
 
-
+        #endregion
     }
 }

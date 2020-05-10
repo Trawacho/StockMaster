@@ -68,12 +68,15 @@
     <Compile Include="BaseClasses\Team.cs" />
     <Compile Include="Behaviours\SelectAllFocusBehavior.cs" />
     <Compile Include="Converters\GamesSortingConverter.cs" />
+    <Compile Include="Converters\NumberIsGreaterThenOneConverter.cs" />
+    <Compile Include="Converters\NumberIsEvenToBooleanConverter.cs" />
     <Compile Include="Converters\TeamToOpponentConverter.cs" />
     <Compile Include="Dialogs\DialogCloseRequestedEventArgs.cs" />
     <Compile Include="Dialogs\DialogService.cs" />
     <Compile Include="Dialogs\IDialog.cs" />
     <Compile Include="Dialogs\IDialogRequestClose.cs" />
     <Compile Include="Dialogs\IDialogService.cs" />
+    <Compile Include="Output\TurnCards\CutterLine.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />

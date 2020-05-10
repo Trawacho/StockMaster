@@ -20,6 +20,8 @@
         <converters:GamesSortingConverter x:Key="gamesSorter"/>
         <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
         <converters:TeamToOpponentConverter x:Key="teamToOpponentConverter"/>
+        <converters:NumberIsEvenToBooleanConverter x:Key="numberIsEvenToBoolenConverter"/>
+        <converters:NumberIsGreaterThenOneConverter x:Key="numberIsGreaterThenOneConverter"/>
 
         <CollectionViewSource x:Key="sortedTeams" Source="{Binding Path=Teams}">
             <CollectionViewSource.SortDescriptions >
@@ -41,7 +43,7 @@
             <RowDefinition />
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        
+
 
 
         <TreeView ItemsSource="{Binding Source={StaticResource sortedTeams}}"
@@ -66,15 +68,15 @@
                         <TextBlock Text="{Binding RoundOfGame}"/>
                         <TextBlock Text=" - Spiel: " />
                         <TextBlock Text="{Binding GameNumber}"/>
-                       
-                        
+
+
                         <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsNotPauseGame, Converter={StaticResource boolToVisibilityConverter}}">
                             <TextBlock Text=" - Bahn: " />
                             <TextBlock Text="{Binding CourtNumber}"/>
                             <TextBlock Text=" - Anspiel: " />
                             <TextBlock Text="{Binding Path=StartingTeam.TeamName}"/>
                             <TextBlock Text=" - Gegner: " />
-                           
+
                             <TextBlock>
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource teamToOpponentConverter}">
@@ -100,13 +102,13 @@
 
             </TreeView.Resources>
         </TreeView>
-        
+
         <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" Margin="20">
             <Button Content="Erzeuge Spiele" Command="{Binding Path=CreateGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
             <Button Content="Lösche alle Spiele" Command="{Binding Path=RemoveAllGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
         </StackPanel>
 
-        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+        <Grid Grid.Row="0" Grid.Column="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -134,12 +136,32 @@
 
             <Label Content="Anzahl der Spielrunden:" Grid.Row="0" Grid.Column="0"/>
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=NumberOfGameRounds, Mode=TwoWay}"/>
+
             <Label Content="Anzahl der Bahnen:" Grid.Row="1" Grid.Column="0" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=NumberOfCourts, Mode=TwoWay}"/>
-            <Label Content="Anzahl der Aussetzer:" Grid.Row="2" Grid.Column="0" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=NumberOfPauseGames, Mode=TwoWay}"/>
+            <Label Grid.Row="1" Grid.Column="1" 
+                   Content="{Binding Path=NumberOfCourts, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   HorizontalContentAlignment="Left"
+                   HorizontalAlignment="Left"/>
+
+            <Label Content="Anzahl der Aussetzer:"
+                   Grid.Row="2" Grid.Column="0"/>
+            <TextBox Text="{Binding Path=NumberOfPauseGames, Mode=TwoWay}"
+                     Grid.Row="2" Grid.Column="1"
+                     IsEnabled="{Binding Path=RealTeamsCount, Converter={StaticResource numberIsEvenToBoolenConverter}}"
+                     ToolTip="0 oder 2 Aussetzer"/>
 
         </Grid>
 
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Button Content="Spiegel drucken" Margin="10" Padding="10"
+                    Command="{Binding Path=PrintTurnCardsCommand}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2">
+            <CheckBox Content="Alle Runden zusammenfassen" Margin="10"
+                      IsChecked="{Binding Path=ConcatRoundsOnOutput}"
+                      IsEnabled="{Binding Path=NumberOfGameRounds, Converter={StaticResource numberIsGreaterThenOneConverter}}"/>
+            <CheckBox Content="Teamnamen auf Spiegel drucken" Margin="10"
+                      IsChecked="{Binding Path=TeamNameOnTurnCards}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
