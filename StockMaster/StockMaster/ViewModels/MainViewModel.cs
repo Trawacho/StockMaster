@@ -56,8 +56,8 @@ namespace StockMaster.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            this.tournament = TournamentExtension.CreateNewTournament(true);
-            //this.tournament = new Tournament();
+            // this.tournament = TournamentExtension.CreateNewTournament(true);
+            this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
         /// <summary>
@@ -163,8 +163,11 @@ namespace StockMaster.ViewModels
                     {
                         this.ViewModel = new GamesViewModel(tournament);
                         RaisePropertyChanged(nameof(ViewModel));
-                    }
-                    ));
+                    },
+                    (p) =>
+                    {
+                        return tournament.Teams.Count > 0;
+                    }));
             }
         }
 
@@ -178,6 +181,10 @@ namespace StockMaster.ViewModels
                     {
                         this.ViewModel = new ResultsViewModel(tournament);
                         RaisePropertyChanged(nameof(ViewModel));
+                    },
+                    (p) =>
+                    {
+                        return tournament.CountOfGames() > 0;
                     }));
             }
         }
@@ -197,6 +204,6 @@ namespace StockMaster.ViewModels
 
         #endregion
 
-        
+
     }
 }

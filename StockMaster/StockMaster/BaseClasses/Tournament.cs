@@ -151,6 +151,11 @@ namespace StockMaster.BaseClasses
             return Teams.SelectMany(g => g.Games);
         }
 
+        internal int CountOfGames()
+        {
+            return GetAllGames().ToList().Count();
+        }
+
         public void DeleteAllTurnsInEveryGame()
         {
             Parallel.ForEach(GetAllGames(), (g) =>

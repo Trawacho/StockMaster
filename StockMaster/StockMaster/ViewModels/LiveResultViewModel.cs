@@ -17,6 +17,8 @@ namespace StockMaster.ViewModels
     public interface ILiveResultViewModel
     {
         ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste { get; }
+        ICommand RefreshCommand { get; }
+        ICommand CloseCommand { get; }
     }
 
 
@@ -55,6 +57,18 @@ namespace StockMaster.ViewModels
             }
         }
 
+        private ICommand _refreshCommand;
+        public ICommand RefreshCommand
+        {
+            get
+            {
+                return _refreshCommand ?? (_refreshCommand = new RelayCommand(
+                    (p) =>
+                    {
+                        RaisePropertyChanged(nameof(Ergebnisliste));
+                    }));
+            }
+        }
 
         public ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste
         {
@@ -95,6 +109,9 @@ namespace StockMaster.ViewModels
         {
             get;
         }
+
+        public ICommand CloseCommand { get; }
+        public ICommand RefreshCommand { get; }
     }
 
 

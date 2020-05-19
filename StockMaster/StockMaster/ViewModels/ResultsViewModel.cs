@@ -11,15 +11,18 @@ namespace StockMaster.ViewModels
     interface IResultsViewModel
     {
         ObservableCollection<Team> Teams { get; }
+        ObservableCollection<Game> Games { get; }
         Team SelectedTeam { get; set; }
+        Game SelectedGame { get; set; }
         List<PointPerTeamAndGame> PointsOfSelectedTeam { get; }
+        List<PointPerGame> PointsPerGameList { get; set; }
 
-        ICommand SavePointsFromTeamCommand { get; }
     } //IResultsViewModel
 
     public class ResultsViewModel : BaseViewModel, IResultsViewModel
     {
         private readonly Tournament tournament;
+
         public ResultsViewModel(Tournament tournament)
         {
             this.tournament = tournament;
@@ -33,51 +36,78 @@ namespace StockMaster.ViewModels
             }
         }
 
-        private Team _selectedTeam;
+        public ObservableCollection<Game> Games
+        {
+            get
+            {
+                return new ObservableCollection<Game>(tournament.GetAllGames()
+                                                                .Where(g => g.IsNotPauseGame)
+                                                                .OrderBy(o => o.GameNumberOverAll)
+                                                                .GroupBy(x => x.GameNumberOverAll)
+                                                                .Select(group => group.First()));
+            }
+        }
 
+        private Team _selectedTeam;
         public Team SelectedTeam
         {
             get
             {
-                return _selectedTeam;
+                return _selectedTeam ?? (SelectedTeam = Teams[0]);
             }
             set
             {
                 if (_selectedTeam == value) return;
 
                 _selectedTeam = value;
+
+
                 SetPointsOfSelectedTeam();
                 RaisePropertyChanged();
             }
         }
 
+        private Game _selectedGame;
+        public Game SelectedGame
+        {
+            get
+            {
+                return _selectedGame ?? (SelectedGame = Games[0]);     
+            }
+            set
+            {
+                if (_selectedGame == value) return;
+
+                _selectedGame = value;
+
+                SetPointsPerGame();
+                RaisePropertyChanged();
+            }
+        }
+
+        private void SetPointsPerGame()
+        {
+
+            this.PointsPerGameList = new List<PointPerGame>();
+            foreach (var game in tournament.GetAllGames()
+                                        .Where(g => g.RoundOfGame == SelectedGame.RoundOfGame
+                                                 && g.GameNumber == SelectedGame.GameNumber
+                                                 && g.IsNotPauseGame)
+                                        .Distinct<Game>()
+                                        .OrderBy(o => o.CourtNumber))
+            {
+                PointsPerGameList.Add(new PointPerGame(game));
+            }
+
+            RaisePropertyChanged(nameof(PointsPerGameList));
+        }
+
         private void SetPointsOfSelectedTeam()
         {
             this.PointsOfSelectedTeam = new List<PointPerTeamAndGame>();
-            if (SelectedTeam != null)
+            foreach (var game in SelectedTeam.Games.OrderBy(g => g.GameNumberOverAll))
             {
-                foreach (var game in SelectedTeam.Games.OrderBy(g => g.GameNumberOverAll))
-                {
-                    PointsOfSelectedTeam.Add(
-                        new PointPerTeamAndGame()
-                        {
-                            GameNumber = game.GameNumberOverAll,
-
-                            StockPunkte = (SelectedTeam == game.TeamA)
-                                            ? game.Turns.First(t => t.Number == 1).PointsTeamA
-                                            : game.Turns.First(t => t.Number == 1).PointsTeamB,
-
-                            StockPunkteGegner = (SelectedTeam == game.TeamA)
-                                            ? game.Turns.First(t => t.Number == 1).PointsTeamB
-                                            : game.Turns.First(t => t.Number == 1).PointsTeamA,
-                            Gegner = (SelectedTeam == game.TeamA)
-                                            ? game.TeamB.TeamName
-                                            : game.TeamA.TeamName,
-
-                            IsPauseGame = game.IsPauseGame
-                        }
-                        );
-                }
+                PointsOfSelectedTeam.Add(new PointPerTeamAndGame(game, SelectedTeam));
             }
 
             RaisePropertyChanged(nameof(PointsOfSelectedTeam));
@@ -85,27 +115,7 @@ namespace StockMaster.ViewModels
 
         public List<PointPerTeamAndGame> PointsOfSelectedTeam { get; set; }
 
-        #region Commands
-
-        private ICommand savePointsFromTeamCommand;
-        public ICommand SavePointsFromTeamCommand
-        {
-            get
-            {
-                return savePointsFromTeamCommand ?? (savePointsFromTeamCommand = new RelayCommand(
-                    (p) =>
-                    {
-                        foreach (var item in PointsOfSelectedTeam)
-                        {
-                            var game = SelectedTeam.Games.First(g => g.GameNumberOverAll == item.GameNumber);
-                            game.AddTurn1_Value(SelectedTeam, item.StockPunkte, item.StockPunkteGegner);
-                        }
-                    }));
-            }
-        }
-
-        #endregion //Commands
-
+        public List<PointPerGame> PointsPerGameList { get; set; }
 
     } //class ResultsViewModel
 
@@ -116,6 +126,8 @@ namespace StockMaster.ViewModels
         public ResultsDesignViewModel()
         {
             this.tournament = new Tournament();
+            this.SelectedGame = tournament.GetAllGames().First(g => g.GameNumberOverAll == 1);
+            //this.SelectedTeam = tournament.Teams[0];
         }
 
         public ObservableCollection<Team> Teams
@@ -125,32 +137,65 @@ namespace StockMaster.ViewModels
                 return new ObservableCollection<Team>(tournament.Teams);
             }
         }
+
+        public ObservableCollection<Game> Games
+        {
+            get
+            {
+                return new ObservableCollection<Game>(tournament.GetAllGames()
+                    .Where(g => g.IsNotPauseGame)
+                    .OrderBy(o => o.GameNumberOverAll)
+                    .ThenBy(p => p.CourtNumber));
+            }
+        }
+
         public Team SelectedTeam { get; set; }
 
-        public List<PointPerTeamAndGame> PointsOfSelectedTeam { get; set; }
+        public Game SelectedGame { get; set; }
 
-        public ICommand SavePointsFromTeamCommand { get; }
+        public List<PointPerTeamAndGame> PointsOfSelectedTeam { get; set; }
+        public List<PointPerGame> PointsPerGameList { get; set; }
+
     } //ResultsDesignViewModel
 
     public class PointPerTeamAndGame : TBaseClass
     {
-        private int stockPunkte;
-        private int stockPunkteGegner;
-        private string gegner;
+        private readonly Game game;
+        private readonly Team selectedTeam;
+        public PointPerTeamAndGame(Game game, Team selectedTeam)
+        {
+            this.game = game;
+            this.selectedTeam = selectedTeam;
+        }
 
-        public int GameNumber { get; set; }
+        public int GameNumber
+        {
+            get
+            {
+                return game.GameNumberOverAll;
+            }
+        }
         public int StockPunkte
         {
             get
             {
-                return stockPunkte;
+                return (selectedTeam == game.TeamA)
+                            ? game.Turns.First(t => t.Number == 0).PointsTeamA
+                            : game.Turns.First(t => t.Number == 0).PointsTeamB;
             }
             set
             {
-                if (IsPauseGame)
-                    stockPunkte = 0;
+                if (IsPauseGame) return;
+                //stockPunkte = 0;
+                if (selectedTeam == game.TeamA)
+                {
+                    game.Turns.First(t => t.Number == 0).PointsTeamA = value;
+                }
                 else
-                    stockPunkte = value;
+                {
+                    game.Turns.First(t => t.Number == 0).PointsTeamB = value;
+
+                }
 
                 RaisePropertyChanged();
             }
@@ -159,31 +204,110 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return stockPunkteGegner;
-
+                return (selectedTeam == game.TeamA)
+                                    ? game.Turns.First(t => t.Number == 0).PointsTeamB
+                                    : game.Turns.First(t => t.Number == 0).PointsTeamA;
             }
             set
             {
-                if (IsPauseGame)
-                    stockPunkteGegner = 0;
+                if (IsPauseGame) return;
+                //stockPunkte = 0;
+                if (selectedTeam == game.TeamA)
+                {
+                    game.Turns.First(t => t.Number == 0).PointsTeamB = value;
+                }
                 else
-                    stockPunkteGegner = value;
+                {
+                    game.Turns.First(t => t.Number == 0).PointsTeamA = value;
+
+                }
 
                 RaisePropertyChanged();
             }
         }
-        public bool IsPauseGame { get; set; }
+        public bool IsPauseGame
+        {
+            get
+            {
+                return game.IsPauseGame;
+            }
+        }
+
         public string Gegner
         {
             get
             {
                 if (IsPauseGame)
                     return "Setzt aus";
-                return gegner;
 
+                if (selectedTeam == game.TeamA)
+                    return game.TeamB.TeamName;
+
+                return game.TeamA.TeamName;
             }
-            set => gegner = value;
-
         }
+
     }  //PointPerTeamAndGame
+
+    public class PointPerGame : TBaseClass
+    {
+        private readonly Game game;
+        public PointPerGame(Game game)
+        {
+            this.game = game;
+        }
+
+
+        public int Bahn
+        {
+            get
+            {
+                return game.CourtNumber;
+            }
+        }
+        public string TeamNameA
+        {
+            get
+            {
+                return game.TeamA.TeamName;
+            }
+        }
+
+        public int StockPunkteA
+        {
+            get
+            {
+                return game.Turns.First(t => t.Number == 0).PointsTeamA;
+            }
+            set
+            {
+                game.Turns.First(t => t.Number == 0).PointsTeamA = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        public string TeamNameB
+        {
+            get
+            {
+                return game.TeamB.TeamName;
+            }
+        }
+
+
+        public int StockPunkteB
+        {
+            get
+            {
+                return game.Turns.First(t => t.Number == 0).PointsTeamB;
+            }
+            set
+            {
+                game.Turns.First(t => t.Number == 0).PointsTeamB = value;
+                RaisePropertyChanged();
+            }
+        }
+
+    } //PointPerGame
 }

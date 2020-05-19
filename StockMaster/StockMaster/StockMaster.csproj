@@ -69,9 +69,11 @@
     <Compile Include="BaseClasses\Team.cs" />
     <Compile Include="BaseClasses\TournamentExtension.cs" />
     <Compile Include="Behaviours\SelectAllFocusBehavior.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\GamesSortingConverter.cs" />
     <Compile Include="Converters\NumberIsGreaterThenOneConverter.cs" />
     <Compile Include="Converters\NumberIsEvenToBooleanConverter.cs" />
+    <Compile Include="Converters\ValueNotNullToVisibilityConverter.cs" />
     <Compile Include="Converters\TeamToOpponentConverter.cs" />
     <Compile Include="Dialogs\DialogCloseRequestedEventArgs.cs" />
     <Compile Include="Dialogs\DialogService.cs" />

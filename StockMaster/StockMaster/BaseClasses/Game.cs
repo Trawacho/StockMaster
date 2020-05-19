@@ -131,26 +131,6 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        internal void AddTurn1_Value(Team team, int stockPunkte, int stockPunkteGegner)
-        {
-            if (Turns.Count == 0) Turns.Push(new Turn(1));
-
-            if (TeamA.Equals(team))
-            {
-                Turns.First(t => t.Number == 1).PointsTeamA = stockPunkte;
-                Turns.First(t => t.Number == 1).PointsTeamB = stockPunkteGegner;
-            }
-            else if (TeamB.Equals(team))
-            {
-                Turns.First(t => t.Number == 1).PointsTeamB = stockPunkte;
-                Turns.First(t => t.Number == 1).PointsTeamA = stockPunkteGegner;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         /// <summary>
         /// Das anspielende Team
         /// </summary>
@@ -210,7 +190,15 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return Turns?.Sum(x => x.PointsTeamB) ?? 0;
+                var turn0 = Turns.First(t => t.Number == 0);
+                if (turn0.PointsTeamA + turn0.PointsTeamB > 0)
+                {
+                    return turn0.PointsTeamB;
+                }
+                else
+                {
+                    return Turns?.Sum(x => x.PointsTeamB) ?? 0;
+                }
             }
         }
 
@@ -221,7 +209,18 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return Turns?.Sum(x => x.PointsTeamA) ?? 0;
+                //In Kehre 0 stehen die manuellen Eingaben. In allen anderen Kehren die Werte von dem NetworkService.
+                //Wenn die Werte in Kehre 0 größer 0 sind, werden auch diese genommen und die Werte aus dem NetworkService ignoriert
+                var turn0 = Turns.First(t => t.Number == 0);
+                if(turn0.PointsTeamA + turn0.PointsTeamB > 0)
+                {
+                    return turn0.PointsTeamA;
+                }
+                else
+                {
+                    return Turns?.Sum(x => x.PointsTeamA) ?? 0;
+
+                }
             }
         }
 
@@ -233,6 +232,9 @@ namespace StockMaster.BaseClasses
         {
             get
             {
+                if (StockPointsTeamA == 0 && StockPointsTeamB == 0)
+                    return 0;
+
                 if (Turns.Count == 0)
                     return 0;
 
@@ -253,6 +255,9 @@ namespace StockMaster.BaseClasses
         {
             get
             {
+                if (StockPointsTeamA == 0 && StockPointsTeamB == 0)
+                    return 0;
+
                 if (Turns.Count == 0)
                     return 0;
 
@@ -277,7 +282,7 @@ namespace StockMaster.BaseClasses
         {
             RoundOfGame = 1;
             this.Turns = new ConcurrentStack<Turn>();
-            this.Turns.Push(new Turn(1));
+            this.Turns.Push(new Turn(0));   //Default-Kehere für manuelle Eingabe
         }
 
 
@@ -288,6 +293,17 @@ namespace StockMaster.BaseClasses
         public override string ToString()
         {
             return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber}({GameNumberOverAll}) -- {TeamA.StartNumber} : {TeamB.StartNumber}    T1A:{StartOfPlayTeamA}     P:{IsPauseGame} ";
+        }
+
+        /// <summary>
+        /// Returns RoundOfGame and GameNumber as a string
+        /// </summary>
+        public string GameName
+        {
+            get
+            {
+                return $"Runde: {RoundOfGame} | Spiel: {GameNumber}";
+            }
         }
 
 
