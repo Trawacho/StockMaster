@@ -59,6 +59,9 @@
             <Button Content="Spiele" 
                     Command="{Binding Path=ShowGamesViewCommand}"
                     Margin="10,5"/>
+            <Button Content="Ergebnisse" 
+                    Command="{Binding Path=ShowResultsViewCommand}"
+                    Margin="10,5"/>
             <Button Content="Live Ergebnisse"
                     Command="{Binding Path=ShowLiveResultCommand}"
                     Margin="10,5"/>

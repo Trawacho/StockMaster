@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StockMaster.Output"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="DocumentViewer" Height="450" Width="800">
     <DocumentViewer Name="_viewer"/>
 </Window>

@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="StockMaster.Output.Results.ucResult"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StockMaster.Output.Results"
+             mc:Ignorable="d" 
+             Background="White">
+
+    <StackPanel Orientation="Vertical" Width="19cm" Height="28cm">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label x:Name="ArtDesWettbewerbs"/>
+            <Label x:Name="Austragungsort"/>
+            <Label x:Name="Veranstalter"/>
+            <Label x:Name="Durchführer"/>
+
+        </Grid>
+
+        <Label Content="Ergebnisliste" HorizontalContentAlignment="Center"
+               FontSize="20"/>
+
+        <StackPanel Orientation="Vertical" Margin="1cm" x:Name="spTeams">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" FontWeight="Bold"/>
+                <Label Content="Punkte" Width="2cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                <Label Content="Stockpunkte" Width="3cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                <Label Content="Note" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" />
+                <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" />
+                <Label Content="Punkte" Width="2cm" HorizontalContentAlignment="Center" />
+                <Label Content="Stockpunkte" Width="3cm" HorizontalContentAlignment="Center" />
+                <Label Content="Note" Width="1.5cm" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+
+    </StackPanel>
+</UserControl>

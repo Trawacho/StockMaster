@@ -18,6 +18,9 @@
             <views:GamesView />
         </DataTemplate>
 
+        <DataTemplate x:Name="resultsViewTemplate" DataType="{x:Type viewmodels:ResultsViewModel}">
+            <views:ResultsView />
+        </DataTemplate>
 
     </Application.Resources>
 </Application>

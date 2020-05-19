@@ -11,12 +11,15 @@ namespace StockMaster.Output.TurnCards
         private readonly FontFamily fnt = new FontFamily("Consolas");
 
         public string StartNummer { get; set; }
-        public SpiegelHeader(Team team, bool printTeamName)
+        public SpiegelHeader(Team team, bool printTeamName, bool kehren8):base(kehren8)
         {
+            int columnSpan = kehren8 ? 8 : 7;
+
             StartNummer = team.StartNumber.ToString();
 
             Margin = new Thickness(0, 0, 0, 5);
 
+            //StartNummer
             TextBlock textBlockStartnummer = new TextBlock()
             {
                 Text = string.Concat("Nr. ", StartNummer),
@@ -28,6 +31,7 @@ namespace StockMaster.Output.TurnCards
             SetColumn(textBlockStartnummer, 0);
             Children.Add(textBlockStartnummer);
 
+            //Moarschaft
             TextBlock textBlockMoarschaft = new TextBlock()
             {
                 Text =  "Moarschaft:",
@@ -42,6 +46,7 @@ namespace StockMaster.Output.TurnCards
             SetColumn(textBlockMoarschaft, 3);
             Children.Add(textBlockMoarschaft);
 
+            //TeamName oder nur Linie
             if (printTeamName)
             {
                 TextBlock textBlockTeamName = new TextBlock()
@@ -55,7 +60,7 @@ namespace StockMaster.Output.TurnCards
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Margin = new Thickness(5,0,0,0)
                 };
-                SetColumnSpan(textBlockTeamName, 7);
+                SetColumnSpan(textBlockTeamName, columnSpan);
                 SetColumn(textBlockTeamName, 6);
                 Children.Add(textBlockTeamName);
             }
@@ -73,11 +78,12 @@ namespace StockMaster.Output.TurnCards
                     X2 = 5,
                     Y2 = 0
                 };
-                SetColumnSpan(line, 7);
+                SetColumnSpan(line, columnSpan);
                 SetColumn(line, 6);
                 Children.Add(line);
             }
 
+            //Gegener
             TextBlock textBlockGegner = new TextBlock()
             {
                 Text = "Gegner",
@@ -87,14 +93,24 @@ namespace StockMaster.Output.TurnCards
                 TextAlignment = TextAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
             };
-            SetColumnSpan(textBlockGegner, 7);
+            SetColumnSpan(textBlockGegner, columnSpan);
             SetColumn(textBlockGegner, 14);
             Children.Add(textBlockGegner);
         }
 
-        public SpiegelHeader()
+        public SpiegelHeader(Team team, bool printTeamName, bool kehren8, int numberOfRound): this(team, printTeamName, kehren8)
         {
-            
+            TextBlock textBlockRound = new TextBlock()
+            {
+                Text = string.Concat("Runde: ", numberOfRound),
+                FontWeight = FontWeights.Bold,
+                FontSize = 12,
+                FontFamily = fnt
+            };
+            SetColumnSpan(textBlockRound, 2);
+            SetColumn(textBlockRound, 23);
+            Children.Add(textBlockRound);
         }
+        
     }
 }

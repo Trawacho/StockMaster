@@ -7,10 +7,17 @@ namespace StockMaster.Converters
 {
     class TupleValue_Team_Converter : IValueConverter
     {
+        /// <summary>
+        /// Returns a string from given ValueTuple as <int,Team> dependings on parameter
+        /// 
+        /// </summary>
+        /// <param name="value">ValueTuple<int, Team></param>
+        /// <param name="targetType">string</param>
+        /// <param name="parameter">TeamName, Platzierung, SpielPunkte, StockPunkte, StockNote, StockPunkteDifferenz</param>
+        /// <param name="culture">unused</param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var tt = value.GetType();
-
             if (value is ValueTuple<int, Team> t)
             {
                 string p = (string)parameter;

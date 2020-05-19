@@ -145,10 +145,25 @@
 
             <Label Content="Anzahl der Aussetzer:"
                    Grid.Row="2" Grid.Column="0"/>
-            <TextBox Text="{Binding Path=NumberOfPauseGames, Mode=TwoWay}"
-                     Grid.Row="2" Grid.Column="1"
-                     IsEnabled="{Binding Path=RealTeamsCount, Converter={StaticResource numberIsEvenToBoolenConverter}}"
-                     ToolTip="0 oder 2 Aussetzer"/>
+            <CheckBox Content="2 Aussetzer pro Mannschaft"
+                      ToolTip="Stanard ist kein Aussetzer"
+                      Grid.Row="2" Grid.Column="1"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      Margin="10"
+                      IsChecked="{Binding Path=IsNumberOfPause2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsEnabled="{Binding Path=RealTeamsCount, Converter={StaticResource numberIsEvenToBoolenConverter}}"/>
+            
+
+            <Label Content="Anzahl Kehren pro Spiel:"
+                   Grid.Row="3" Grid.Column="0"/>
+            <CheckBox Content="8 Kehren pro Spiel"
+                      ToolTip="Standard sind 6 Kehren"
+                      Margin="10"
+                      Grid.Row="3" Grid.Column="1"
+                      IsChecked="{Binding Path=Is8KehrenSpiel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"/>
 
         </Grid>
 

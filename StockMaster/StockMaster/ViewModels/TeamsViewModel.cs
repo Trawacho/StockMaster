@@ -1,5 +1,6 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Commands;
+using StockMaster.Output;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -12,6 +13,8 @@ namespace StockMaster.ViewModels
         ObservableCollection<Team> Teams { get; }
         ICommand AddTeamCommand { get; }
         ICommand RemoveTeamCommand { get; }
+
+        ICommand PrintQuittungenCommand { get; }
     }
 
     public class TeamsViewModel : BaseViewModel, ITeamsViewModel
@@ -42,7 +45,6 @@ namespace StockMaster.ViewModels
                 }
                 );
 
-            //tournament.x_Teams.PropertyChanged += Teams_PropertyChanged;
         }
 
         private void Teams_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -83,13 +85,33 @@ namespace StockMaster.ViewModels
             //});
             RaisePropertyChanged(nameof(Teams));
         }
+
+        private ICommand printQuittungenCommand;
+        public ICommand PrintQuittungenCommand
+        {
+            get
+            {
+                return printQuittungenCommand ?? (printQuittungenCommand = new RelayCommand(
+                    (p) =>
+                    {
+                        var x = new Output.Receipts.Receipt(tournament);
+                        PrintPreview printPreview = new PrintPreview();
+                        var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
+                        printPreview.Document = x.CreateReceipts(A4Size);
+                        printPreview.ShowDialog();
+                    }
+                    ));
+            }
+        }
     }
 
     public class TeamsDesignviewModel : ITeamsViewModel
     {
+        private Tournament t = TournamentExtension.CreateNewTournament(true);
         public TeamsDesignviewModel()
         {
-
+            SelectedTeam = t.Teams[3];
+            Teams = new ObservableCollection<Team>(t.Teams);
         }
         public ObservableCollection<Team> Teams { get; }
 
@@ -97,5 +119,6 @@ namespace StockMaster.ViewModels
 
         public ICommand AddTeamCommand { get; }
         public ICommand RemoveTeamCommand { get; }
+        public ICommand PrintQuittungenCommand { get; }
     }
 }

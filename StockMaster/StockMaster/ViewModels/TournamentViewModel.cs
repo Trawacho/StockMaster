@@ -11,6 +11,8 @@ namespace StockMaster.ViewModels
         string TournamentName { get; set; }
         DateTime DateOfTournament { get; set; }
 
+        EntryFee EntryFee { get; set; }
+
         bool IsDirectionOfCourtsFromRightToLeft { get; set; }
         string DirectionOfCourtsDesctiption { get; }
     }
@@ -116,6 +118,18 @@ namespace StockMaster.ViewModels
             }
         }
 
+        public EntryFee EntryFee
+        {
+            get
+            {
+                return Tournament.EntryFee;
+            }
+            set
+            {
+                Tournament.EntryFee = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public bool IsDirectionOfCourtsFromRightToLeft
         {
@@ -144,11 +158,11 @@ namespace StockMaster.ViewModels
         }
     }
 
-    public class TournamentDesignViewModel: ITournamentViewModel
+    public class TournamentDesignViewModel : ITournamentViewModel
     {
         public TournamentDesignViewModel()
         {
-
+            EntryFee = new EntryFee(30.00, "dreißig");
         }
 
         public string Venue { get; set; } = "Hankofen";
@@ -169,7 +183,9 @@ namespace StockMaster.ViewModels
                      : "1. Bahn links, weiter folgen rechts";
             }
         }
+
+        public EntryFee EntryFee { get; set; }
     }
 
-    
+
 }

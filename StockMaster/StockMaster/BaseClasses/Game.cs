@@ -29,9 +29,6 @@ namespace StockMaster.BaseClasses
             if (obj is Game game)
             {
                 return this.Equals(game);
-                //return (this.RoundOfGame == game.RoundOfGame
-                //      && this.CourtNumber == game.CourtNumber
-                //      && this.GameNumber == game.GameNumber);
             }
 
             return false;
@@ -134,6 +131,26 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        internal void AddTurn1_Value(Team team, int stockPunkte, int stockPunkteGegner)
+        {
+            if (Turns.Count == 0) Turns.Push(new Turn(1));
+
+            if (TeamA.Equals(team))
+            {
+                Turns.First(t => t.Number == 1).PointsTeamA = stockPunkte;
+                Turns.First(t => t.Number == 1).PointsTeamB = stockPunkteGegner;
+            }
+            else if (TeamB.Equals(team))
+            {
+                Turns.First(t => t.Number == 1).PointsTeamB = stockPunkte;
+                Turns.First(t => t.Number == 1).PointsTeamA = stockPunkteGegner;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Das anspielende Team
         /// </summary>
@@ -152,7 +169,12 @@ namespace StockMaster.BaseClasses
         /// <returns></returns>
         public Team GetOpponent(Team team)
         {
-            return team == TeamA ? TeamB : TeamA;
+            // return team == TeamA ? TeamB : TeamA;
+            return team == TeamA
+                         ? TeamB
+                         : team == TeamB
+                                 ? TeamA
+                                 : null;
         }
 
         /// <summary>
@@ -255,6 +277,7 @@ namespace StockMaster.BaseClasses
         {
             RoundOfGame = 1;
             this.Turns = new ConcurrentStack<Turn>();
+            this.Turns.Push(new Turn(1));
         }
 
 

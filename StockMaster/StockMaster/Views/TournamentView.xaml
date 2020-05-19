@@ -28,6 +28,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.Resources>
             <Style TargetType="{x:Type TextBox}">
@@ -45,13 +46,12 @@
                Grid.Row="1" Grid.Column="1"/>
         <TextBox Text="{Binding Path=TournamentName}"
                  Grid.Row="1" Grid.Column="2"/>
-        
+
         <Label Content="Veranstaltungsort:"
                Grid.Row="2" Grid.Column="1"/>
-        
         <TextBox Text="{Binding Path=Venue}"
                  Grid.Row="2" Grid.Column="2"/>
-        
+
         <Label Content="Veranstalter:"
                Grid.Row="3" Grid.Column="1"/>
         <TextBox Text="{Binding Path=Organizer}"
@@ -73,7 +73,7 @@
                     HorizontalAlignment="Left"
                     Width="250"
                     Margin="5"/>
-        
+
         <Label Content="Spielbahn Richtung:"
                Grid.Row="6" Grid.Column="1"
                HorizontalAlignment="Right"
@@ -86,5 +86,21 @@
                   VerticalContentAlignment="Center"
                   Margin="5"/>
 
+        <Label Content="Startgebühr:"
+               Grid.Column="1" Grid.Row="7"/>
+        <Grid   Grid.Row="7" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Wert in EUR:" Grid.Row="0" Grid.Column="0"/>
+            <TextBox Text="{Binding Path=EntryFee.Value}" Grid.Row="0" Grid.Column="1" Width="100" HorizontalContentAlignment="Center"/>
+            <Label x:Name="labelFee" Content="in Worten:" Grid.Row="1" Grid.Column="0"/>
+            <TextBox Text="{Binding Path=EntryFee.Verbal}" Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center"/>
+        </Grid>
     </Grid>
 </UserControl>

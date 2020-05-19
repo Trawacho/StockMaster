@@ -56,7 +56,7 @@ namespace StockMaster.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            CreateNewTournament();
+            this.tournament = TournamentExtension.CreateNewTournament(true);
             //this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
@@ -168,6 +168,20 @@ namespace StockMaster.ViewModels
             }
         }
 
+        private ICommand _showResultsViewCommand;
+        public ICommand ShowResultsViewCommand
+        {
+            get
+            {
+                return _showResultsViewCommand ?? (_showResultsViewCommand = new RelayCommand(
+                    (p) =>
+                    {
+                        this.ViewModel = new ResultsViewModel(tournament);
+                        RaisePropertyChanged(nameof(ViewModel));
+                    }));
+            }
+        }
+
         private ICommand _exitApplicationCommand;
         public ICommand ExitApplicationCommand
         {
@@ -183,30 +197,6 @@ namespace StockMaster.ViewModels
 
         #endregion
 
-        #region Functions
-
-        private void CreateNewTournament()
-        {
-            tournament = new Tournament
-            {
-                NumberOfCourts = 4, // 4 Bahnen
-                NumberOfGameRounds = 1,
-                NumberOfPauseGames = 2
-            };
-            tournament.AddTeam(new Team("ESF Hankofen"));
-            tournament.AddTeam(new Team("EC Pilsting"));
-            tournament.AddTeam(new Team("DJK Leiblfing"));
-            tournament.AddTeam(new Team("ETSV Hainsbach"));
-            tournament.AddTeam(new Team("SV Salching"));
-            tournament.AddTeam(new Team("SV Haibach"));
-            tournament.AddTeam(new Team("TSV Bogen"));
-            tournament.AddTeam(new Team("EC EBRA Aiterhofen"));
-            //tournament.AddTeam(new Team("EC Welchenberg"));
-
-            tournament.CreateGames();
-
-        }
-
-        #endregion
+        
     }
 }

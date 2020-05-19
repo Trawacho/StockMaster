@@ -14,7 +14,7 @@
     <Grid Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="25"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="25"/>
         </Grid.ColumnDefinitions>
@@ -78,7 +78,7 @@
                 </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Teamname" 
-                                    Binding="{Binding Path=TeamName, Mode=TwoWay}">
+                                    Binding="{Binding Path=TeamName, Mode=TwoWay}" Width="*">
 
                     <DataGridTextColumn.ElementStyle>
                         
@@ -103,5 +103,12 @@
                     Command="{Binding Path=RemoveTeamCommand}" 
                     Margin="10" Padding="10"/>
         </WrapPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="2">
+            <Button Content="Quittungen"
+                    Command="{Binding Path=PrintQuittungenCommand}"
+                    HorizontalAlignment="Left"
+                    Margin="10" Padding="10" />
+        </StackPanel>
     </Grid>
 </UserControl>

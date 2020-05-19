@@ -9,11 +9,10 @@ namespace StockMaster.BaseClasses
     public class Tournament : TBaseClass
     {
 
-
         #region Properties
 
         private readonly List<Team> _teams;
-        private int numberOfPauseGames;
+        private bool isNumberOfPause2;
         private int numberOfGameRounds;
         private int numberOfCourts;
 
@@ -90,36 +89,28 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
 
-        /// <summary>
-        /// Always 1 if Number of Real Teams are odd
-        /// </summary>
-        public int NumberOfPauseGames
+        public bool IsNumberOfPause2
         {
             get
             {
-                if (Teams.Count(t => !t.IsVirtual) % 2 != 0)
-                {
-                    return 1;
-                }
-                return numberOfPauseGames;
+                return isNumberOfPause2;
             }
             set
             {
-                if (numberOfPauseGames == value) return;
-                if (value < -1 || value > 2) return;
-                if (value == 1 && Teams?.Count(t => !t.IsVirtual) % 2 == 0) return;
-
-                numberOfPauseGames = value;
+                if (value == isNumberOfPause2) return;
+                isNumberOfPause2 = value;
                 RaisePropertyChanged();
             }
         }
 
-
+        public bool Is8KehrenSpiel { get; set; }
 
         /// <summary>
         /// True, wenn bei einer Mehrfachrunde das Anspiel bei jeder Runde gewechselt wird
         /// </summary>
         public bool StartOfTeamChange { get; set; }
+
+        public EntryFee EntryFee { get; set; }
 
 
         #endregion
@@ -130,8 +121,10 @@ namespace StockMaster.BaseClasses
         {
             this.IsDirectionOfCourtsFromRightToLeft = true;
             this.NumberOfGameRounds = 1;
-            this.NumberOfPauseGames = 1;
+            this.IsNumberOfPause2 = false;
             this.NumberOfCourts = 1;
+            this.Is8KehrenSpiel = false;
+            this.EntryFee = new EntryFee() ;
             StartOfTeamChange = false;
             DateOfTournament = DateTime.Now;
             this._teams = new List<Team>();
@@ -200,7 +193,7 @@ namespace StockMaster.BaseClasses
                 AddTeam(new Team("Virtual Team")
                 {
                     IsVirtual = true
-                }, 
+                },
                 i > 0);
             }
         }
@@ -288,7 +281,8 @@ namespace StockMaster.BaseClasses
             {
                 //Gerade Anzahl an Mannschaften
                 //Entweder kein Aussetzer oder ZWEI Aussetzer
-                if (NumberOfPauseGames == 2)
+                //if (NumberOfPauseGames == 2)
+                if(IsNumberOfPause2)
                 {
                     AddVirtualTeams(2);
                 }

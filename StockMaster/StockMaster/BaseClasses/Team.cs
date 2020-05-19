@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace StockMaster.BaseClasses
 {
-    public class Team : TBaseClass
+    public class Team : TBaseClass, IEquatable<Team>
     {
         private string teamName;
         private int startNumber;
@@ -71,7 +71,9 @@ namespace StockMaster.BaseClasses
         /// Liste aller Spiele 
         /// </summary>
         public ReadOnlyCollection<Game> Games { get; private set; }
-        
+
+       
+
         #endregion
 
         #region ReadOnly Result Properties 
@@ -128,6 +130,7 @@ namespace StockMaster.BaseClasses
             this.IsVirtual = false;
             this.StartNumber = 0;
             this.Players = new List<Player>();
+           
             for (int i = 0; i < 4; i++) // default 4 Spieler erzeugen
             {
                 Players.Add(new Player("LastName", "FirstName"));
@@ -175,13 +178,13 @@ namespace StockMaster.BaseClasses
             RaisePropertyChanged(nameof(Games));
         }
 
-        public IOrderedEnumerable<IGrouping<int,Game>> GetGamesGroupedByRound()
+        public IOrderedEnumerable<IGrouping<int, Game>> GetGamesGroupedByRound()
         {
             return from game in Games.OrderBy(r => r.RoundOfGame)
                                      .ThenBy(g => g.GameNumber)
-                    group game by game.RoundOfGame into grGames
-                    orderby grGames.Key
-                    select grGames;
+                   group game by game.RoundOfGame into grGames
+                   orderby grGames.Key
+                   select grGames;
         }
 
         public override string ToString()
@@ -200,6 +203,14 @@ namespace StockMaster.BaseClasses
 
         }
 
-        
+        /// <summary>
+        /// If a Team is equal to another Team depends only on the StartNumber
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Team other)
+        {
+            return this.StartNumber == other.StartNumber;
+        }
     }
 }

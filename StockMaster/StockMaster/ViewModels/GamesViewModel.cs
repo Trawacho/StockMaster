@@ -4,6 +4,7 @@ using StockMaster.Output;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,16 +17,14 @@ namespace StockMaster.ViewModels
     {
         int NumberOfCourts { get; set; }
         int NumberOfGameRounds { get; set; }
-        int NumberOfPauseGames { get; set; }
         ObservableCollection<Team> Teams { get; }
         int RealTeamsCount { get; }
-
+        bool IsNumberOfPause2 { get; set; }
         bool ConcatRoundsOnOutput { get; set; }
         bool TeamNameOnTurnCards { get; set; }
-
+        bool Is8KehrenSpiel { get; set; }
         ICommand RemoveAllGamesCommand { get; }
         ICommand CreateGamesCommand { get; }
-
         ICommand PrintTurnCardsCommand { get; }
     }
 
@@ -43,15 +42,11 @@ namespace StockMaster.ViewModels
         {
             this.tournament = tournament;
             this.PropertyChanged += GamesViewModel_PropertyChanged;
-            ConcatRoundsOnOutput = true;
+            ConcatRoundsOnOutput = false;
             TeamNameOnTurnCards = false;
         }
 
-        #endregion
-
-        #region Events
-
-        private void GamesViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void GamesViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Teams))
             {
@@ -60,6 +55,7 @@ namespace StockMaster.ViewModels
         }
 
         #endregion
+
 
         #region Properties
 
@@ -80,21 +76,6 @@ namespace StockMaster.ViewModels
             }
         }
 
-        /// <summary>
-        /// Anzahl der Aussetzer pro Mannschaft
-        /// </summary>
-        public int NumberOfPauseGames
-        {
-            get
-            {
-                return tournament.NumberOfPauseGames;
-            }
-            set
-            {
-                tournament.NumberOfPauseGames = value;
-                RaisePropertyChanged();
-            }
-        }
 
         /// <summary>
         /// Anzahl der Spielrunden
@@ -121,6 +102,15 @@ namespace StockMaster.ViewModels
             }
         }
 
+        public bool IsNumberOfPause2
+        {
+            get { return tournament.IsNumberOfPause2; }
+            set
+            {
+                tournament.IsNumberOfPause2 = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public int RealTeamsCount
         {
@@ -130,8 +120,36 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public bool ConcatRoundsOnOutput { get; set; }
+        private bool concatRoundsOnOutput;
+        public bool ConcatRoundsOnOutput
+        {
+            get
+            {
+                return NumberOfGameRounds == 1 ? true : concatRoundsOnOutput;
+            }
+            set
+            {
+                if (concatRoundsOnOutput == value) return;
+
+                concatRoundsOnOutput = value;
+                RaisePropertyChanged();
+            }
+        }
         public bool TeamNameOnTurnCards { get; set; }
+
+        public bool Is8KehrenSpiel
+        {
+            get
+            {
+                return tournament.Is8KehrenSpiel;
+            }
+            set
+            {
+                tournament.Is8KehrenSpiel = value;
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -206,15 +224,16 @@ namespace StockMaster.ViewModels
         }
 
         public int NumberOfCourts { get; set; } = 4;
-        public int NumberOfPauseGames { get; set; } = 1;
         public int NumberOfGameRounds { get; set; } = 1;
-
+        public bool IsNumberOfPause2 { get; set; } = true;
         public int RealTeamsCount { get; } = 4;
 
         public ObservableCollection<Team> Teams { get { return new ObservableCollection<Team>(t.Teams.Where(t => !t.IsVirtual)); } }
 
         public bool ConcatRoundsOnOutput { get; set; } = true;
         public bool TeamNameOnTurnCards { get; set; } = true;
+
+        public bool Is8KehrenSpiel { get; set; } = true;
 
         public ICommand RemoveAllGamesCommand { get; }
         public ICommand CreateGamesCommand { get; }

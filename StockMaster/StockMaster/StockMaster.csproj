@@ -60,12 +60,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseClasses\EntryFee.cs" />
     <Compile Include="BaseClasses\TBaseClass.cs" />
     <Compile Include="BaseClasses\Game.cs" />
     <Compile Include="BaseClasses\NetworkService.cs" />
     <Compile Include="BaseClasses\Player.cs" />
     <Compile Include="BaseClasses\Settings.cs" />
     <Compile Include="BaseClasses\Team.cs" />
+    <Compile Include="BaseClasses\TournamentExtension.cs" />
     <Compile Include="Behaviours\SelectAllFocusBehavior.cs" />
     <Compile Include="Converters\GamesSortingConverter.cs" />
     <Compile Include="Converters\NumberIsGreaterThenOneConverter.cs" />
@@ -76,11 +78,19 @@
     <Compile Include="Dialogs\IDialog.cs" />
     <Compile Include="Dialogs\IDialogRequestClose.cs" />
     <Compile Include="Dialogs\IDialogService.cs" />
+    <Compile Include="Output\Receipts\Receipt.cs" />
+    <Compile Include="Output\Receipts\ucReceipt.xaml.cs">
+      <DependentUpon>ucReceipt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Output\Results\ucResult.xaml.cs">
+      <DependentUpon>ucResult.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Output\TurnCards\CutterLine.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ResultsViewModel.cs" />
     <Compile Include="ViewModels\TeamsViewModel.cs" />
     <Compile Include="Views\GamesView.xaml.cs">
       <DependentUpon>GamesView.xaml</DependentUpon>
@@ -88,12 +98,23 @@
     <Compile Include="Views\LiveResultView.xaml.cs">
       <DependentUpon>LiveResultView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ResultsView.xaml.cs">
+      <DependentUpon>ResultsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TemsView.xaml.cs">
       <DependentUpon>TemsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TournamentView.xaml.cs">
       <DependentUpon>TournamentView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Output\Receipts\ucReceipt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Output\Results\ucResult.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GamesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -115,11 +136,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Output\TurnCards\PrintPreview.xaml">
+    <Page Include="Output\PrintPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LiveResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ResultsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -140,7 +165,7 @@
     <Compile Include="Output\TurnCards\SpiegelGrid.cs" />
     <Compile Include="Output\TurnCards\SpiegelHeader.cs" />
     <Compile Include="Output\TurnCards\SpiegelHeaderGrid.cs" />
-    <Compile Include="Output\TurnCards\PrintPreview.xaml.cs">
+    <Compile Include="Output\PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\PixelConverter.cs" />
