@@ -36,6 +36,7 @@
     </Window.Resources>
 
     <Grid>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>

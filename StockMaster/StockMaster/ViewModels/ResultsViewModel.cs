@@ -1,5 +1,6 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Commands;
+using StockMaster.Output;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -72,7 +73,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _selectedGame ?? (SelectedGame = Games[0]);     
+                return _selectedGame ?? (SelectedGame = Games[0]);
             }
             set
             {
@@ -117,6 +118,24 @@ namespace StockMaster.ViewModels
 
         public List<PointPerGame> PointsPerGameList { get; set; }
 
+        private ICommand _printErgebnislisteCommand;
+        public ICommand PrintErgebnislisteCommand
+        {
+            get
+            {
+                return _printErgebnislisteCommand ?? (_printErgebnislisteCommand = new RelayCommand(
+                    (p) =>
+                    {
+                        var x = new Output.Results.Result(tournament);
+                        var printPreview = new PrintPreview();
+                        var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
+                        printPreview.Document = x.CreateResult(A4Size);
+                        printPreview.ShowDialog();
+
+                    }));
+            }
+        }
+
     } //class ResultsViewModel
 
     public class ResultsDesignViewModel : IResultsViewModel
@@ -155,6 +174,8 @@ namespace StockMaster.ViewModels
 
         public List<PointPerTeamAndGame> PointsOfSelectedTeam { get; set; }
         public List<PointPerGame> PointsPerGameList { get; set; }
+
+        public ICommand PrintErgebnislisteCommand { get; }
 
     } //ResultsDesignViewModel
 

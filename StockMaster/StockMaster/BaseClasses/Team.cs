@@ -72,7 +72,7 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public ReadOnlyCollection<Game> Games { get; private set; }
 
-       
+
 
         #endregion
 
@@ -88,6 +88,14 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        public string SpielPunkteString
+        {
+            get
+            {
+                return $"{SpielPunkte.positiv}:{SpielPunkte.negativ}";
+            }
+        }
+
         public (int positiv, int negativ) StockPunkte
         {
             get
@@ -96,6 +104,15 @@ namespace StockMaster.BaseClasses
                         Games.Sum(o => o.GetStockPunkteGegner(this)));
             }
         }
+
+        public string StockPunkteString
+        {
+            get
+            {
+                return $"{StockPunkte.positiv}:{StockPunkte.negativ}";
+            }
+        }
+
 
         public double StockNote
         {
@@ -130,7 +147,7 @@ namespace StockMaster.BaseClasses
             this.IsVirtual = false;
             this.StartNumber = 0;
             this.Players = new List<Player>();
-           
+
             for (int i = 0; i < 4; i++) // default 4 Spieler erzeugen
             {
                 Players.Add(new Player("LastName", "FirstName"));

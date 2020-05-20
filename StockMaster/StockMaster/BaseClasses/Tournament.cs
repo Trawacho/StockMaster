@@ -112,6 +112,11 @@ namespace StockMaster.BaseClasses
 
         public EntryFee EntryFee { get; set; }
 
+        /// <summary>
+        /// Bei wieviel Mannschaften werden die Spielernamen auf der Ergebnisliste mit angedruckt
+        /// </summary>
+        public int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
+
 
         #endregion
 
@@ -130,6 +135,7 @@ namespace StockMaster.BaseClasses
             this._teams = new List<Team>();
             this.Teams = _teams.AsReadOnly();
             this.PropertyChanged += Tournament_PropertyChanged;
+            this.NumberOfTeamsWithNamedPlayerOnResult = 3;
         }
 
         private void Tournament_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

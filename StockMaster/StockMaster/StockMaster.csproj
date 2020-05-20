@@ -80,12 +80,17 @@
     <Compile Include="Dialogs\IDialog.cs" />
     <Compile Include="Dialogs\IDialogRequestClose.cs" />
     <Compile Include="Dialogs\IDialogService.cs" />
+    <Compile Include="Output\Helpers.cs" />
     <Compile Include="Output\Receipts\Receipt.cs" />
     <Compile Include="Output\Receipts\ucReceipt.xaml.cs">
       <DependentUpon>ucReceipt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Output\Results\Result.cs" />
     <Compile Include="Output\Results\ucResult.xaml.cs">
       <DependentUpon>ucResult.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Output\Results\ucStackPanelTeam.xaml.cs">
+      <DependentUpon>ucStackPanelTeam.xaml</DependentUpon>
     </Compile>
     <Compile Include="Output\TurnCards\CutterLine.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
@@ -114,6 +119,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Output\Results\ucResult.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Output\Results\ucStackPanelTeam.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

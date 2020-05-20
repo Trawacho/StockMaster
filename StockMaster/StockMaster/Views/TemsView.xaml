@@ -10,27 +10,18 @@
                             Type=viewmodels:TeamsDesignviewModel, 
                             IsDesignTimeCreatable=True}" 
              d:DesignHeight="450" d:DesignWidth="800"
+             Background="WhiteSmoke"
              >
-    <Grid Background="WhiteSmoke">
+    <Grid Margin="25">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="25"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
 
-        <DataGrid Grid.Row="1" Grid.RowSpan="3"
-                  Grid.Column="1" 
+        <DataGrid Grid.Row="0" 
+                  Grid.Column="0" 
                   ItemsSource="{Binding Path=Teams}"
                   AutoGenerateColumns="False"
-                  MinWidth="200"
                   SelectedItem="{Binding Path=SelectedTeam}"
                   SelectionMode="Single"
                   CanUserAddRows="False"
@@ -93,7 +84,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <WrapPanel Grid.Row="1" Grid.Column="2" 
+        <WrapPanel Grid.Row="0" Grid.Column="1" 
                        Grid.ColumnSpan="3"
                        Orientation="Horizontal" >
             <Button Content="Hinzufügen" 
@@ -102,13 +93,12 @@
             <Button Content="Entfernen" 
                     Command="{Binding Path=RemoveTeamCommand}" 
                     Margin="10" Padding="10"/>
-        </WrapPanel>
-
-        <StackPanel Grid.Row="2" Grid.Column="2">
             <Button Content="Quittungen"
                     Command="{Binding Path=PrintQuittungenCommand}"
                     HorizontalAlignment="Left"
                     Margin="10" Padding="10" />
-        </StackPanel>
+        </WrapPanel>
+
+        
     </Grid>
 </UserControl>

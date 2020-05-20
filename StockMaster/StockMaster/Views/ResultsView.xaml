@@ -18,7 +18,7 @@
     </UserControl.Resources>
 
 
-    <Grid Margin="10">
+    <Grid Margin="25">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="150"/>
             <ColumnDefinition Width="auto"/>
@@ -280,5 +280,10 @@
 
         </StackPanel>
 
+        <StackPanel Grid.Column="2">
+            <Button Content="Ergebnisliste" Margin="10" Padding="10" 
+                    Command="{Binding Path=PrintErgebnislisteCommand}"/>
+        </StackPanel>
+        
     </Grid>
 </UserControl>

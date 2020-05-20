@@ -64,7 +64,7 @@ namespace StockMaster.Output.Receipts
 
         private void SetPagePanelToDocument(StackPanel panel)
         {
-            var newPage = GetNewPage(document.DocumentPaginator.PageSize);
+            var newPage = Helpers.GetNewPage(document.DocumentPaginator.PageSize);
             newPage.HorizontalAlignment = HorizontalAlignment.Center;
             newPage.VerticalAlignment = VerticalAlignment.Center;
 
@@ -80,14 +80,6 @@ namespace StockMaster.Output.Receipts
             document.Pages.Add(content);
         }
 
-        private FixedPage GetNewPage(Size pageSize)
-        {
-            FixedPage page = new FixedPage
-            {
-                Width = pageSize.Width,
-                Height = pageSize.Height
-            };
-            return page;
-        }
+        
     }
 }

@@ -5,48 +5,89 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StockMaster.Output.Results"
              mc:Ignorable="d" 
-             Background="White">
+             Background="White"
+             FontFamily="Bahnschrift"
+             >
 
     <StackPanel Orientation="Vertical" Width="19cm" Height="28cm">
 
-        <Grid>
+        <Grid Margin="1cm">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
+                <RowDefinition Height="2cm"/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label x:Name="ArtDesWettbewerbs"/>
-            <Label x:Name="Austragungsort"/>
-            <Label x:Name="Veranstalter"/>
-            <Label x:Name="Durchführer"/>
+
+            <Viewbox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4">
+                <Label x:Name="_ArtDesWettbewerbs" 
+                   Content="Art des Wettbewerbs" 
+                   FontWeight="Bold"
+                   Margin="5" HorizontalContentAlignment="Center"/>
+            </Viewbox>
+
+            <Label Grid.Row="1" Grid.Column="0" 
+                   Margin="5"
+                   Content="Austragungsort:" HorizontalContentAlignment="Right"/>
+            <Label x:Name="_Austragungsort" 
+                   Content="Austragungsort"
+                   FontWeight="Bold"
+                   Grid.Row="1" Grid.Column="1"
+                   Margin="5" 
+                   HorizontalContentAlignment="Left"/>
+
+            <Label Grid.Row="2" Grid.Column="0"
+                   Margin="5"
+                   Content="Veranstalter:" HorizontalContentAlignment="Right"/>
+            <Label x:Name="_Veranstalter" 
+                   Content="Veranstalter" 
+                   FontWeight="Bold"
+                   Grid.Row="2" Grid.Column ="1" 
+                   Margin="5" HorizontalContentAlignment="Left"/>
+
+            <Label Grid.Row="2" Grid.Column="2"
+                   Content="Durchführer:" HorizontalContentAlignment="Right"
+                   Margin="5"/>
+            <Label x:Name="_Durchführer" Content="Durchführer" 
+                   Grid.Row="2"  Grid.Column="3" Margin="5" 
+                   HorizontalContentAlignment="Left" FontWeight="Bold"/>
+
+            <Label Grid.Row="1" Grid.Column="2" 
+                   Content="Datum:" HorizontalContentAlignment="Right"
+                   Margin="5"/>
+            <Label x:Name="_Datum" Content="date" 
+                   Grid.Row="1" Grid.Column="3" Margin="5" 
+                   HorizontalContentAlignment="Left" FontWeight="Bold"/>
 
         </Grid>
+        
+        <Viewbox Height="2cm">
+            <Label Content="E R G E B N I S"
+               HorizontalContentAlignment="Center"
+               FontWeight="Bold"/>
+        </Viewbox>
+        
+        <Viewbox Margin="1cm">
 
-        <Label Content="Ergebnisliste" HorizontalContentAlignment="Center"
-               FontSize="20"/>
+            <StackPanel Orientation="Vertical" x:Name="_spTeams">
 
-        <StackPanel Orientation="Vertical" Margin="1cm" x:Name="spTeams">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
-                <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" FontWeight="Bold"/>
-                <Label Content="Punkte" Width="2cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
-                <Label Content="Stockpunkte" Width="3cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
-                <Label Content="Note" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" FontWeight="Bold"/>
+                    <Label Content="Punkte" Width="2cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="Stockpunkte" Width="3cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="Note" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                </StackPanel>
+
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" />
-                <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" />
-                <Label Content="Punkte" Width="2cm" HorizontalContentAlignment="Center" />
-                <Label Content="Stockpunkte" Width="3cm" HorizontalContentAlignment="Center" />
-                <Label Content="Note" Width="1.5cm" HorizontalContentAlignment="Center"/>
-            </StackPanel>
-        </StackPanel>
+        </Viewbox>
 
     </StackPanel>
 </UserControl>
