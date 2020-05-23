@@ -14,9 +14,13 @@
              >
     <Grid Margin="25">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
 
         <DataGrid Grid.Row="0" 
                   Grid.Column="0" 
@@ -26,6 +30,8 @@
                   SelectionMode="Single"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
+                  BorderThickness="0"
+                  Width="{Binding ElementName=stackPanelButtons, Path=ActualWidth}"
                   >
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell" >
@@ -39,8 +45,7 @@
                                                                 Mode=TwoWay, 
                                                                 UpdateSourceTrigger=Default}"
                                                  HorizontalAlignment="Stretch" 
-                                                 HorizontalContentAlignment="Center"
-                                                 behaviours:SelectAllFocusBehavior.Enable="True"
+                                                 HorizontalContentAlignment="Left"
                                                  VerticalAlignment="Stretch" 
                                                  VerticalContentAlignment="Center"
                                                  Padding="0" 
@@ -59,6 +64,7 @@
                 <DataGridTextColumn Header="Start#" 
                                     Binding="{Binding Path=StartNumber}"
                                     IsReadOnly="True"
+                                    Width="auto"
                                     >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
@@ -66,10 +72,12 @@
                             <Setter Property="Margin" Value="10"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
+                    
                 </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Teamname" 
-                                    Binding="{Binding Path=TeamName, Mode=TwoWay}" Width="*">
+                                    Binding="{Binding Path=TeamName, Mode=TwoWay}" 
+                                    Width="*">
 
                     <DataGridTextColumn.ElementStyle>
                         
@@ -81,12 +89,14 @@
                     </DataGridTextColumn.ElementStyle>
                     
                 </DataGridTextColumn>
+           
             </DataGrid.Columns>
+            
         </DataGrid>
 
-        <WrapPanel Grid.Row="0" Grid.Column="1" 
-                       Grid.ColumnSpan="3"
-                       Orientation="Horizontal" >
+        <StackPanel Grid.Row="1" Grid.Column="0" 
+                    Orientation="Horizontal" 
+                    x:Name="stackPanelButtons">
             <Button Content="Hinzufügen" 
                     Command="{Binding Path=AddTeamCommand}" 
                     Margin="10" Padding="10"/>
@@ -97,7 +107,53 @@
                     Command="{Binding Path=PrintQuittungenCommand}"
                     HorizontalAlignment="Left"
                     Margin="10" Padding="10" />
-        </WrapPanel>
+        </StackPanel>
+
+        <ScrollViewer Grid.Column="1" 
+                      Margin="20,0"
+                      HorizontalScrollBarVisibility="Auto" 
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Label Content="Mannschaftsdaten" FontWeight="Bold"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Kreis / Nation:" HorizontalContentAlignment="Right"
+                           Grid.Row="0" Grid.Column="0"/>
+                    <TextBox Grid.Row="0" Grid.Column="1"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Left" 
+                             MaxLength="20"/>
+                </Grid>
+                <Label Content="Spieler" FontWeight="Bold"/>
+                <DataGrid ItemsSource="{Binding Path=SelectedTeam.Players}"
+                          AutoGenerateColumns="False"
+                          Height="300">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nachname" 
+                                            Binding="{Binding LastName}" 
+                                            Width="100"/>
+                        <DataGridTextColumn Header="Vorname" 
+                                            Binding="{Binding FirstName}"
+                                            Width="100"/>
+                        <DataGridTextColumn Header="Passnummer" 
+                                            Binding="{Binding LicenseNumber}"
+                                            Width="100"/>
+                    </DataGrid.Columns>
+                    
+                </DataGrid>
+            </StackPanel>
+        </ScrollViewer>
+        
+
+            
+
+
 
         
     </Grid>
