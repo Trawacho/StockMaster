@@ -14,7 +14,12 @@ namespace StockMaster.ViewModels
         EntryFee EntryFee { get; set; }
 
         bool IsDirectionOfCourtsFromRightToLeft { get; set; }
-        string DirectionOfCourtsDesctiption { get; }
+        string DirectionOfCourtsDescription { get; }
+        int NumberOfPlayerPerTeam { get; set; }
+
+        IExecutive Schiedsrichter { get; set; }
+        IExecutive Wettbewerbsleiter { get; set; }
+        IExecutive Rechenbüro{ get; set; }
     }
 
     public class TournamentViewModel : BaseViewModel, ITournamentViewModel
@@ -143,17 +148,69 @@ namespace StockMaster.ViewModels
 
                 Tournament.IsDirectionOfCourtsFromRightToLeft = value;
                 RaisePropertyChanged();
-                RaisePropertyChanged(nameof(DirectionOfCourtsDesctiption));
+                RaisePropertyChanged(nameof(DirectionOfCourtsDescription));
             }
         }
 
-        public string DirectionOfCourtsDesctiption
+        public string DirectionOfCourtsDescription
         {
             get
             {
                 return IsDirectionOfCourtsFromRightToLeft
                     ? "1. Bahn rechts, weitere folgen links"
-                    : "1. Bahn links, weiter folgen rechts";
+                    : "1. Bahn links, weitere folgen rechts";
+            }
+        }
+
+        public int NumberOfPlayerPerTeam
+        {
+            get
+            {
+                return Tournament.NumberOfPlayersPerTeam;
+            }
+            set
+            {
+                Tournament.NumberOfPlayersPerTeam = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public IExecutive Schiedsrichter
+        {
+            get
+            {
+                return Tournament.Schiedsrichter;
+            }
+            set
+            {
+                Tournament.Schiedsrichter = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public IExecutive Wettbewerbsleiter
+        {
+            get
+            {
+                return Tournament.Wettbewerbsleiter;
+            }
+            set
+            {
+                Tournament.Wettbewerbsleiter = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public IExecutive Rechenbüro
+        {
+            get
+            {
+                return Tournament.Rechenbüro;
+            }
+            set
+            {
+                Tournament.Rechenbüro = value;
+                RaisePropertyChanged();
             }
         }
     }
@@ -174,17 +231,23 @@ namespace StockMaster.ViewModels
         public DateTime DateOfTournament { get; set; } = DateTime.Now;
 
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; } = true;
-        public string DirectionOfCourtsDesctiption
+        public string DirectionOfCourtsDescription
         {
             get
             {
                 return IsDirectionOfCourtsFromRightToLeft
                      ? "1. Bahn rechts, weitere folgen links"
-                     : "1. Bahn links, weiter folgen rechts";
+                     : "1. Bahn links, weitere folgen rechts";
             }
         }
 
         public EntryFee EntryFee { get; set; }
+
+        public int NumberOfPlayerPerTeam { get; set; } = 4;
+
+        public IExecutive Schiedsrichter { get; set; }
+        public IExecutive Rechenbüro { get; set; }
+        public IExecutive Wettbewerbsleiter { get; set; }
     }
 
 

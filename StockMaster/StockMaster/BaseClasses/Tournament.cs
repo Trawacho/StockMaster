@@ -15,6 +15,7 @@ namespace StockMaster.BaseClasses
         private bool isNumberOfPause2;
         private int numberOfGameRounds;
         private int numberOfCourts;
+        private int numberOfPlayersPerTeam;
 
         /// <summary>
         /// Liste aller Teams
@@ -103,6 +104,9 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        /// <summary>
+        /// On True, the TurnCard has 8 instead of 7 Turns per Team
+        /// </summary>
         public bool Is8KehrenSpiel { get; set; }
 
         /// <summary>
@@ -110,6 +114,9 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public bool StartOfTeamChange { get; set; }
 
+        /// <summary>
+        /// Startgebühr pro Mannschaft
+        /// </summary>
         public EntryFee EntryFee { get; set; }
 
         /// <summary>
@@ -117,6 +124,31 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
 
+        /// <summary>
+        /// Anzahl der Spieler pro Mannschaft (1-6) (default-Wert beim erstellen eines Teams)
+        /// </summary>
+        public int NumberOfPlayersPerTeam
+        {
+            get
+            {
+                return numberOfPlayersPerTeam;
+            }
+            set
+            {
+                if (value < Team.MinNumberOfPlayer
+                    || value > Team.MaxNumberOfPlayers
+                    || value == numberOfPlayersPerTeam)
+                    return;
+
+                numberOfPlayersPerTeam = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        public IExecutive Schiedsrichter { get; set; }
+        public IExecutive Wettbewerbsleiter { get; set; }
+        public IExecutive Rechenbüro { get; set; }
 
         #endregion
 
@@ -129,13 +161,17 @@ namespace StockMaster.BaseClasses
             this.IsNumberOfPause2 = false;
             this.NumberOfCourts = 1;
             this.Is8KehrenSpiel = false;
-            this.EntryFee = new EntryFee() ;
+            this.EntryFee = new EntryFee();
             StartOfTeamChange = false;
             DateOfTournament = DateTime.Now;
             this._teams = new List<Team>();
             this.Teams = _teams.AsReadOnly();
             this.PropertyChanged += Tournament_PropertyChanged;
             this.NumberOfTeamsWithNamedPlayerOnResult = 3;
+            this.NumberOfPlayersPerTeam = 4;
+            this.Schiedsrichter = new Referee();
+            this.Wettbewerbsleiter = new CompetitionManager();
+            this.Rechenbüro = new ComputingOfficer();
         }
 
         private void Tournament_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -201,7 +237,7 @@ namespace StockMaster.BaseClasses
         {
             for (int i = 0; i < count; i++)
             {
-                AddTeam(new Team("Virtual Team")
+                AddTeam(new Team("Virtual Team", NumberOfPlayersPerTeam)
                 {
                     IsVirtual = true
                 },
@@ -293,7 +329,7 @@ namespace StockMaster.BaseClasses
                 //Gerade Anzahl an Mannschaften
                 //Entweder kein Aussetzer oder ZWEI Aussetzer
                 //if (NumberOfPauseGames == 2)
-                if(IsNumberOfPause2)
+                if (IsNumberOfPause2)
                 {
                     AddVirtualTeams(2);
                 }

@@ -17,6 +17,7 @@ namespace StockMaster.ViewModels
         Game SelectedGame { get; set; }
         List<PointPerTeamAndGame> PointsOfSelectedTeam { get; }
         List<PointPerGame> PointsPerGameList { get; set; }
+        int NumberOfTeamsWithNamedPlayers { get; set; }
 
     } //IResultsViewModel
 
@@ -118,6 +119,21 @@ namespace StockMaster.ViewModels
 
         public List<PointPerGame> PointsPerGameList { get; set; }
 
+        public int NumberOfTeamsWithNamedPlayers
+        {
+            get
+            {
+                return tournament.NumberOfTeamsWithNamedPlayerOnResult;
+            }
+            set
+            {
+                if (tournament.NumberOfTeamsWithNamedPlayerOnResult == value) return;
+
+                tournament.NumberOfTeamsWithNamedPlayerOnResult = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ICommand _printErgebnislisteCommand;
         public ICommand PrintErgebnislisteCommand
         {
@@ -176,7 +192,7 @@ namespace StockMaster.ViewModels
         public List<PointPerGame> PointsPerGameList { get; set; }
 
         public ICommand PrintErgebnislisteCommand { get; }
-
+        public int NumberOfTeamsWithNamedPlayers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     } //ResultsDesignViewModel
 
     public class PointPerTeamAndGame : TBaseClass

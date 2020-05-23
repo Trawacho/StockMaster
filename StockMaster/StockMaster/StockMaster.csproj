@@ -61,6 +61,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseClasses\EntryFee.cs" />
+    <Compile Include="BaseClasses\Executive.cs" />
     <Compile Include="BaseClasses\TBaseClass.cs" />
     <Compile Include="BaseClasses\Game.cs" />
     <Compile Include="BaseClasses\NetworkService.cs" />

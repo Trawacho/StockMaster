@@ -13,16 +13,13 @@
         d:DesignWidth="1280"
         Title="StockMaster" Height="1024" Width="1280"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow"
+        WindowState="Maximized"
         FontFamily="Verdana" >
 
     <Window.Resources>
         <converters:TupleValue_Team_Converter x:Key="TVC"/>
     </Window.Resources>
 
-    <!--<Window.DataContext>
-        <viewmodels:MainViewModel/>
-    </Window.DataContext>-->
 
     <DockPanel >
         <Menu DockPanel.Dock="Top" Padding="5">

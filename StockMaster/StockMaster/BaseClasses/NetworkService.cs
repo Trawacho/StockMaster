@@ -151,6 +151,7 @@ namespace StockMaster.BaseClasses
             int kehrenZähler = 1;
             var game = courtGames.First(g => g.GameNumber == spielZähler);
             game.Turns.Clear();
+
             for (int i = 0; i < newData.Length; i += 2)
             {
                 if (kehrenZähler > turnLength)

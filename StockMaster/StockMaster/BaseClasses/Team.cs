@@ -19,6 +19,16 @@ namespace StockMaster.BaseClasses
         public List<Player> Players { get; set; }
 
         /// <summary>
+        /// Maximum Number of Players for a Team
+        /// </summary>
+        public static int MaxNumberOfPlayers { get; } = 6;
+
+        /// <summary>
+        /// Minimum Number of Players for a Team
+        /// </summary>
+        public static int MinNumberOfPlayer { get; } = 1;
+
+        /// <summary>
         /// Teamname
         /// </summary>
         public string TeamName
@@ -72,6 +82,18 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public ReadOnlyCollection<Game> Games { get; private set; }
 
+        private string nation;
+
+        public string Nation
+        {
+            get { return nation; }
+            set {
+                if (value == nation) return;
+
+                nation = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         #endregion
@@ -142,13 +164,13 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Default-Constructor
         /// </summary>
-        public Team()
+        public Team(int numberOfPlayers)
         {
             this.IsVirtual = false;
             this.StartNumber = 0;
             this.Players = new List<Player>();
 
-            for (int i = 0; i < 4; i++) // default 4 Spieler erzeugen
+            for (int i = 0; i < numberOfPlayers; i++) // default 4 Spieler erzeugen
             {
                 Players.Add(new Player("LastName", "FirstName"));
             }
@@ -156,28 +178,20 @@ namespace StockMaster.BaseClasses
             this.Games = _games.AsReadOnly();
         }
 
+        
+
         /// <summary>
         /// Constructor 
         /// </summary>
         /// <param name="TeamName"></param>
         /// <param name="CountOfDefaultPlayer"></param>
-        public Team(string TeamName) : this()
+        public Team(string TeamName, int numberOfPlayers) : this(numberOfPlayers)
         {
             this.TeamName = TeamName;
 
         }
 
-        /// <summary>
-        /// Constructor with Paramters
-        /// </summary>
-        /// <param name="StartNumber"></param>
-        /// <param name="TeamName"></param>
-        /// <param name="Players"></param>
-        public Team(string TeamName, List<Player> Players) : this(TeamName)
-        {
-            this.Players = Players;
-        }
-
+        
         #endregion
 
         /// <summary>
@@ -204,21 +218,24 @@ namespace StockMaster.BaseClasses
                    select grGames;
         }
 
+        internal void RemovePlayer(Player selectedPlayer)
+        {
+            this.Players.Remove(selectedPlayer);
+            RaisePropertyChanged(nameof(Players));
+        }
+
+        internal void AddPlayer()
+        {
+            this.Players.Add(new Player());
+            RaisePropertyChanged(nameof(Players));
+        }
+
         public override string ToString()
         {
             return $"{StartNumber}. {TeamName}";
         }
 
-        [Obsolete]
-        public Team CopyWithoutGamesOrPlayers()
-        {
-            var copy = (Team)this.MemberwiseClone();
-            //Games = new List<Game>();
-            Players = new List<Player>();
-
-            return copy;
-
-        }
+       
 
         /// <summary>
         /// If a Team is equal to another Team depends only on the StartNumber

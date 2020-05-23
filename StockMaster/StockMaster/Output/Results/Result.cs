@@ -1,7 +1,5 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Converters;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -18,8 +16,6 @@ namespace StockMaster.Output.Results
         {
             this.tournament = tournament;
         }
-
-
 
 
         public FixedDocument CreateResult(Size pageSize)
@@ -45,6 +41,27 @@ namespace StockMaster.Output.Results
                 r++;
                 ergListe._spTeams.Children.Add(spT);
             }
+
+            //Eintragen der Offiziellen
+            if (string.IsNullOrWhiteSpace(tournament.Schiedsrichter.Name)){
+                ergListe._stackPanelSchiedsrichter.Visibility = Visibility.Collapsed;
+            }
+            ergListe._textblockSchiedsrichterName.Text = tournament.Schiedsrichter.Name;
+            ergListe._textblockSchiedsrichterClub.Text = tournament.Schiedsrichter.ClubName;
+
+            if (string.IsNullOrWhiteSpace(tournament.Wettbewerbsleiter.Name))
+            {
+                ergListe._stackPanelWettbewerbsleiter.Visibility = Visibility.Collapsed;
+            }
+            ergListe._textblockWettbewerbsleiterName.Text = tournament.Wettbewerbsleiter.Name;
+            ergListe._textblockWettbewerbsleiterClub.Text = tournament.Wettbewerbsleiter.ClubName;
+
+            if (string.IsNullOrWhiteSpace(tournament.Rechenbüro.Name))
+            {
+                ergListe._stackPanelRechenbüro.Visibility = Visibility.Collapsed;
+            }
+            ergListe._textblockRechenbüroName.Text = tournament.Rechenbüro.Name;
+            ergListe._textblockRechenbüroClub.Text = tournament.Rechenbüro.ClubName;
 
             SetPagePanelToDocument(ergListe);
             return document;

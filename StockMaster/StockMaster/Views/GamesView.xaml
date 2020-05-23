@@ -31,6 +31,7 @@
 
 
     </UserControl.Resources>
+   
     <Grid Margin="25">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="400"/>
@@ -108,12 +109,16 @@
             <Button Content="Lösche alle Spiele" Command="{Binding Path=RemoveAllGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
         </StackPanel>
 
-        <Grid Grid.Row="0" Grid.Column="1" >
+        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"  Margin="40,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -124,12 +129,12 @@
             <Grid.Resources>
                 <Style TargetType="Label">
                     <Setter Property="HorizontalAlignment" Value="Right"/>
-                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Margin" Value="5"/>
                 </Style>
                 <Style TargetType="TextBox">
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Margin" Value="0,5"/>
                     <Setter Property="MinWidth" Value="50"/>
                 </Style>
             </Grid.Resources>
@@ -140,6 +145,7 @@
             <Label Content="Anzahl der Bahnen:" Grid.Row="1" Grid.Column="0" />
             <Label Grid.Row="1" Grid.Column="1" 
                    Content="{Binding Path=NumberOfCourts, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   Margin="0,5"
                    HorizontalContentAlignment="Left"
                    HorizontalAlignment="Left"/>
 
@@ -150,7 +156,6 @@
                       Grid.Row="2" Grid.Column="1"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"
-                      Margin="10"
                       IsChecked="{Binding Path=IsNumberOfPause2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       IsEnabled="{Binding Path=RealTeamsCount, Converter={StaticResource numberIsEvenToBoolenConverter}}"/>
             
@@ -159,24 +164,37 @@
                    Grid.Row="3" Grid.Column="0"/>
             <CheckBox Content="8 Kehren pro Spiel"
                       ToolTip="Standard sind 6 Kehren"
-                      Margin="10"
                       Grid.Row="3" Grid.Column="1"
-                      IsChecked="{Binding Path=Is8KehrenSpiel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsChecked="{Binding Path=Is8KehrenSpiel, Mode=TwoWay, 
+                                          UpdateSourceTrigger=PropertyChanged}"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"/>
 
+            <Label Content="Spiegel:" 
+                   Grid.Row="4" Grid.Column="0"/>
+            <CheckBox Content="Alle Runden zusammenfassen" 
+                      Grid.Row="4" Grid.Column="1"  
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding Path=ConcatRoundsOnOutput}"
+                      IsEnabled="{Binding Path=NumberOfGameRounds, 
+                                          Converter={StaticResource numberIsGreaterThenOneConverter}}"/>
+            
+            <Label  Content="Team-Name:" 
+                    Grid.Row="5" Grid.Column="0"/>
+            <CheckBox Content="Teamnamen auf Spiegel drucken"
+                      Grid.Row="5" Grid.Column="1"
+                      IsChecked="{Binding Path=TeamNameOnTurnCards}"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"/>
+
+
+            <Button Content="Spiegel drucken" 
+                    Grid.Column="0" Grid.Row="6"
+                    Margin="10" Padding="10"
+                    Command="{Binding Path=PrintTurnCardsCommand}"/>
         </Grid>
 
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <Button Content="Spiegel drucken" Margin="10" Padding="10"
-                    Command="{Binding Path=PrintTurnCardsCommand}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="2">
-            <CheckBox Content="Alle Runden zusammenfassen" Margin="10"
-                      IsChecked="{Binding Path=ConcatRoundsOnOutput}"
-                      IsEnabled="{Binding Path=NumberOfGameRounds, Converter={StaticResource numberIsGreaterThenOneConverter}}"/>
-            <CheckBox Content="Teamnamen auf Spiegel drucken" Margin="10"
-                      IsChecked="{Binding Path=TeamNameOnTurnCards}"/>
-        </StackPanel>
+     
     </Grid>
 </UserControl>

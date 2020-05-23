@@ -10,10 +10,15 @@ namespace StockMaster.ViewModels
     public interface ITeamsViewModel
     {
         Team SelectedTeam { get; set; }
+        Player SelectedPlayer { get; set; }
+
         ObservableCollection<Team> Teams { get; }
+        ObservableCollection<Player> Players { get; }
         ICommand AddTeamCommand { get; }
         ICommand RemoveTeamCommand { get; }
 
+        ICommand AddPlayerCommand { get; }
+        ICommand RemovePlayerCommand { get; }
         ICommand PrintQuittungenCommand { get; }
     }
 
@@ -59,15 +64,53 @@ namespace StockMaster.ViewModels
                 return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
             }
         }
+        public ObservableCollection<Player> Players
+        {
+            get
+            {
+                if (SelectedTeam == null) return null; 
+                return new ObservableCollection<Player>(SelectedTeam.Players);
+            }
+        }
 
-        public Team SelectedTeam { get; set; }
+        private Team _selectedTeam;
+        public Team SelectedTeam
+        {
+            get
+            {
+                return _selectedTeam ?? (SelectedTeam = Teams.FirstOrDefault());
+            }
+            set
+            {
+                if (_selectedTeam == value) return;
+
+                _selectedTeam = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(Players));
+            }
+        }
+
+        private Player _selectedPlayer;
+        public Player SelectedPlayer
+        {
+            get
+            {
+                return _selectedPlayer;
+            }
+            set
+            {
+                if (_selectedPlayer == value) return;
+
+                _selectedPlayer = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public ICommand RemoveTeamCommand { get; }
 
         private void RemoveTeamAction()
         {
             tournament.RemoveTeam(SelectedTeam);
-            //tournament.x_Teams.Remove(SelectedTeam);
             RaisePropertyChanged(nameof(Teams));
         }
 
@@ -75,14 +118,11 @@ namespace StockMaster.ViewModels
         public ICommand AddTeamCommand { get; }
         private void AddTeamAction()
         {
-            tournament.AddTeam(new Team()
+            tournament.AddTeam(new Team(tournament.NumberOfPlayersPerTeam)
             {
                 TeamName = $"default {tournament.Teams.Count + 1}"
             });
-            //tournament.x_Teams.Add(new Team
-            //{
-            //    TeamName = "default"
-            //});
+
             RaisePropertyChanged(nameof(Teams));
         }
 
@@ -103,6 +143,40 @@ namespace StockMaster.ViewModels
                     ));
             }
         }
+
+        private ICommand addPlayerCommand;
+        public ICommand AddPlayerCommand
+        {
+            get
+            {
+                return addPlayerCommand ?? (addPlayerCommand = new RelayCommand(
+                    (p) =>
+                    {
+                        SelectedTeam.AddPlayer();
+                        RaisePropertyChanged(nameof(Players));
+
+                    },
+                    (p) =>
+                     Players?.Count < Team.MaxNumberOfPlayers));
+            }
+        }
+
+        private ICommand removePlayerCommand;
+        public ICommand RemovePlayerCommand
+        {
+            get
+            {
+                return removePlayerCommand ?? (removePlayerCommand = new RelayCommand(
+                    (p) =>
+                    {
+                        SelectedTeam.RemovePlayer(SelectedPlayer);
+                        RaisePropertyChanged(nameof(Players));
+                    },
+                    (p) =>
+                    Players?.Count > Team.MinNumberOfPlayer 
+                    && SelectedPlayer != null));
+            }
+        }
     }
 
     public class TeamsDesignviewModel : ITeamsViewModel
@@ -113,12 +187,22 @@ namespace StockMaster.ViewModels
             SelectedTeam = t.Teams[3];
             Teams = new ObservableCollection<Team>(t.Teams);
         }
+
         public ObservableCollection<Team> Teams { get; }
-
+        public ObservableCollection<Player> Players
+        {
+            get
+            {
+                return new ObservableCollection<Player>(SelectedTeam.Players);
+            }
+        }
         public Team SelectedTeam { get; set; }
-
+        public Player SelectedPlayer { get; set; }
         public ICommand AddTeamCommand { get; }
         public ICommand RemoveTeamCommand { get; }
+
+        public ICommand AddPlayerCommand { get; }
+        public ICommand RemovePlayerCommand { get; }
         public ICommand PrintQuittungenCommand { get; }
     }
 }

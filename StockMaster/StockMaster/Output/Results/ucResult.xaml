@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StockMaster.Output.Results"
+             xmlns:converters="clr-namespace:StockMaster.Converters"
              mc:Ignorable="d" 
              Background="White"
              FontFamily="Bahnschrift"
              >
+    <UserControl.Resources>
+        <converters:ValueNotNullToVisibilityConverter x:Key="valueNotNullToVisibilityConverter"/>
+    </UserControl.Resources>
 
     <StackPanel Orientation="Vertical" Width="19cm" Height="28cm">
 
@@ -67,17 +71,17 @@
                    HorizontalContentAlignment="Left" FontWeight="Bold"/>
 
         </Grid>
-        
+
         <Viewbox Height="2cm">
             <Label Content="E R G E B N I S"
                HorizontalContentAlignment="Center"
                FontWeight="Bold"/>
         </Viewbox>
-        
-        <Viewbox Margin="1cm">
+
+        <Viewbox Margin="1cm, 1cm, 1cm, 0" MaxHeight="580" >
 
             <StackPanel Orientation="Vertical" x:Name="_spTeams">
-
+ 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
                     <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" FontWeight="Bold"/>
@@ -88,6 +92,65 @@
 
             </StackPanel>
         </Viewbox>
+
+        <Grid Margin="1cm">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            
+            
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="0"
+                        x:Name="_stackPanelSchiedsrichter">
+                <TextBlock x:Name="_textblockSchiedsrichterName"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock x:Name="_textblockSchiedsrichterClub"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock Text="(Schiedsrichter)"
+                       HorizontalAlignment="Stretch"
+                       TextAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="1"
+                        x:Name="_stackPanelRechenbüro">
+                <TextBlock x:Name="_textblockRechenbüroName"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock x:Name="_textblockRechenbüroClub"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock Text="(Rechenbüro)"
+                       HorizontalAlignment="Stretch"
+                       TextAlignment="Center"
+                       />
+            </StackPanel>
+           
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="2"
+                        x:Name="_stackPanelWettbewerbsleiter">
+                <TextBlock x:Name="_textblockWettbewerbsleiterName"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock x:Name="_textblockWettbewerbsleiterClub"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Stretch"/>
+                <TextBlock Text="(Wettbewerbsleiter)"
+                       HorizontalAlignment="Stretch"
+                       TextAlignment="Center"
+                       Grid.Row="1" Grid.Column="2"/>
+            </StackPanel>
+      
+        </Grid>
 
     </StackPanel>
 </UserControl>
