@@ -15,6 +15,7 @@ namespace StockMaster.BaseClasses
         private int gameNumberOverall;
         private int courtNumber;
         private bool startOfPlayTeam1;
+        private Turn masterTurn;
 
         #region IEquatable Implementation
 
@@ -179,9 +180,26 @@ namespace StockMaster.BaseClasses
         }
 
         /// <summary>
-        /// Liste der Kehren
+        /// Liste der Kehren von StockTV
         /// </summary>
         public ConcurrentStack<Turn> Turns { get; set; }
+
+        /// <summary>
+        /// ErgebnisKehre. Wenn hier Werte enthalten sind, dann wird die Liste der Kehren nicht berücksichtigt
+        /// </summary>
+        public Turn MasterTurn
+        {
+            get
+            {
+                return masterTurn;
+            }
+            set
+            {
+                if (masterTurn == value) return;
+                masterTurn = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Summe der Stockpunkte von TeamB in diesem Spiel
@@ -190,10 +208,9 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                var turn0 = Turns.First(t => t.Number == 0);
-                if (turn0.PointsTeamA + turn0.PointsTeamB > 0)
+                if (MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
                 {
-                    return turn0.PointsTeamB;
+                    return MasterTurn.PointsTeamB;
                 }
                 else
                 {
@@ -211,10 +228,9 @@ namespace StockMaster.BaseClasses
             {
                 //In Kehre 0 stehen die manuellen Eingaben. In allen anderen Kehren die Werte von dem NetworkService.
                 //Wenn die Werte in Kehre 0 größer 0 sind, werden auch diese genommen und die Werte aus dem NetworkService ignoriert
-                var turn0 = Turns.First(t => t.Number == 0);
-                if(turn0.PointsTeamA + turn0.PointsTeamB > 0)
+                if(MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
                 {
-                    return turn0.PointsTeamA;
+                    return MasterTurn.PointsTeamA;
                 }
                 else
                 {
@@ -235,9 +251,6 @@ namespace StockMaster.BaseClasses
                 if (StockPointsTeamA == 0 && StockPointsTeamB == 0)
                     return 0;
 
-                if (Turns.Count == 0)
-                    return 0;
-
                 if (StockPointsTeamA > StockPointsTeamB)
                     return 0;
 
@@ -256,9 +269,6 @@ namespace StockMaster.BaseClasses
             get
             {
                 if (StockPointsTeamA == 0 && StockPointsTeamB == 0)
-                    return 0;
-
-                if (Turns.Count == 0)
                     return 0;
 
                 if (StockPointsTeamA > StockPointsTeamB)
@@ -282,7 +292,7 @@ namespace StockMaster.BaseClasses
         {
             RoundOfGame = 1;
             this.Turns = new ConcurrentStack<Turn>();
-            this.Turns.Push(new Turn(0));   //Default-Kehere für manuelle Eingabe
+            this.MasterTurn = new Turn(0);   //Default-Kehere für manuelle Eingabe
         }
 
 
@@ -344,6 +354,8 @@ namespace StockMaster.BaseClasses
                 return SpielPunkteTeamA;
             return 0;
         }
+
+       
 
         #endregion
     }

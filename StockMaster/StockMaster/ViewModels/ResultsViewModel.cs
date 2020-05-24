@@ -217,20 +217,20 @@ namespace StockMaster.ViewModels
             get
             {
                 return (selectedTeam == game.TeamA)
-                            ? game.Turns.First(t => t.Number == 0).PointsTeamA
-                            : game.Turns.First(t => t.Number == 0).PointsTeamB;
+                            ? game.MasterTurn.PointsTeamA
+                            : game.MasterTurn.PointsTeamB;
             }
             set
             {
                 if (IsPauseGame) return;
-                //stockPunkte = 0;
+
                 if (selectedTeam == game.TeamA)
                 {
-                    game.Turns.First(t => t.Number == 0).PointsTeamA = value;
+                    game.MasterTurn.PointsTeamA = value;
                 }
                 else
                 {
-                    game.Turns.First(t => t.Number == 0).PointsTeamB = value;
+                    game.MasterTurn.PointsTeamB = value;
 
                 }
 
@@ -242,20 +242,20 @@ namespace StockMaster.ViewModels
             get
             {
                 return (selectedTeam == game.TeamA)
-                                    ? game.Turns.First(t => t.Number == 0).PointsTeamB
-                                    : game.Turns.First(t => t.Number == 0).PointsTeamA;
+                                    ? game.MasterTurn.PointsTeamB
+                                    : game.MasterTurn.PointsTeamA;
             }
             set
             {
                 if (IsPauseGame) return;
-                //stockPunkte = 0;
+                
                 if (selectedTeam == game.TeamA)
                 {
-                    game.Turns.First(t => t.Number == 0).PointsTeamB = value;
+                    game.MasterTurn.PointsTeamB = value;
                 }
                 else
                 {
-                    game.Turns.First(t => t.Number == 0).PointsTeamA = value;
+                    game.MasterTurn.PointsTeamA = value;
 
                 }
 
@@ -314,11 +314,11 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return game.Turns.First(t => t.Number == 0).PointsTeamA;
+                return game.MasterTurn.PointsTeamA;
             }
             set
             {
-                game.Turns.First(t => t.Number == 0).PointsTeamA = value;
+                game.MasterTurn.PointsTeamA = value;
                 RaisePropertyChanged();
             }
         }
@@ -337,11 +337,11 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return game.Turns.First(t => t.Number == 0).PointsTeamB;
+                return game.MasterTurn.PointsTeamB;
             }
             set
             {
-                game.Turns.First(t => t.Number == 0).PointsTeamB = value;
+                game.MasterTurn.PointsTeamB = value;
                 RaisePropertyChanged();
             }
         }

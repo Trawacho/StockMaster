@@ -123,8 +123,8 @@ namespace StockMaster.BaseClasses
              *
              * Aufbau eines Datagramms: 
              * 1 Im ersten Byte steht die Bahnnummer
-             * 2 Im zweiten Byten steht die Länge eines Spiels (Anzahl der Kehren)
-             * 3 In jedem weiteren Byten kommen die laufenden Kehren
+             * 2 Im zweiten Byte steht die Länge eines Spiels (Anzahl der Kehren)
+             * 3 In jedem weiteren Byte kommen die laufenden Kehren
              *   Jede Kehre besteht aus zwei Byte, davon
              *      das erste Byte hat Mannschaft links
              *      das zweite Byte hat Mannschaft rechts
@@ -169,7 +169,6 @@ namespace StockMaster.BaseClasses
                 });
 
                 kehrenZähler++;
-
             }
          
             _CallBackAfterUpdateAction();
