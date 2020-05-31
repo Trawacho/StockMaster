@@ -95,7 +95,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _selectedPlayer;
+                return _selectedPlayer ?? (SelectedPlayer = SelectedTeam?.Players.FirstOrDefault());
             }
             set
             {
@@ -118,10 +118,10 @@ namespace StockMaster.ViewModels
         public ICommand AddTeamCommand { get; }
         private void AddTeamAction()
         {
-            tournament.AddTeam(new Team(tournament.NumberOfPlayersPerTeam)
+            tournament.AddTeam(new Team()
             {
                 TeamName = $"default {tournament.Teams.Count + 1}"
-            });
+            }, true);
 
             RaisePropertyChanged(nameof(Teams));
         }
@@ -131,7 +131,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return printQuittungenCommand ?? (printQuittungenCommand = new RelayCommand(
+                return printQuittungenCommand ??= new RelayCommand(
                     (p) =>
                     {
                         var x = new Output.Receipts.Receipt(tournament);
@@ -139,8 +139,9 @@ namespace StockMaster.ViewModels
                         var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
                         printPreview.Document = x.CreateReceipts(A4Size);
                         printPreview.ShowDialog();
-                    }
-                    ));
+                    },
+                    (p) => Teams.Count > 0
+                    ) ;
             }
         }
 
@@ -149,7 +150,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return addPlayerCommand ?? (addPlayerCommand = new RelayCommand(
+                return addPlayerCommand ??= new RelayCommand(
                     (p) =>
                     {
                         SelectedTeam.AddPlayer();
@@ -157,7 +158,7 @@ namespace StockMaster.ViewModels
 
                     },
                     (p) =>
-                     Players?.Count < Team.MaxNumberOfPlayers));
+                     Players?.Count < Team.MaxNumberOfPlayers);
             }
         }
 
@@ -166,7 +167,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return removePlayerCommand ?? (removePlayerCommand = new RelayCommand(
+                return removePlayerCommand ??= new RelayCommand(
                     (p) =>
                     {
                         SelectedTeam.RemovePlayer(SelectedPlayer);
@@ -174,14 +175,14 @@ namespace StockMaster.ViewModels
                     },
                     (p) =>
                     Players?.Count > Team.MinNumberOfPlayer 
-                    && SelectedPlayer != null));
+                    && SelectedPlayer != null);
             }
         }
     }
 
     public class TeamsDesignviewModel : ITeamsViewModel
     {
-        private Tournament t = TournamentExtension.CreateNewTournament(true);
+        private readonly Tournament t = TournamentExtension.CreateNewTournament(true);
         public TeamsDesignviewModel()
         {
             SelectedTeam = t.Teams[3];

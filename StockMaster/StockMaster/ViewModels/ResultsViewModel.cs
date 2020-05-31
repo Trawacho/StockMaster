@@ -139,7 +139,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _printErgebnislisteCommand ?? (_printErgebnislisteCommand = new RelayCommand(
+                return _printErgebnislisteCommand ??= new RelayCommand(
                     (p) =>
                     {
                         var x = new Output.Results.Result(tournament);
@@ -148,7 +148,7 @@ namespace StockMaster.ViewModels
                         printPreview.Document = x.CreateResult(A4Size);
                         printPreview.ShowDialog();
 
-                    }));
+                    });
             }
         }
 

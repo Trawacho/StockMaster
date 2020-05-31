@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
 
 namespace StockMaster.BaseClasses
 {
-    public class SerializableTournamentSet
+    public class SerializableTournamentSet : ITournament
     {
         public SerializableTournamentSet()
         {
@@ -14,30 +16,30 @@ namespace StockMaster.BaseClasses
 
         public void SetTournament(Tournament tournament)
         {
-            this.Teams = tournament.Teams.ToList();
+            this.XTeams = tournament.Teams.ToList();
             this.Games = tournament.GetAllGames()
                                  .Distinct<Game>()
                                  .OrderBy(r => r.RoundOfGame)
                                  .ThenBy(g => g.GameNumber)
                                  .ThenBy(c => c.CourtNumber)
                                  .ToList();
+            this.TournamentName = tournament.TournamentName;
             this.Venue = tournament.Venue;
             this.Operator = tournament.Operator;
             this.Organizer = tournament.Organizer;
             this.DateOfTournament = tournament.DateOfTournament;
             this.EntryFee = tournament.EntryFee;
+            this.StartOfTeamChange = tournament.StartOfTeamChange;
             this.Is8KehrenSpiel = tournament.Is8KehrenSpiel;
             this.IsDirectionOfCourtsFromRightToLeft = tournament.IsDirectionOfCourtsFromRightToLeft;
             this.IsNumberOfPause2 = tournament.IsNumberOfPause2;
             this.NumberOfGameRounds = tournament.NumberOfGameRounds;
             this.NumberOfTeamsWithNamedPlayerOnResult = tournament.NumberOfTeamsWithNamedPlayerOnResult;
-            this.ComputingOffice = tournament.Rechenbüro;
-            this.Referee = tournament.Schiedsrichter;
-            this.StartOfTeamChange = tournament.StartOfTeamChange;
-            this.TournamentName = tournament.TournamentName;
-            this.TournamentManager = tournament.Wettbewerbsleiter;
+            this.ComputingOfficer = tournament.ComputingOfficer;
+            this.Referee = tournament.Referee;
+            this.CompetitionManager = tournament.CompetitionManager;
         }
-        
+
 
         public Tournament GetTournament()
         {
@@ -53,23 +55,24 @@ namespace StockMaster.BaseClasses
                 IsNumberOfPause2 = this.IsNumberOfPause2,
                 NumberOfGameRounds = this.NumberOfGameRounds,
                 NumberOfTeamsWithNamedPlayerOnResult = this.NumberOfTeamsWithNamedPlayerOnResult,
-                Rechenbüro = this.ComputingOffice,
-                Schiedsrichter = this.Referee,
+                ComputingOfficer = this.ComputingOfficer,
+                Referee = this.Referee,
                 StartOfTeamChange = this.StartOfTeamChange,
                 TournamentName = this.TournamentName,
-                Wettbewerbsleiter = this.TournamentManager
+                CompetitionManager = this.CompetitionManager
             };
 
             tournament.RemoveAllTeams();
-            foreach (var team in Teams)
+
+            foreach (var team in XTeams)
             {
                 tournament.AddTeam(team);
             }
 
             foreach (var game in Games)
             {
-                game.TeamA = Teams.First(t => t.StartNumber == game.StartNumberTeamA);
-                game.TeamB = Teams.First(t => t.StartNumber == game.StartNumberTeamB);
+                game.TeamA = XTeams.First(t => t.StartNumber == game.StartNumberTeamA);
+                game.TeamB = XTeams.First(t => t.StartNumber == game.StartNumberTeamB);
 
                 tournament.Teams.First(t => t == game.TeamA).AddGame(game);
                 tournament.Teams.First(t => t == game.TeamB).AddGame(game);
@@ -77,6 +80,27 @@ namespace StockMaster.BaseClasses
 
             return tournament;
         }
+
+        [XmlIgnore()]
+        [Obsolete ("not available in serialization", true)]
+        public ReadOnlyCollection<Team> Teams
+        {
+            get
+            {
+                throw new Exception("Not allowd in Serialization");
+            }
+        }
+
+        [XmlIgnore()]
+        [Obsolete ("not available in serialization", true)]
+        public int NumberOfCourts
+        {
+            get
+            {
+                throw new Exception("Not allowed in Serialization");
+            }
+        }
+
 
         [XmlElement(Order = 2)]
         public string TournamentName { get; set; }
@@ -115,18 +139,19 @@ namespace StockMaster.BaseClasses
         public int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
 
         [XmlElement(Order = 14)]
-        public ComputingOfficer ComputingOffice { get; set; }
+        public ComputingOfficer ComputingOfficer { get; set; }
 
         [XmlElement(Order = 15)]
         public Referee Referee { get; set; }
 
         [XmlElement(Order = 16)]
-        public CompetitionManager TournamentManager { get; set; }
+        public CompetitionManager CompetitionManager { get; set; }
 
-        [XmlArray(ElementName = nameof(Teams), Order = 99)]
+
+
+        [XmlArray(ElementName = "Teams", Order = 90)]
         [XmlArrayItem(nameof(Team))]
-        public List<Team> Teams { get; set; }
-
+        public List<Team> XTeams { get; set; }
 
         [XmlArray(ElementName = nameof(Games), Order = 100)]
         [XmlArrayItem(nameof(Game))]

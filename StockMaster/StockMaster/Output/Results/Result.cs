@@ -43,25 +43,25 @@ namespace StockMaster.Output.Results
             }
 
             //Eintragen der Offiziellen
-            if (string.IsNullOrWhiteSpace(tournament.Schiedsrichter.Name)){
+            if (string.IsNullOrWhiteSpace(tournament.Referee.Name)){
                 ergListe._stackPanelSchiedsrichter.Visibility = Visibility.Collapsed;
             }
-            ergListe._textblockSchiedsrichterName.Text = tournament.Schiedsrichter.Name;
-            ergListe._textblockSchiedsrichterClub.Text = tournament.Schiedsrichter.ClubName;
+            ergListe._textblockSchiedsrichterName.Text = tournament.Referee.Name;
+            ergListe._textblockSchiedsrichterClub.Text = tournament.Referee.ClubName;
 
-            if (string.IsNullOrWhiteSpace(tournament.Wettbewerbsleiter.Name))
+            if (string.IsNullOrWhiteSpace(tournament.CompetitionManager.Name))
             {
                 ergListe._stackPanelWettbewerbsleiter.Visibility = Visibility.Collapsed;
             }
-            ergListe._textblockWettbewerbsleiterName.Text = tournament.Wettbewerbsleiter.Name;
-            ergListe._textblockWettbewerbsleiterClub.Text = tournament.Wettbewerbsleiter.ClubName;
+            ergListe._textblockWettbewerbsleiterName.Text = tournament.CompetitionManager.Name;
+            ergListe._textblockWettbewerbsleiterClub.Text = tournament.CompetitionManager.ClubName;
 
-            if (string.IsNullOrWhiteSpace(tournament.Rechenbüro.Name))
+            if (string.IsNullOrWhiteSpace(tournament.ComputingOfficer.Name))
             {
                 ergListe._stackPanelRechenbüro.Visibility = Visibility.Collapsed;
             }
-            ergListe._textblockRechenbüroName.Text = tournament.Rechenbüro.Name;
-            ergListe._textblockRechenbüroClub.Text = tournament.Rechenbüro.ClubName;
+            ergListe._textblockRechenbüroName.Text = tournament.ComputingOfficer.Name;
+            ergListe._textblockRechenbüroClub.Text = tournament.ComputingOfficer.ClubName;
 
             SetPagePanelToDocument(ergListe);
             return document;

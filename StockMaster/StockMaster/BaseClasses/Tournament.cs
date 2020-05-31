@@ -7,22 +7,22 @@ using System.Xml.Serialization;
 
 namespace StockMaster.BaseClasses
 {
-    public class Tournament : TBaseClass
+    public class Tournament : TBaseClass, ITournament
     {
-
-        #region Properties
+        #region Fields
 
         private readonly List<Team> _teams;
         private bool isNumberOfPause2;
         private int numberOfGameRounds;
-        private int numberOfPlayersPerTeam;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Liste aller Teams
         /// </summary>
-        public ReadOnlyCollection<Team> Teams { get; private set; }
-        //public List<Team> Teams { get; private set; }
-
+        public ReadOnlyCollection<Team> Teams { get;  }
 
         /// <summary>
         /// Veranstaltungsort
@@ -119,31 +119,9 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
 
-        /// <summary>
-        /// Anzahl der Spieler pro Mannschaft (1-6) (default-Wert beim erstellen eines Teams)
-        /// </summary>
-        public int NumberOfPlayersPerTeam
-        {
-            get
-            {
-                return numberOfPlayersPerTeam;
-            }
-            set
-            {
-                if (value < Team.MinNumberOfPlayer
-                    || value > Team.MaxNumberOfPlayers
-                    || value == numberOfPlayersPerTeam)
-                    return;
-
-                numberOfPlayersPerTeam = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        public Referee Schiedsrichter { get; set; }
-        public CompetitionManager Wettbewerbsleiter { get; set; }
-        public ComputingOfficer Rechenbüro { get; set; }
+        public Referee Referee { get; set; }
+        public CompetitionManager CompetitionManager { get; set; }
+        public ComputingOfficer ComputingOfficer { get; set; }
 
         #endregion
 
@@ -165,10 +143,9 @@ namespace StockMaster.BaseClasses
 
 
             this.NumberOfTeamsWithNamedPlayerOnResult = 3;
-            this.NumberOfPlayersPerTeam = 4;
-            this.Schiedsrichter = new Referee();
-            this.Wettbewerbsleiter = new CompetitionManager();
-            this.Rechenbüro = new ComputingOfficer();
+            this.Referee = new Referee();
+            this.CompetitionManager = new CompetitionManager();
+            this.ComputingOfficer = new ComputingOfficer();
         }
 
 
@@ -226,7 +203,7 @@ namespace StockMaster.BaseClasses
         {
             for (int i = 0; i < count; i++)
             {
-                AddTeam(new Team("Virtual Team", NumberOfPlayersPerTeam)
+                AddTeam(new Team("Virtual Team")
                 {
                     IsVirtual = true
                 },
@@ -273,12 +250,14 @@ namespace StockMaster.BaseClasses
 
         /// <summary>
         /// Removes the Team from the Tournament
+        /// - Remove alle Virtual Teams
         /// - Startnumbers were reOrganized
         /// - all Games were deleted
         /// </summary>
         /// <param name="team"></param>
         public void RemoveTeam(Team team)
         {
+            RemoveAllVirtualTeams();
             this._teams.Remove(team);
 
             Parallel.ForEach(_teams, (t) => t.ClearGames());

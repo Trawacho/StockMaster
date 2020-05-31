@@ -92,6 +92,7 @@
                   IsThreeState="False"
                   HorizontalContentAlignment="Left"
                   VerticalContentAlignment="Center"
+                  ToolTip="Nur in Verbindung mit StockTV relevant"
                   Margin="5"/>
 
             <Label Content="Startgebühr:"
@@ -116,13 +117,7 @@
             </Grid>
             
             
-            <Label Content="Spieler pro Mannschaft:" 
-               Grid.Row="7" Grid.Column="0"/>
-            <TextBox Grid.Row="7" Grid.Column="1"
-                 Text="{Binding Path=NumberOfPlayerPerTeam,
-                                Mode=TwoWay, 
-                                UpdateSourceTrigger=PropertyChanged}"
-                 MaxLength="1" Width="auto" Padding="5,0"/>
+           <!-- Row 7 is empty -->
             
                 
             
@@ -141,11 +136,11 @@
                 <Label Content="Name:" Grid.Row="0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Schiedsrichter.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=Referee.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Verein:" Grid.Row="1"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Schiedsrichter.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=Referee.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
             <Label Content="Wettbewerbsleiter" Grid.Row="9" Grid.Column="0"/>
             <Grid Grid.Row="9" Grid.Column="1">
@@ -160,11 +155,11 @@
                 <Label Content="Name:" Grid.Row="0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Wettbewerbsleiter.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=CompetitionManager.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Verein:" Grid.Row="1"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Wettbewerbsleiter.ClubName,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=CompetitionManager.ClubName,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
             <Label Content="Rechenbüro" Grid.Row="10" Grid.Column="0"/>
@@ -180,11 +175,11 @@
                 <Label Content="Name:" Grid.Row="0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Rechenbüro.Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=ComputingOfficer.Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Verein:" Grid.Row="1"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Rechenbüro.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding Path=ComputingOfficer.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
         </Grid>

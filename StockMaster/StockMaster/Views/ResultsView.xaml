@@ -43,7 +43,7 @@
             </Grid.RowDefinitions>
             
             <RadioButton Grid.Column="0" Grid.Row="0" 
-                         Content="nach Team" x:Name="radioButtonTeam"/>
+                         Content="pro Team" x:Name="radioButtonTeam"/>
             
             <ListView Grid.Column="0" Grid.Row="1"
                       Visibility="{Binding ElementName=radioButtonTeam, 
@@ -55,7 +55,7 @@
                       SelectedItem="{Binding Path=SelectedTeam, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             
             <RadioButton IsChecked="True" Grid.Column="0" Grid.Row="2" 
-                         Content="nach Spiel" x:Name="radioButtonGame"/>
+                         Content="nach jedem Spiel" x:Name="radioButtonGame"/>
             
             <ListView Grid.Column="0" Grid.Row="3" 
                       Visibility="{Binding ElementName=radioButtonGame, 

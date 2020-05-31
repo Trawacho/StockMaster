@@ -47,13 +47,13 @@ namespace StockMaster.ViewModels
             get
             {
 
-                return _closeCommand ?? (_closeCommand = new RelayCommand(
+                return _closeCommand ??= new RelayCommand(
                     (p) =>
                     {
                         WindowCloseRequested?.Invoke(this, new WindowCloseRequestedEventArgs());
                         DialogCloseRequested?.Invoke(null, null);
                     },
-                    (p) => true));
+                    (p) => true);
             }
         }
 
@@ -62,11 +62,11 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _refreshCommand ?? (_refreshCommand = new RelayCommand(
+                return _refreshCommand ??= new RelayCommand(
                     (p) =>
                     {
                         RaisePropertyChanged(nameof(Ergebnisliste));
-                    }));
+                    });
             }
         }
 
@@ -92,15 +92,15 @@ namespace StockMaster.ViewModels
         {
             this.Ergebnisliste = new ObservableCollection<(int, Team)>
             {
-                (1, new Team("ESF Hankofen",4)),
-                (2, new Team("TV Geiselhöring",4)),
-                (3, new Team("EC EBRA Aiterhofen",4)),
-                (4, new Team("EC Pilsting",4)),
-                (5, new Team("DJK Leiblfing",4)),
-                (6, new Team("EC Welchenberg",4)),
-                (7, new Team("SV Salching",4)),
-                (8, new Team("EC Straßkirchen",4)),
-                (9, new Team("DJK Aigen am Inn",4))
+                (1, new Team("ESF Hankofen")),
+                (2, new Team("TV Geiselhöring")),
+                (3, new Team("EC EBRA Aiterhofen")),
+                (4, new Team("EC Pilsting")),
+                (5, new Team("DJK Leiblfing")),
+                (6, new Team("EC Welchenberg")),
+                (7, new Team("SV Salching")),
+                (8, new Team("EC Straßkirchen")),
+                (9, new Team("DJK Aigen am Inn"))
             };
         }
 

@@ -15,11 +15,10 @@ namespace StockMaster.ViewModels
 
         bool IsDirectionOfCourtsFromRightToLeft { get; set; }
         string DirectionOfCourtsDescription { get; }
-        int NumberOfPlayerPerTeam { get; set; }
 
-        Referee Schiedsrichter { get; set; }
-        CompetitionManager Wettbewerbsleiter { get; set; }
-        ComputingOfficer Rechenbüro{ get; set; }
+        Referee Referee { get; set; }
+        CompetitionManager CompetitionManager { get; set; }
+        ComputingOfficer ComputingOfficer{ get; set; }
     }
 
     public class TournamentViewModel : BaseViewModel, ITournamentViewModel
@@ -75,13 +74,13 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return Tournament.Organizer;
+                return Tournament.Operator;
             }
             set
             {
-                if (Tournament.Organizer == value)
+                if (Tournament.Operator == value)
                     return;
-                Tournament.Organizer = value;
+                Tournament.Operator = value;
                 RaisePropertyChanged();
             }
         }
@@ -162,54 +161,42 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public int NumberOfPlayerPerTeam
+
+        public Referee Referee
         {
             get
             {
-                return Tournament.NumberOfPlayersPerTeam;
+                return Tournament.Referee;
             }
             set
             {
-                Tournament.NumberOfPlayersPerTeam = value;
+                Tournament.Referee = value;
                 RaisePropertyChanged();
             }
         }
 
-        public Referee Schiedsrichter
+        public CompetitionManager CompetitionManager
         {
             get
             {
-                return Tournament.Schiedsrichter;
+                return Tournament.CompetitionManager;
             }
             set
             {
-                Tournament.Schiedsrichter = value;
+                Tournament.CompetitionManager = value;
                 RaisePropertyChanged();
             }
         }
 
-        public CompetitionManager Wettbewerbsleiter
+        public ComputingOfficer ComputingOfficer
         {
             get
             {
-                return Tournament.Wettbewerbsleiter;
+                return Tournament.ComputingOfficer;
             }
             set
             {
-                Tournament.Wettbewerbsleiter = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public ComputingOfficer Rechenbüro
-        {
-            get
-            {
-                return Tournament.Rechenbüro;
-            }
-            set
-            {
-                Tournament.Rechenbüro = value;
+                Tournament.ComputingOfficer = value;
                 RaisePropertyChanged();
             }
         }
@@ -243,11 +230,9 @@ namespace StockMaster.ViewModels
 
         public EntryFee EntryFee { get; set; }
 
-        public int NumberOfPlayerPerTeam { get; set; } = 4;
-
-        public Referee Schiedsrichter { get; set; }
-        public ComputingOfficer Rechenbüro { get; set; }
-        public CompetitionManager Wettbewerbsleiter { get; set; }
+        public Referee Referee { get; set; }
+        public ComputingOfficer ComputingOfficer { get; set; }
+        public CompetitionManager CompetitionManager { get; set; }
     }
 
 

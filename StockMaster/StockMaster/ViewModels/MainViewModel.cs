@@ -236,9 +236,11 @@ namespace StockMaster.ViewModels
                 return _SaveTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var sfd = new SaveFileDialog();
-                        sfd.DefaultExt = "skmr";
-                        sfd.Filter = "StockMaster File (*.skmr)|*.skmr";
+                        var sfd = new SaveFileDialog
+                        {
+                            DefaultExt = "skmr",
+                            Filter = "StockMaster File (*.skmr)|*.skmr"
+                        };
                         var dialogResult = sfd.ShowDialog();
                         if (dialogResult == DialogResult.OK)
                         {
@@ -257,10 +259,11 @@ namespace StockMaster.ViewModels
                 return _OpenTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var ofd = new OpenFileDialog();
-
-                        ofd.Filter = "StockMaster Files (*.skmr)|*.skmr";
-                        ofd.DefaultExt = "skmr";
+                        var ofd = new OpenFileDialog
+                        {
+                            Filter = "StockMaster Files (*.skmr)|*.skmr",
+                            DefaultExt = "skmr"
+                        };
 
                         var dialogResult = ofd.ShowDialog();
 

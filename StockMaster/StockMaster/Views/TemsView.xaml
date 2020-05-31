@@ -127,8 +127,16 @@
                              MaxLength="20"/>
                 </Grid>
                 <Label Content="Spieler" FontWeight="Bold" Margin="0,10,0,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Hinzufügen" 
+                            Command="{Binding Path=AddPlayerCommand}"
+                            Margin="0,10" Padding="10" HorizontalAlignment="Left"/>
+                    <Button Content="Entfernen" 
+                            Command="{Binding Path=RemovePlayerCommand}"
+                            Margin="10,10" Padding="10" HorizontalAlignment="Left"/>
+                </StackPanel>
                 <DataGrid ItemsSource="{Binding Path=Players}"
-                          SelectedItem="{Binding Path=SelectedPlayer}"
+                          SelectedItem="{Binding Path=SelectedPlayer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           AutoGenerateColumns="False"
                           SelectionMode="Single"
                           BorderThickness="0"
@@ -182,14 +190,7 @@
                     </DataGrid.Columns>
 
                 </DataGrid>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Hinzufügen" 
-                            Command="{Binding Path=AddPlayerCommand}"
-                            Margin="0,10" Padding="10" HorizontalAlignment="Left"/>
-                    <Button Content="Entfernen" 
-                            Command="{Binding Path=RemovePlayerCommand}"
-                            Margin="10,10" Padding="10" HorizontalAlignment="Left"/>
-                </StackPanel>
+                
             </StackPanel>
         </ScrollViewer>
 

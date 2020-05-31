@@ -110,7 +110,7 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Minimum Number of Players for a Team
         /// </summary>
-        public static int MinNumberOfPlayer { get; } = 1;
+        public static int MinNumberOfPlayer { get; } = 0;
 
         /// <summary>
         /// Liste aller Spiele 
@@ -210,28 +210,14 @@ namespace StockMaster.BaseClasses
             this.Games = games.AsReadOnly();
             this.Players = new List<Player>();
         }
-
-        /// <summary>
-        /// Default-Constructor
-        /// </summary>
-        public Team(int numberOfPlayers):this()
-        {
-            
-
-            for (int i = 0; i < numberOfPlayers; i++) // default 4 Spieler erzeugen
-            {
-                Players.Add(new Player("LastName", "FirstName"));
-            }
-            
-        }
-        
+               
 
         /// <summary>
         /// Constructor 
         /// </summary>
         /// <param name="TeamName"></param>
         /// <param name="CountOfDefaultPlayer"></param>
-        public Team(string TeamName, int numberOfPlayers) : this(numberOfPlayers)
+        public Team(string TeamName) : this()
         {
             this.TeamName = TeamName;
 

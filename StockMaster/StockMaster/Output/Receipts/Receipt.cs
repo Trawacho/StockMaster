@@ -1,6 +1,7 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Converters;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -25,7 +26,7 @@ namespace StockMaster.Output.Receipts
 
             var receipts = new List<Control>();
 
-            foreach (var team in tournament.Teams)
+            foreach (var team in tournament.Teams.Where(t => !t.IsVirtual))
             {
                 var receipt = new ucReceipt();
                 receipt.labelAn.Content = tournament.Organizer;
