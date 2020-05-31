@@ -32,7 +32,7 @@ namespace StockMaster.BaseClasses
             this.StartOfTeamChange = tournament.StartOfTeamChange;
             this.Is8KehrenSpiel = tournament.Is8KehrenSpiel;
             this.IsDirectionOfCourtsFromRightToLeft = tournament.IsDirectionOfCourtsFromRightToLeft;
-            this.IsNumberOfPause2 = tournament.IsNumberOfPause2;
+            this.TwoPauseGames = tournament.TwoPauseGames;
             this.NumberOfGameRounds = tournament.NumberOfGameRounds;
             this.NumberOfTeamsWithNamedPlayerOnResult = tournament.NumberOfTeamsWithNamedPlayerOnResult;
             this.ComputingOfficer = tournament.ComputingOfficer;
@@ -52,7 +52,7 @@ namespace StockMaster.BaseClasses
                 EntryFee = this.EntryFee,
                 Is8KehrenSpiel = this.Is8KehrenSpiel,
                 IsDirectionOfCourtsFromRightToLeft = this.IsDirectionOfCourtsFromRightToLeft,
-                IsNumberOfPause2 = this.IsNumberOfPause2,
+                TwoPauseGames = this.TwoPauseGames,
                 NumberOfGameRounds = this.NumberOfGameRounds,
                 NumberOfTeamsWithNamedPlayerOnResult = this.NumberOfTeamsWithNamedPlayerOnResult,
                 ComputingOfficer = this.ComputingOfficer,
@@ -130,7 +130,7 @@ namespace StockMaster.BaseClasses
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
 
         [XmlElement(Order = 11)]
-        public bool IsNumberOfPause2 { get; set; }
+        public bool TwoPauseGames { get; set; }
 
         [XmlElement(Order = 12)]
         public int NumberOfGameRounds { get; set; }

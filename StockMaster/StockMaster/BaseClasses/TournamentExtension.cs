@@ -13,7 +13,7 @@ namespace StockMaster.BaseClasses
             {
                 //NumberOfCourts = 4, // 4 Bahnen
                 NumberOfGameRounds = 1,
-                IsNumberOfPause2 = false,
+                TwoPauseGames = false,
                 EntryFee = new EntryFee(30.00, "dreißig"),
                 Organizer = "Eisstockfreunde Hankofen",
                 DateOfTournament = DateTime.Now,

@@ -12,7 +12,7 @@ namespace StockMaster.BaseClasses
         #region Fields
 
         private readonly List<Team> _teams;
-        private bool isNumberOfPause2;
+        private bool twoPauseGames;
         private int numberOfGameRounds;
 
         #endregion
@@ -22,7 +22,7 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Liste aller Teams
         /// </summary>
-        public ReadOnlyCollection<Team> Teams { get;  }
+        public ReadOnlyCollection<Team> Teams { get; }
 
         /// <summary>
         /// Veranstaltungsort
@@ -85,16 +85,18 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
 
-        public bool IsNumberOfPause2
+        public bool TwoPauseGames
         {
             get
             {
-                return isNumberOfPause2;
+                return Teams.Count(t => !t.IsVirtual) % 2 == 0 
+                                        ? twoPauseGames 
+                                        : false;
             }
             set
             {
-                if (value == isNumberOfPause2) return;
-                isNumberOfPause2 = value;
+                if (value == twoPauseGames) return;
+                twoPauseGames = value;
                 RaisePropertyChanged();
             }
         }
@@ -131,7 +133,7 @@ namespace StockMaster.BaseClasses
         {
             this.IsDirectionOfCourtsFromRightToLeft = true;
             this.NumberOfGameRounds = 1;
-            this.IsNumberOfPause2 = false;
+            this.TwoPauseGames = false;
             this.Is8KehrenSpiel = false;
             this.EntryFee = new EntryFee();
             StartOfTeamChange = false;
@@ -302,7 +304,7 @@ namespace StockMaster.BaseClasses
                 //Gerade Anzahl an Mannschaften
                 //Entweder kein Aussetzer oder ZWEI Aussetzer
                 //if (NumberOfPauseGames == 2)
-                if (IsNumberOfPause2)
+                if (TwoPauseGames)
                 {
                     AddVirtualTeams(2);
                 }

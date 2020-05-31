@@ -18,8 +18,7 @@ namespace StockMaster.ViewModels
         int NumberOfCourts { get; }
         int NumberOfGameRounds { get; set; }
         ObservableCollection<Team> Teams { get; }
-        int RealTeamsCount { get; }
-        bool IsNumberOfPause2 { get; set; }
+        bool TwoPauseGames { get; set; }
         bool ConcatRoundsOnOutput { get; set; }
         bool TeamNameOnTurnCards { get; set; }
         bool Is8KehrenSpiel { get; set; }
@@ -41,21 +40,11 @@ namespace StockMaster.ViewModels
         public GamesViewModel(Tournament tournament)
         {
             this.tournament = tournament;
-            this.PropertyChanged += GamesViewModel_PropertyChanged;
             ConcatRoundsOnOutput = false;
             TeamNameOnTurnCards = false;
         }
 
-        private void GamesViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Teams))
-            {
-                RaisePropertyChanged(nameof(RealTeamsCount));
-            }
-        }
-
         #endregion
-
 
         #region Properties
 
@@ -69,11 +58,6 @@ namespace StockMaster.ViewModels
             {
                 return tournament.NumberOfCourts;
             }
-            //set
-            //{
-            //    tournament.NumberOfCourts = value;
-            //    RaisePropertyChanged();
-            //}
         }
 
 
@@ -93,7 +77,9 @@ namespace StockMaster.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Liste der Reellen Teams
+        /// </summary>
         public ObservableCollection<Team> Teams
         {
             get
@@ -102,23 +88,20 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public bool IsNumberOfPause2
+        /// <summary>
+        /// bei gerader Anzahl an Manschaften, true, dann werden zwei Aussetzer gespielt
+        /// </summary>
+        public bool TwoPauseGames
         {
-            get { return tournament.IsNumberOfPause2; }
+            get { return tournament.TwoPauseGames; }
             set
             {
-                tournament.IsNumberOfPause2 = value;
+                tournament.TwoPauseGames = value;
                 RaisePropertyChanged();
             }
         }
 
-        public int RealTeamsCount
-        {
-            get
-            {
-                return Teams.Count(t => !t.IsVirtual);
-            }
-        }
+       
 
         private bool concatRoundsOnOutput;
         public bool ConcatRoundsOnOutput
@@ -135,6 +118,7 @@ namespace StockMaster.ViewModels
                 RaisePropertyChanged();
             }
         }
+       
         public bool TeamNameOnTurnCards { get; set; }
 
         public bool Is8KehrenSpiel
@@ -225,8 +209,7 @@ namespace StockMaster.ViewModels
 
         public int NumberOfCourts { get; }
         public int NumberOfGameRounds { get; set; } = 1;
-        public bool IsNumberOfPause2 { get; set; } = true;
-        public int RealTeamsCount { get; } = 4;
+        public bool TwoPauseGames { get; set; } = true;
 
         public ObservableCollection<Team> Teams { get { return new ObservableCollection<Team>(t.Teams.Where(t => !t.IsVirtual)); } }
 

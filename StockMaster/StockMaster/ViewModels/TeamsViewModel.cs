@@ -16,7 +16,6 @@ namespace StockMaster.ViewModels
         ObservableCollection<Player> Players { get; }
         ICommand AddTeamCommand { get; }
         ICommand RemoveTeamCommand { get; }
-
         ICommand AddPlayerCommand { get; }
         ICommand RemovePlayerCommand { get; }
         ICommand PrintQuittungenCommand { get; }
@@ -28,33 +27,6 @@ namespace StockMaster.ViewModels
         public TeamsViewModel(Tournament tournament)
         {
             this.tournament = tournament;
-            this.AddTeamCommand = new RelayCommand(
-                (p) =>
-                {
-                    AddTeamAction();
-                },
-                (o) =>
-                {
-                    return Teams.Count(t => !t.IsVirtual) < 15;
-                }
-                );
-
-            this.RemoveTeamCommand = new RelayCommand(
-                (p) =>
-                {
-                    RemoveTeamAction();
-                },
-                (o) =>
-                {
-                    return SelectedTeam != null;
-                }
-                );
-
-        }
-
-        private void Teams_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            RaisePropertyChanged(nameof(Teams));
         }
 
         public ObservableCollection<Team> Teams
@@ -64,11 +36,12 @@ namespace StockMaster.ViewModels
                 return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
             }
         }
+       
         public ObservableCollection<Player> Players
         {
             get
             {
-                if (SelectedTeam == null) return null; 
+                if (SelectedTeam == null) return null;
                 return new ObservableCollection<Player>(SelectedTeam.Players);
             }
         }
@@ -106,24 +79,41 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public ICommand RemoveTeamCommand { get; }
-
-        private void RemoveTeamAction()
+        private ICommand _removeTeamCommand;
+        public ICommand RemoveTeamCommand
         {
-            tournament.RemoveTeam(SelectedTeam);
-            RaisePropertyChanged(nameof(Teams));
+            get
+            {
+                return _removeTeamCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        tournament.RemoveTeam(SelectedTeam);
+                        RaisePropertyChanged(nameof(Teams));
+                    },
+                (o) =>
+                {
+                    return SelectedTeam != null;
+                }
+                );
+            }
         }
 
-
-        public ICommand AddTeamCommand { get; }
-        private void AddTeamAction()
+        private ICommand _addTeamCommand;
+        public ICommand AddTeamCommand
         {
-            tournament.AddTeam(new Team()
+            get
             {
-                TeamName = $"default {tournament.Teams.Count + 1}"
-            }, true);
-
-            RaisePropertyChanged(nameof(Teams));
+                return _addTeamCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        tournament.AddTeam(new Team($"default {tournament.Teams.Count + 1}"), true);
+                        RaisePropertyChanged(nameof(Teams));
+                    },
+                    (p) =>
+                    {
+                        return Teams.Count(t => !t.IsVirtual) < 15;
+                    });
+            }
         }
 
         private ICommand printQuittungenCommand;
@@ -141,7 +131,7 @@ namespace StockMaster.ViewModels
                         printPreview.ShowDialog();
                     },
                     (p) => Teams.Count > 0
-                    ) ;
+                    );
             }
         }
 
@@ -174,7 +164,7 @@ namespace StockMaster.ViewModels
                         RaisePropertyChanged(nameof(Players));
                     },
                     (p) =>
-                    Players?.Count > Team.MinNumberOfPlayer 
+                    Players?.Count > Team.MinNumberOfPlayer
                     && SelectedPlayer != null);
             }
         }
@@ -197,11 +187,11 @@ namespace StockMaster.ViewModels
                 return new ObservableCollection<Player>(SelectedTeam.Players);
             }
         }
+
         public Team SelectedTeam { get; set; }
         public Player SelectedPlayer { get; set; }
         public ICommand AddTeamCommand { get; }
         public ICommand RemoveTeamCommand { get; }
-
         public ICommand AddPlayerCommand { get; }
         public ICommand RemovePlayerCommand { get; }
         public ICommand PrintQuittungenCommand { get; }

@@ -156,8 +156,8 @@
                       Grid.Row="2" Grid.Column="1"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"
-                      IsChecked="{Binding Path=IsNumberOfPause2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      IsEnabled="{Binding Path=RealTeamsCount, Converter={StaticResource numberIsEvenToBoolenConverter}}"/>
+                      IsChecked="{Binding Path=TwoPauseGames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsEnabled="{Binding Path=Teams.Count, Converter={StaticResource numberIsEvenToBoolenConverter}}"/>
             
 
             <Label Content="Anzahl Kehren pro Spiel:"

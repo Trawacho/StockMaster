@@ -45,7 +45,6 @@ namespace StockMaster.ViewModels
         /// </summary>
         public Action ExitApplicationAction { get; set; }
 
-
         /// <summary>
         /// Content for the ListenerButton with state related content
         /// </summary>
@@ -75,6 +74,7 @@ namespace StockMaster.ViewModels
             //this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
+     
         /// <summary>
         /// Default-Constructor
         /// </summary>

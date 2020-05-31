@@ -15,8 +15,8 @@ namespace StockMaster.ViewModels
         ObservableCollection<Game> Games { get; }
         Team SelectedTeam { get; set; }
         Game SelectedGame { get; set; }
-        List<PointPerTeamAndGame> PointsOfSelectedTeam { get; }
-        List<PointPerGame> PointsPerGameList { get; set; }
+        List<PointsPerTeamAndGame> PointsOfSelectedTeam { get; }
+        List<PointsPerGame> PointsPerGameList { get; set; }
         int NumberOfTeamsWithNamedPlayers { get; set; }
 
     } //IResultsViewModel
@@ -90,7 +90,7 @@ namespace StockMaster.ViewModels
         private void SetPointsPerGame()
         {
 
-            this.PointsPerGameList = new List<PointPerGame>();
+            this.PointsPerGameList = new List<PointsPerGame>();
             foreach (var game in tournament.GetAllGames()
                                         .Where(g => g.RoundOfGame == SelectedGame.RoundOfGame
                                                  && g.GameNumber == SelectedGame.GameNumber
@@ -98,7 +98,7 @@ namespace StockMaster.ViewModels
                                         .Distinct<Game>()
                                         .OrderBy(o => o.CourtNumber))
             {
-                PointsPerGameList.Add(new PointPerGame(game));
+                PointsPerGameList.Add(new PointsPerGame(game));
             }
 
             RaisePropertyChanged(nameof(PointsPerGameList));
@@ -106,18 +106,18 @@ namespace StockMaster.ViewModels
 
         private void SetPointsOfSelectedTeam()
         {
-            this.PointsOfSelectedTeam = new List<PointPerTeamAndGame>();
+            this.PointsOfSelectedTeam = new List<PointsPerTeamAndGame>();
             foreach (var game in SelectedTeam.Games.OrderBy(g => g.GameNumberOverAll))
             {
-                PointsOfSelectedTeam.Add(new PointPerTeamAndGame(game, SelectedTeam));
+                PointsOfSelectedTeam.Add(new PointsPerTeamAndGame(game, SelectedTeam));
             }
 
             RaisePropertyChanged(nameof(PointsOfSelectedTeam));
         }
 
-        public List<PointPerTeamAndGame> PointsOfSelectedTeam { get; set; }
+        public List<PointsPerTeamAndGame> PointsOfSelectedTeam { get; set; }
 
-        public List<PointPerGame> PointsPerGameList { get; set; }
+        public List<PointsPerGame> PointsPerGameList { get; set; }
 
         public int NumberOfTeamsWithNamedPlayers
         {
@@ -188,163 +188,14 @@ namespace StockMaster.ViewModels
 
         public Game SelectedGame { get; set; }
 
-        public List<PointPerTeamAndGame> PointsOfSelectedTeam { get; set; }
-        public List<PointPerGame> PointsPerGameList { get; set; }
+        public List<PointsPerTeamAndGame> PointsOfSelectedTeam { get; set; }
+        public List<PointsPerGame> PointsPerGameList { get; set; }
 
         public ICommand PrintErgebnislisteCommand { get; }
         public int NumberOfTeamsWithNamedPlayers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     } //ResultsDesignViewModel
 
-    public class PointPerTeamAndGame : TBaseClass
-    {
-        private readonly Game game;
-        private readonly Team selectedTeam;
-        public PointPerTeamAndGame(Game game, Team selectedTeam)
-        {
-            this.game = game;
-            this.selectedTeam = selectedTeam;
-        }
+    
 
-        public int GameNumber
-        {
-            get
-            {
-                return game.GameNumberOverAll;
-            }
-        }
-        public int StockPunkte
-        {
-            get
-            {
-                return (selectedTeam == game.TeamA)
-                            ? game.MasterTurn.PointsTeamA
-                            : game.MasterTurn.PointsTeamB;
-            }
-            set
-            {
-                if (IsPauseGame) return;
-
-                if (selectedTeam == game.TeamA)
-                {
-                    game.MasterTurn.PointsTeamA = value;
-                }
-                else
-                {
-                    game.MasterTurn.PointsTeamB = value;
-
-                }
-
-                RaisePropertyChanged();
-            }
-        }
-        public int StockPunkteGegner
-        {
-            get
-            {
-                return (selectedTeam == game.TeamA)
-                                    ? game.MasterTurn.PointsTeamB
-                                    : game.MasterTurn.PointsTeamA;
-            }
-            set
-            {
-                if (IsPauseGame) return;
-                
-                if (selectedTeam == game.TeamA)
-                {
-                    game.MasterTurn.PointsTeamB = value;
-                }
-                else
-                {
-                    game.MasterTurn.PointsTeamA = value;
-
-                }
-
-                RaisePropertyChanged();
-            }
-        }
-        public bool IsPauseGame
-        {
-            get
-            {
-                return game.IsPauseGame;
-            }
-        }
-
-        public string Gegner
-        {
-            get
-            {
-                if (IsPauseGame)
-                    return "Setzt aus";
-
-                if (selectedTeam == game.TeamA)
-                    return game.TeamB.TeamName;
-
-                return game.TeamA.TeamName;
-            }
-        }
-
-    }  //PointPerTeamAndGame
-
-    public class PointPerGame : TBaseClass
-    {
-        private readonly Game game;
-        public PointPerGame(Game game)
-        {
-            this.game = game;
-        }
-
-
-        public int Bahn
-        {
-            get
-            {
-                return game.CourtNumber;
-            }
-        }
-        public string TeamNameA
-        {
-            get
-            {
-                return game.TeamA.TeamName;
-            }
-        }
-
-        public int StockPunkteA
-        {
-            get
-            {
-                return game.MasterTurn.PointsTeamA;
-            }
-            set
-            {
-                game.MasterTurn.PointsTeamA = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        public string TeamNameB
-        {
-            get
-            {
-                return game.TeamB.TeamName;
-            }
-        }
-
-
-        public int StockPunkteB
-        {
-            get
-            {
-                return game.MasterTurn.PointsTeamB;
-            }
-            set
-            {
-                game.MasterTurn.PointsTeamB = value;
-                RaisePropertyChanged();
-            }
-        }
-
-    } //PointPerGame
+    
 }

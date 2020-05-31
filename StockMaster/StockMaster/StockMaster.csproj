@@ -82,6 +82,8 @@
     <Compile Include="BaseClasses\EntryFee.cs" />
     <Compile Include="BaseClasses\Executive.cs" />
     <Compile Include="BaseClasses\ITournament.cs" />
+    <Compile Include="BaseClasses\PointsPerTeamAndGame.cs" />
+    <Compile Include="BaseClasses\PointsPerGame.cs" />
     <Compile Include="BaseClasses\SerializableTournamentSet.cs" />
     <Compile Include="BaseClasses\TBaseClass.cs" />
     <Compile Include="BaseClasses\Game.cs" />

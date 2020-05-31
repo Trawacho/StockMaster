@@ -363,9 +363,6 @@ namespace StockMaster.BaseClasses
             }
         }
 
-
-
-
         public int GetStockPunkte(Team team)
         {
             if (team == TeamA)

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
@@ -60,7 +56,7 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// If true, on even number of Teams, there are two games as pause
         /// </summary>
-        bool IsNumberOfPause2 { get; set; }
+        bool TwoPauseGames { get; set; }
 
 
         /// <summary>

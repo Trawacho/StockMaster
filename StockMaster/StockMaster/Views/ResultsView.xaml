@@ -180,7 +180,9 @@
             
             <Label Content="{Binding Path=SelectedGame.GameName}" FontWeight="Bold" Padding="10"/>
 
-            <DataGrid ItemsSource="{Binding Path=PointsPerGameList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            <DataGrid ItemsSource="{Binding Path=PointsPerGameList, 
+                                            Mode=OneWay, 
+                                            UpdateSourceTrigger=PropertyChanged}"
                       Width="auto"
                       MinHeight="100"
                       MaxHeight="800"
