@@ -2,44 +2,50 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace StockMaster.BaseClasses
 {
     public class Team : TBaseClass, IEquatable<Team>
     {
+        #region Fields
+
         private string teamName;
         private int startNumber;
         private bool isVirtual;
+        private string nation;
+        private readonly List<Game> games;
+
+        #endregion
+
+        #region IEquatable implementation
+
+        /// <summary>
+        /// If a Team is equal to another Team depends only on the StartNumber
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Team other)
+        {
+            return this.StartNumber == other.StartNumber;
+        }
+
+        #endregion
 
         #region Standard-Properties
 
         /// <summary>
-        /// Liste aller Spieler
+        /// True, wenn das Team nur zur Berechnung verwendet wird
         /// </summary>
-        public List<Player> Players { get; set; }
-
-        /// <summary>
-        /// Maximum Number of Players for a Team
-        /// </summary>
-        public static int MaxNumberOfPlayers { get; } = 6;
-
-        /// <summary>
-        /// Minimum Number of Players for a Team
-        /// </summary>
-        public static int MinNumberOfPlayer { get; } = 1;
-
-        /// <summary>
-        /// Teamname
-        /// </summary>
-        public string TeamName
+        public bool IsVirtual
         {
-            get => teamName;
+            get => isVirtual;
             set
             {
-                if (teamName == value)
+                if (isVirtual == value)
                     return;
 
-                teamName = value;
+                isVirtual = value;
                 RaisePropertyChanged();
             }
         }
@@ -61,37 +67,74 @@ namespace StockMaster.BaseClasses
         }
 
         /// <summary>
-        /// Team wird nur zur Berechnung verwendet
+        /// Teamname
         /// </summary>
-        public bool IsVirtual
+        public string TeamName
         {
-            get => isVirtual;
+            get => teamName;
             set
             {
-                if (isVirtual == value)
+                if (teamName == value)
                     return;
 
-                isVirtual = value;
+                teamName = value;
                 RaisePropertyChanged();
             }
         }
 
-        private readonly List<Game> _games;
         /// <summary>
-        /// Liste aller Spiele 
+        /// Info über Kreis, Bezirk, Verband oder Nation
         /// </summary>
-        public ReadOnlyCollection<Game> Games { get; private set; }
-
-        private string nation;
-
         public string Nation
         {
             get { return nation; }
-            set {
+            set
+            {
                 if (value == nation) return;
 
                 nation = value;
                 RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Liste aller Spieler
+        /// </summary>
+        public List<Player> Players { get; set; }
+
+        /// <summary>
+        /// Maximum Number of Players for a Team
+        /// </summary>
+        public static int MaxNumberOfPlayers { get; } = 6;
+
+        /// <summary>
+        /// Minimum Number of Players for a Team
+        /// </summary>
+        public static int MinNumberOfPlayer { get; } = 1;
+
+        /// <summary>
+        /// Liste aller Spiele 
+        /// </summary>
+        [XmlIgnore()]
+        public ReadOnlyCollection<Game> Games { get; private set; }
+
+        /// <summary>
+        /// Alle Spielnummern, bei denen die Mannschaft auf einer "steigenden Bahn" ist.
+        /// Bedeutet, dass die nächste Bahn eine höhere Nummer hat
+        /// </summary>
+        [XmlIgnore()]
+        public List<int> SteigendeSpielNummern
+        {
+            get
+            {
+                List<int> result = new List<int>();
+                var sortedGames = Games.OrderBy(g => g.GameNumberOverAll).ToList();
+                for (int i = 0; i < sortedGames.Count-1; i++)
+                {
+                    if (sortedGames[i].CourtNumber <= sortedGames[i + 1].CourtNumber)
+                        result.Add(sortedGames[i].GameNumberOverAll);
+                }
+                return result;
             }
         }
 
@@ -135,7 +178,6 @@ namespace StockMaster.BaseClasses
             }
         }
 
-
         public double StockNote
         {
             get
@@ -158,26 +200,30 @@ namespace StockMaster.BaseClasses
 
         #endregion 
 
-
         #region Constructor
+
+        public Team()
+        {
+            this.IsVirtual = false;
+            this.StartNumber = 0;
+            this.games = new List<Game>();
+            this.Games = games.AsReadOnly();
+            this.Players = new List<Player>();
+        }
 
         /// <summary>
         /// Default-Constructor
         /// </summary>
-        public Team(int numberOfPlayers)
+        public Team(int numberOfPlayers):this()
         {
-            this.IsVirtual = false;
-            this.StartNumber = 0;
-            this.Players = new List<Player>();
+            
 
             for (int i = 0; i < numberOfPlayers; i++) // default 4 Spieler erzeugen
             {
                 Players.Add(new Player("LastName", "FirstName"));
             }
-            this._games = new List<Game>();
-            this.Games = _games.AsReadOnly();
+            
         }
-
         
 
         /// <summary>
@@ -191,21 +237,23 @@ namespace StockMaster.BaseClasses
 
         }
 
-        
+
         #endregion
+
+        #region Functions
 
         /// <summary>
         /// Deletes alle Games
         /// </summary>
         public void ClearGames()
         {
-            this._games.Clear();
+            this.games.Clear();
             RaisePropertyChanged(nameof(Games));
         }
 
         public void AddGame(Game game)
         {
-            this._games.Add(game);
+            this.games.Add(game);
             RaisePropertyChanged(nameof(Games));
         }
 
@@ -235,16 +283,7 @@ namespace StockMaster.BaseClasses
             return $"{StartNumber}. {TeamName}";
         }
 
-       
+        #endregion
 
-        /// <summary>
-        /// If a Team is equal to another Team depends only on the StartNumber
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(Team other)
-        {
-            return this.StartNumber == other.StartNumber;
-        }
     }
 }

@@ -17,9 +17,9 @@ namespace StockMaster.ViewModels
         string DirectionOfCourtsDescription { get; }
         int NumberOfPlayerPerTeam { get; set; }
 
-        IExecutive Schiedsrichter { get; set; }
-        IExecutive Wettbewerbsleiter { get; set; }
-        IExecutive Rechenbüro{ get; set; }
+        Referee Schiedsrichter { get; set; }
+        CompetitionManager Wettbewerbsleiter { get; set; }
+        ComputingOfficer Rechenbüro{ get; set; }
     }
 
     public class TournamentViewModel : BaseViewModel, ITournamentViewModel
@@ -175,7 +175,7 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public IExecutive Schiedsrichter
+        public Referee Schiedsrichter
         {
             get
             {
@@ -188,7 +188,7 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public IExecutive Wettbewerbsleiter
+        public CompetitionManager Wettbewerbsleiter
         {
             get
             {
@@ -201,7 +201,7 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public IExecutive Rechenbüro
+        public ComputingOfficer Rechenbüro
         {
             get
             {
@@ -245,9 +245,9 @@ namespace StockMaster.ViewModels
 
         public int NumberOfPlayerPerTeam { get; set; } = 4;
 
-        public IExecutive Schiedsrichter { get; set; }
-        public IExecutive Rechenbüro { get; set; }
-        public IExecutive Wettbewerbsleiter { get; set; }
+        public Referee Schiedsrichter { get; set; }
+        public ComputingOfficer Rechenbüro { get; set; }
+        public CompetitionManager Wettbewerbsleiter { get; set; }
     }
 
 

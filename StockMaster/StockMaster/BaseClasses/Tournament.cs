@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace StockMaster.BaseClasses
 {
@@ -14,13 +15,14 @@ namespace StockMaster.BaseClasses
         private readonly List<Team> _teams;
         private bool isNumberOfPause2;
         private int numberOfGameRounds;
-        private int numberOfCourts;
         private int numberOfPlayersPerTeam;
 
         /// <summary>
         /// Liste aller Teams
         /// </summary>
         public ReadOnlyCollection<Team> Teams { get; private set; }
+        //public List<Team> Teams { get; private set; }
+
 
         /// <summary>
         /// Veranstaltungsort
@@ -54,16 +56,9 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return numberOfCourts;
+                return (Teams.Count(t => !t.IsVirtual) / 2); ;
             }
-            internal set
-            {
-                if (numberOfCourts == value) return;
-                if (value < 1 | value > 7) return;
 
-                numberOfCourts = value;
-                RaisePropertyChanged();
-            }
         }
 
         /// <summary>
@@ -146,9 +141,9 @@ namespace StockMaster.BaseClasses
         }
 
 
-        public IExecutive Schiedsrichter { get; set; }
-        public IExecutive Wettbewerbsleiter { get; set; }
-        public IExecutive Rechenbüro { get; set; }
+        public Referee Schiedsrichter { get; set; }
+        public CompetitionManager Wettbewerbsleiter { get; set; }
+        public ComputingOfficer Rechenbüro { get; set; }
 
         #endregion
 
@@ -159,14 +154,16 @@ namespace StockMaster.BaseClasses
             this.IsDirectionOfCourtsFromRightToLeft = true;
             this.NumberOfGameRounds = 1;
             this.IsNumberOfPause2 = false;
-            this.NumberOfCourts = 1;
             this.Is8KehrenSpiel = false;
             this.EntryFee = new EntryFee();
             StartOfTeamChange = false;
             DateOfTournament = DateTime.Now;
+
             this._teams = new List<Team>();
             this.Teams = _teams.AsReadOnly();
-            this.PropertyChanged += Tournament_PropertyChanged;
+            //this.Teams = _teams;
+
+
             this.NumberOfTeamsWithNamedPlayerOnResult = 3;
             this.NumberOfPlayersPerTeam = 4;
             this.Schiedsrichter = new Referee();
@@ -174,13 +171,7 @@ namespace StockMaster.BaseClasses
             this.Rechenbüro = new ComputingOfficer();
         }
 
-        private void Tournament_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Teams))
-            {
-                ReCalculateNumberOfCourts();
-            }
-        }
+
 
 
 
@@ -225,13 +216,11 @@ namespace StockMaster.BaseClasses
         }
 
 
-        private void ReCalculateNumberOfCourts()
-        {
-            NumberOfCourts = (Teams.Count(t => !t.IsVirtual) / 2);
-        }
 
 
         #endregion
+
+        #region Team Functions
 
         public void AddVirtualTeams(int count)
         {
@@ -241,7 +230,7 @@ namespace StockMaster.BaseClasses
                 {
                     IsVirtual = true
                 },
-                i > 0);
+                i == 0);
             }
         }
 
@@ -250,17 +239,24 @@ namespace StockMaster.BaseClasses
             _teams.RemoveAll(t => t.IsVirtual);
             RaisePropertyChanged(nameof(Teams));
         }
-        /// <summary>
-        /// Adds a Team to the Tournament. 
-        /// - If Team has StartNumber "0" all Teams were deleted. 
-        /// - Startnumbers were reOrganized
-        /// - Number of Courts is new Caluclated
-        /// </summary>
-        /// <param name="team"></param>
-        /// <param name="force">TRUE, all virtual teams get deleted first</param>
-        public void AddTeam(Team team, bool force = false)
+
+        internal void RemoveAllTeams()
         {
-            if (!force)
+            _teams.Clear();
+            RaisePropertyChanged(nameof(Teams));
+        }
+
+
+        /// <summary>
+        /// Adds a Team to the Tournament.
+        /// - All Games were deleted
+        /// - Startnumbers were reOrganized
+        /// </summary>
+        /// <param name="team">The <see cref="Team"/> to add</param>
+        /// <param name="deleteVirtualTeamsFirst">If TRUE, all VirtualTeams are removed first</param>
+        public void AddTeam(Team team, bool deleteVirtualTeamsFirst = false)
+        {
+            if (deleteVirtualTeamsFirst)
                 RemoveAllVirtualTeams();
 
             Parallel.ForEach(_teams, (t) => t.ClearGames());
@@ -271,8 +267,6 @@ namespace StockMaster.BaseClasses
 
             this._teams.Add(team);
 
-            //Number of courts 
-            NumberOfCourts = Teams.Count / 2;
             RaisePropertyChanged(nameof(Teams));
 
         }
@@ -280,7 +274,7 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Removes the Team from the Tournament
         /// - Startnumbers were reOrganized
-        /// - Number of courts is new calculated
+        /// - all Games were deleted
         /// </summary>
         /// <param name="team"></param>
         public void RemoveTeam(Team team)
@@ -291,8 +285,6 @@ namespace StockMaster.BaseClasses
 
             ReOrganizeTeamStartNumbers();
 
-            //Number of courts 
-            NumberOfCourts = Teams.Count / 2;
             RaisePropertyChanged(nameof(Teams));
         }
 
@@ -301,12 +293,13 @@ namespace StockMaster.BaseClasses
         /// </summary>
         private void ReOrganizeTeamStartNumbers()
         {
-            //Re-Organize Startnumbers
             for (int i = 0; i < _teams.Count; i++)
             {
                 _teams[i].StartNumber = i + 1;
             }
         }
+
+        #endregion
 
         internal void CreateGames()
         {
@@ -315,6 +308,7 @@ namespace StockMaster.BaseClasses
              *  http://www-i1.informatik.rwth-aachen.de/~algorithmus/algo36.php
              * 
              */
+            //Remove Virtual Teams to check the number of VirtualTeams needed
             RemoveAllVirtualTeams();
 
             int iBahnCor = 0;               //Korrektur-Wert für Bahn

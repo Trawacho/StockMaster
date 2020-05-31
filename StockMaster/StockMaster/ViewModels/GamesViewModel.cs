@@ -15,7 +15,7 @@ namespace StockMaster.ViewModels
 {
     public interface IGamesViewModel
     {
-        int NumberOfCourts { get; set; }
+        int NumberOfCourts { get; }
         int NumberOfGameRounds { get; set; }
         ObservableCollection<Team> Teams { get; }
         int RealTeamsCount { get; }
@@ -69,11 +69,11 @@ namespace StockMaster.ViewModels
             {
                 return tournament.NumberOfCourts;
             }
-            set
-            {
-                tournament.NumberOfCourts = value;
-                RaisePropertyChanged();
-            }
+            //set
+            //{
+            //    tournament.NumberOfCourts = value;
+            //    RaisePropertyChanged();
+            //}
         }
 
 
@@ -223,7 +223,7 @@ namespace StockMaster.ViewModels
             t.CreateGames();
         }
 
-        public int NumberOfCourts { get; set; } = 4;
+        public int NumberOfCourts { get; }
         public int NumberOfGameRounds { get; set; } = 1;
         public bool IsNumberOfPause2 { get; set; } = true;
         public int RealTeamsCount { get; } = 4;

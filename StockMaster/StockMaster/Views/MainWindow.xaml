@@ -25,8 +25,8 @@
         <Menu DockPanel.Dock="Top" Padding="5">
             <MenuItem Header="Datei">
                 <MenuItem Header="Turnier neu erstellen"/>
-                <MenuItem Header="Turnier laden"/>
-                <MenuItem Header="Turnier speichern"/>
+                <MenuItem Header="Turnier laden" Command="{Binding Path=OpenTournamentCommand}"/>
+                <MenuItem Header="Turnier speichern" Command="{Binding Path=SaveTournamentCommand}"/>
                 <Separator/>
                 <MenuItem Header="Beenden" Command="{Binding Path=ExitApplicationCommand}"/>
             </MenuItem>

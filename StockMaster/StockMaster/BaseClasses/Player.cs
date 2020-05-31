@@ -47,11 +47,20 @@
             }
         }
 
-        public Player(string LastName = "lastname", string FirstName = "firstname")
+        #region Constructors
+
+        public Player()
+        {
+            this.LicenseNumber = string.Empty;
+        }
+
+        public Player(string LastName = "lastname", string FirstName = "firstname") : this()
         {
             this.FirstName = FirstName;
             this.LastName = LastName;
-            this.LicenseNumber = string.Empty;
         }
+
+
+        #endregion
     }
 }

@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace StockMaster.BaseClasses
 {
     public class Game : TBaseClass, IEquatable<Game>
     {
+        #region Fields
+
         private int roundOfGame;
         private int gameNumber;
         private int gameNumberOverall;
         private int courtNumber;
         private bool startOfPlayTeam1;
         private Turn masterTurn;
+        private int startNumberTeamA;
+        private int startNumberTeamB;
+
+        #endregion
 
         #region IEquatable Implementation
 
@@ -41,7 +44,6 @@ namespace StockMaster.BaseClasses
         }
 
         #endregion
-
 
         #region Properties
 
@@ -109,13 +111,56 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Team A - 1
         /// </summary>
+        [XmlIgnore()]
         public Team TeamA { get; set; }
+
+        /// <summary>
+        /// StartNumber of TeamA 
+        /// </summary>
+        [XmlElement(ElementName = nameof(StartNumberTeamA))]
+        public int StartNumberTeamA
+        {
+            get
+            {
+                return TeamA?.StartNumber ?? startNumberTeamA;
+            }
+            [Obsolete("Only used for xml serialization", error: true)]
+            set
+            {
+                if (TeamA != null)
+                {
+                    throw new NotSupportedException("Setting the StartNumberTeamA property is not supported");
+                }
+
+                startNumberTeamA = value;
+            }
+        }
 
         /// <summary>
         /// Team B - 2
         /// </summary>
+        [XmlIgnore()]
         public Team TeamB { get; set; }
 
+        /// <summary>
+        /// StartNumber of TeamB
+        /// </summary>
+        [XmlElement(ElementName = nameof(StartNumberTeamB))]
+        public int StartNumberTeamB
+        {
+            get
+            {
+                return TeamB?.StartNumber ?? startNumberTeamB;
+            }
+            [Obsolete("Only used for xml serialization", error: true)]
+            set
+            {
+                if (TeamB != null)
+                    throw new NotSupportedException("Setting the StartNumberTeamB property is not supported");
+
+                startNumberTeamB = value;
+            }
+        }
         /// <summary>
         /// Das Team A hat Anspiel
         /// </summary>
@@ -182,6 +227,7 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Liste der Kehren von StockTV
         /// </summary>
+        [XmlIgnore()]
         public ConcurrentStack<Turn> Turns { get; set; }
 
         /// <summary>
@@ -228,7 +274,7 @@ namespace StockMaster.BaseClasses
             {
                 //In Kehre 0 stehen die manuellen Eingaben. In allen anderen Kehren die Werte von dem NetworkService.
                 //Wenn die Werte in Kehre 0 größer 0 sind, werden auch diese genommen und die Werte aus dem NetworkService ignoriert
-                if(MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
+                if (MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
                 {
                     return MasterTurn.PointsTeamA;
                 }
@@ -299,6 +345,7 @@ namespace StockMaster.BaseClasses
 
         #endregion
 
+        #region Public Functions
 
         public override string ToString()
         {
@@ -317,7 +364,7 @@ namespace StockMaster.BaseClasses
         }
 
 
-        #region Public Functions
+
 
         public int GetStockPunkte(Team team)
         {
@@ -355,7 +402,7 @@ namespace StockMaster.BaseClasses
             return 0;
         }
 
-       
+
 
         #endregion
     }

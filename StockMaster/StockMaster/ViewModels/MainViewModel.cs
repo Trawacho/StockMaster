@@ -56,8 +56,8 @@ namespace StockMaster.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            // this.tournament = TournamentExtension.CreateNewTournament(true);
-            this.tournament = new Tournament();
+            this.tournament = TournamentExtension.CreateNewTournament(true);
+            //this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
         /// <summary>
@@ -78,14 +78,14 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _showLiveResultCommand ?? (_showLiveResultCommand = new RelayCommand(
+                return _showLiveResultCommand ??= new RelayCommand(
                     (p) =>
                     {
                         var vm = new LiveResultViewModel(tournament);
                         dialogService.Show(vm);
                     },
                     (p) => true
-                    ));
+                    );
             }
         }
 
@@ -94,7 +94,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _StartStopUdpReceiverCommand ?? (_StartStopUdpReceiverCommand =
+                return _StartStopUdpReceiverCommand ??=
                     new RelayCommand(
                             (p) =>
                             {
@@ -117,7 +117,7 @@ namespace StockMaster.ViewModels
                                 RaisePropertyChanged(nameof(UdpButtonContent));
                             },
                             (o) => { return true; }
-                            ));
+                            );
             }
         }
 
@@ -126,14 +126,14 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _showTournamentViewCommand ?? (_showTournamentViewCommand = new RelayCommand(
+                return _showTournamentViewCommand ??= new RelayCommand(
                     (p) =>
                     {
                         ViewModel = new TournamentViewModel(tournament);
                         RaisePropertyChanged(nameof(ViewModel));
                     },
                     (p) => true
-                    ));
+                    );
             }
         }
 
@@ -142,14 +142,14 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _showTeamsViewCommand ?? (_showTeamsViewCommand = new RelayCommand(
+                return _showTeamsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
                         this.ViewModel = new TeamsViewModel(tournament);
                         RaisePropertyChanged(nameof(ViewModel));
                     },
                     (p) => true
-                    )); ;
+                    ); ;
             }
         }
 
@@ -158,7 +158,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _showGamesViewCommand ?? (_showGamesViewCommand = new RelayCommand(
+                return _showGamesViewCommand ??= new RelayCommand(
                     (p) =>
                     {
                         this.ViewModel = new GamesViewModel(tournament);
@@ -167,7 +167,7 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         return tournament.Teams.Count > 0;
-                    }));
+                    });
             }
         }
 
@@ -176,7 +176,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _showResultsViewCommand ?? (_showResultsViewCommand = new RelayCommand(
+                return _showResultsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
                         this.ViewModel = new ResultsViewModel(tournament);
@@ -185,7 +185,7 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         return tournament.CountOfGames() > 0;
-                    }));
+                    });
             }
         }
 
@@ -194,11 +194,39 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _exitApplicationCommand ?? (_exitApplicationCommand = new RelayCommand(
+                return _exitApplicationCommand ??= new RelayCommand(
                     (p) =>
                     {
                         ExitApplicationAction();
-                    }));
+                    });
+            }
+        }
+
+        private ICommand _SaveTournamentCommand;
+        public ICommand SaveTournamentCommand
+        {
+            get
+            {
+                return _SaveTournamentCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        TournamentExtension.Save(tournament);
+                    });
+            }
+        }
+
+        private ICommand _OpenTournamentCommand;
+        public ICommand OpenTournamentCommand
+        {
+            get
+            {
+                return _OpenTournamentCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        this.tournament = TournamentExtension.Load();
+                        RaisePropertyChanged(nameof(ViewModel));
+
+                    });
             }
         }
 

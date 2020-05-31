@@ -6,14 +6,22 @@ using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
+   
+
     /// <summary>
     /// Eine Kehre im Spiel
     /// </summary>
     public class Turn : TBaseClass
     {
+        #region Fields
+
         private int pointsTeamA;
         private int pointsTeamB;
         private int number;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Stockpunkte von Team A in dieser Kehre
@@ -63,11 +71,22 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        public Turn(int TurnNumber)
+        #endregion
+
+        #region Constructor
+
+        public Turn()
+        {
+            Number = 0;
+        }
+
+        public Turn(int TurnNumber) : this()
         {
             Number = TurnNumber;
             PointsTeamA = 0;
             PointsTeamB = 0;
         }
+
+        #endregion
     }
 }
