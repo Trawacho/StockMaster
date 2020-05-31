@@ -11,7 +11,6 @@ namespace StockMaster.BaseClasses
         {
             var tournament = new Tournament
             {
-                //NumberOfCourts = 4, // 4 Bahnen
                 NumberOfGameRounds = 1,
                 TwoPauseGames = false,
                 EntryFee = new EntryFee(30.00, "dreißig"),
@@ -46,12 +45,12 @@ namespace StockMaster.BaseClasses
             set.SetTournament(tournament);
             var xmlString = "";
 
-            using (var sww = new StringWriter())
-            using (XmlWriter writer = XmlWriter.Create(sww))
+            using (var stringWriter = new StringWriter())
+            using (var writer = XmlWriter.Create(stringWriter))
             {
-                var xsSubmit = new XmlSerializer(typeof(SerializableTournamentSet));
-                xsSubmit.Serialize(writer, set);
-                xmlString = sww.ToString();
+                var serializer = new XmlSerializer(typeof(SerializableTournamentSet));
+                serializer.Serialize(writer, set);
+                xmlString = stringWriter.ToString();
             }
 
             File.WriteAllText(filePath, xmlString);
@@ -60,7 +59,7 @@ namespace StockMaster.BaseClasses
         public static Tournament Load(string filePath)
         {
             using StreamReader reader = new StreamReader(filePath);
-            XmlSerializer serializer = new XmlSerializer(typeof(SerializableTournamentSet));
+            var serializer = new XmlSerializer(typeof(SerializableTournamentSet));
             var set = serializer.Deserialize(reader) as SerializableTournamentSet;
             return set.GetTournament();
         }
