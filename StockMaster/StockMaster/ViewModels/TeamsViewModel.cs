@@ -1,5 +1,6 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Commands;
+using StockMaster.Interfaces;
 using StockMaster.Output;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,20 +8,6 @@ using System.Windows.Input;
 
 namespace StockMaster.ViewModels
 {
-    public interface ITeamsViewModel
-    {
-        Team SelectedTeam { get; set; }
-        Player SelectedPlayer { get; set; }
-
-        ObservableCollection<Team> Teams { get; }
-        ObservableCollection<Player> Players { get; }
-        ICommand AddTeamCommand { get; }
-        ICommand RemoveTeamCommand { get; }
-        ICommand AddPlayerCommand { get; }
-        ICommand RemovePlayerCommand { get; }
-        ICommand PrintQuittungenCommand { get; }
-    }
-
     public class TeamsViewModel : BaseViewModel, ITeamsViewModel
     {
         private readonly Tournament tournament;

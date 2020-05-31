@@ -81,7 +81,11 @@
     </ApplicationDefinition>
     <Compile Include="BaseClasses\EntryFee.cs" />
     <Compile Include="BaseClasses\Executive.cs" />
-    <Compile Include="BaseClasses\ITournament.cs" />
+    <Compile Include="Interfaces\IGamesViewModel.cs" />
+    <Compile Include="Interfaces\ILiveResultViewModel.cs" />
+    <Compile Include="Interfaces\IResultsViewModel.cs" />
+    <Compile Include="Interfaces\ITeamsViewModel.cs" />
+    <Compile Include="Interfaces\ITournament.cs" />
     <Compile Include="BaseClasses\PointsPerTeamAndGame.cs" />
     <Compile Include="BaseClasses\PointsPerGame.cs" />
     <Compile Include="BaseClasses\SerializableTournamentSet.cs" />
@@ -104,6 +108,8 @@
     <Compile Include="Dialogs\IDialog.cs" />
     <Compile Include="Dialogs\IDialogRequestClose.cs" />
     <Compile Include="Dialogs\IDialogService.cs" />
+    <Compile Include="Interfaces\IExecutive.cs" />
+    <Compile Include="Interfaces\ITournamentViewModel.cs" />
     <Compile Include="Output\Helpers.cs" />
     <Compile Include="Output\Receipts\Receipt.cs" />
     <Compile Include="Output\Receipts\ucReceipt.xaml.cs">

@@ -1,5 +1,6 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Commands;
+using StockMaster.Interfaces;
 using StockMaster.Output;
 using System;
 using System.Collections.Generic;
@@ -13,20 +14,6 @@ using System.Windows.Input;
 
 namespace StockMaster.ViewModels
 {
-    public interface IGamesViewModel
-    {
-        int NumberOfCourts { get; }
-        int NumberOfGameRounds { get; set; }
-        ObservableCollection<Team> Teams { get; }
-        bool TwoPauseGames { get; set; }
-        bool ConcatRoundsOnOutput { get; set; }
-        bool TeamNameOnTurnCards { get; set; }
-        bool Is8KehrenSpiel { get; set; }
-        ICommand RemoveAllGamesCommand { get; }
-        ICommand CreateGamesCommand { get; }
-        ICommand PrintTurnCardsCommand { get; }
-    }
-
     public class GamesViewModel : BaseViewModel, IGamesViewModel
     {
         #region Fields
@@ -195,7 +182,6 @@ namespace StockMaster.ViewModels
         }
 
         #endregion
-
     }
 
     public class GamesDesignViewModel : IGamesViewModel

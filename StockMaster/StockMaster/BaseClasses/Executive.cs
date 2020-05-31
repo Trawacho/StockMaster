@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockMaster.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,6 @@ using System.Threading.Tasks;
 
 namespace StockMaster.BaseClasses
 {
-    public interface IExecutive
-    {
-        string Name { get; set; }
-        string ClubName { get; set; }
-    }
-
     public class ExecutiveBaseClass : TBaseClass, IExecutive
     {
 

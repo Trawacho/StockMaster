@@ -11,7 +11,7 @@ namespace StockMaster.BaseClasses
         public double Value { get; set; }
         public string Verbal { get; set; }
 
-        public EntryFee(double value, string verbal )
+        public EntryFee(double value, string verbal ):this()
         {
             this.Value = value;
             this.Verbal = verbal;

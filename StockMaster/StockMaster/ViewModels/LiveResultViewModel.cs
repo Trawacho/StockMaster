@@ -1,6 +1,7 @@
 ﻿using StockMaster.BaseClasses;
 using StockMaster.Commands;
 using StockMaster.Dialogs;
+using StockMaster.Interfaces;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,12 +15,7 @@ namespace StockMaster.ViewModels
     /// - ViewModel
     /// - ViewModel for Design
     /// </summary>
-    public interface ILiveResultViewModel
-    {
-        ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste { get; }
-        ICommand RefreshCommand { get; }
-        ICommand CloseCommand { get; }
-    }
+   
 
 
     public class LiveResultViewModel : BaseViewModel, IDialogRequestClose, ILiveResultViewModel

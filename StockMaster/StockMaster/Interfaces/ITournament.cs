@@ -1,7 +1,8 @@
-﻿using System;
+﻿using StockMaster.BaseClasses;
+using System;
 using System.Collections.ObjectModel;
 
-namespace StockMaster.BaseClasses
+namespace StockMaster.Interfaces
 {
     internal interface ITournament
     {

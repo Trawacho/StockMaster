@@ -1,26 +1,9 @@
 ﻿using StockMaster.BaseClasses;
+using StockMaster.Interfaces;
 using System;
 
 namespace StockMaster.ViewModels
 {
-    public interface ITournamentViewModel
-    {
-        string Venue { get; set; }
-        string Organizer { get; set; }
-        string Operator { get; set; }
-        string TournamentName { get; set; }
-        DateTime DateOfTournament { get; set; }
-
-        EntryFee EntryFee { get; set; }
-
-        bool IsDirectionOfCourtsFromRightToLeft { get; set; }
-        string DirectionOfCourtsDescription { get; }
-
-        Referee Referee { get; set; }
-        CompetitionManager CompetitionManager { get; set; }
-        ComputingOfficer ComputingOfficer{ get; set; }
-    }
-
     public class TournamentViewModel : BaseViewModel, ITournamentViewModel
     {
 
