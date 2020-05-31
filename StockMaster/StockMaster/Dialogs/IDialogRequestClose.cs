@@ -12,10 +12,4 @@ namespace StockMaster.Dialogs
         event EventHandler<DialogCloseRequestedEventArgs> DialogCloseRequested;
         event EventHandler<WindowCloseRequestedEventArgs> WindowCloseRequested;
     }
-
-    
-
-   
-
-    
 }

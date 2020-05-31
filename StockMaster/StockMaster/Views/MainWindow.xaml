@@ -20,13 +20,25 @@
         <converters:TupleValue_Team_Converter x:Key="TVC"/>
     </Window.Resources>
 
+ 
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding Path=NewTournamentCommand}"/>
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding Path=OpenTournamentCommand}"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding Path=SaveTournamentCommand}"/>
+    </Window.InputBindings>
 
     <DockPanel >
         <Menu DockPanel.Dock="Top" Padding="5">
             <MenuItem Header="Datei">
-                <MenuItem Header="Turnier neu erstellen"/>
-                <MenuItem Header="Turnier laden" Command="{Binding Path=OpenTournamentCommand}"/>
-                <MenuItem Header="Turnier speichern" Command="{Binding Path=SaveTournamentCommand}"/>
+                <MenuItem Header="Turnier neu erstellen"
+                          InputGestureText="Strg+N"
+                          Command="{Binding Path=NewTournamentCommand}"/>
+                <MenuItem Header="Turnier laden" 
+                          InputGestureText="Strg+O"
+                          Command="{Binding Path=OpenTournamentCommand}"/>
+                <MenuItem Header="Turnier speichern" 
+                          InputGestureText="Strg+S"
+                          Command="{Binding Path=SaveTournamentCommand}"/>
                 <Separator/>
                 <MenuItem Header="Beenden" Command="{Binding Path=ExitApplicationCommand}"/>
             </MenuItem>

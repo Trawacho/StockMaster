@@ -2,16 +2,14 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace StockMaster.Output.TurnCards
+namespace StockMaster.Output.Wertungskarte
 {
     public class SpiegelFeld : Border
     {
-
         public FontFamily FntFamily { get; set; }
 
-
         public TextBlock Textblock { get; set; }
-               
+
         public SpiegelFeld(string Text, int RotateAngle = 0)
         {
             FntFamily = new FontFamily("Bahnschrift");
@@ -44,6 +42,5 @@ namespace StockMaster.Output.TurnCards
             Background = brush;
         }
 
-        
     }
 }

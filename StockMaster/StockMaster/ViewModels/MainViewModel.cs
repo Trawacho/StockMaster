@@ -2,6 +2,7 @@
 using StockMaster.Commands;
 using StockMaster.Dialogs;
 using System;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace StockMaster.ViewModels
@@ -15,6 +16,8 @@ namespace StockMaster.ViewModels
 
         private NetworkService _NetworkService;
         private Tournament tournament;
+        private LiveResultViewModel liveResultViewModel;
+        private BaseViewModel _viewModel;
 
         #endregion
 
@@ -23,7 +26,19 @@ namespace StockMaster.ViewModels
         /// <summary>
         /// Holds the ViewModel for the UserControl in the mid of the page
         /// </summary>
-        public BaseViewModel ViewModel { get; set; }
+        public BaseViewModel ViewModel
+        {
+            get
+            {
+                return _viewModel;
+            }
+            set
+            {
+                if (_viewModel == value) return;
+                _viewModel = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Action to Close the Application
@@ -81,8 +96,9 @@ namespace StockMaster.ViewModels
                 return _showLiveResultCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var vm = new LiveResultViewModel(tournament);
-                        dialogService.Show(vm);
+                        dialogService.SetOwner(App.Current.MainWindow);
+                        dialogService.Show(
+                            liveResultViewModel ??= new LiveResultViewModel(tournament));
                     },
                     (p) => true
                     );
@@ -130,7 +146,6 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         ViewModel = new TournamentViewModel(tournament);
-                        RaisePropertyChanged(nameof(ViewModel));
                     },
                     (p) => true
                     );
@@ -146,7 +161,6 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         this.ViewModel = new TeamsViewModel(tournament);
-                        RaisePropertyChanged(nameof(ViewModel));
                     },
                     (p) => true
                     ); ;
@@ -162,7 +176,6 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         this.ViewModel = new GamesViewModel(tournament);
-                        RaisePropertyChanged(nameof(ViewModel));
                     },
                     (p) =>
                     {
@@ -180,7 +193,6 @@ namespace StockMaster.ViewModels
                     (p) =>
                     {
                         this.ViewModel = new ResultsViewModel(tournament);
-                        RaisePropertyChanged(nameof(ViewModel));
                     },
                     (p) =>
                     {
@@ -202,6 +214,20 @@ namespace StockMaster.ViewModels
             }
         }
 
+        private ICommand _newTournamentCommand;
+        public ICommand NewTournamentCommand
+        {
+            get
+            {
+                return _newTournamentCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        this.tournament = new Tournament();
+                        ViewModel = new TournamentViewModel(this.tournament);
+                    });
+            }
+        }
+
         private ICommand _SaveTournamentCommand;
         public ICommand SaveTournamentCommand
         {
@@ -210,7 +236,15 @@ namespace StockMaster.ViewModels
                 return _SaveTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        TournamentExtension.Save(tournament);
+                        var sfd = new SaveFileDialog();
+                        sfd.DefaultExt = "skmr";
+                        sfd.Filter = "StockMaster File (*.skmr)|*.skmr";
+                        var dialogResult = sfd.ShowDialog();
+                        if (dialogResult == DialogResult.OK)
+                        {
+                            var filePath = sfd.FileName;
+                            TournamentExtension.Save(tournament, filePath);
+                        }
                     });
             }
         }
@@ -223,8 +257,21 @@ namespace StockMaster.ViewModels
                 return _OpenTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.tournament = TournamentExtension.Load();
-                        RaisePropertyChanged(nameof(ViewModel));
+                        var ofd = new OpenFileDialog();
+
+                        ofd.Filter = "StockMaster Files (*.skmr)|*.skmr";
+                        ofd.DefaultExt = "skmr";
+
+                        var dialogResult = ofd.ShowDialog();
+
+                        if (dialogResult == DialogResult.OK)
+                        {
+                            var filePath = ofd.FileName;
+
+                            this.tournament = TournamentExtension.Load(filePath);
+                            ViewModel = new TournamentViewModel(this.tournament);
+                        }
+
 
                     });
             }

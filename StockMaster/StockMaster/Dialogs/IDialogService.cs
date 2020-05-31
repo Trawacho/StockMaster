@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace StockMaster.Dialogs
 {
@@ -15,13 +16,7 @@ namespace StockMaster.Dialogs
 
         void Show<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose;
 
+        void SetOwner(Window owner);
     }
 
-    //public interface IWindowService
-    //{
-    //    void Register<TViewModel, TView>() where TViewModel : IDialogRequestClose
-    //                                      where TView : IWindow;
-
-    //    void Show<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose;
-    //}
 }

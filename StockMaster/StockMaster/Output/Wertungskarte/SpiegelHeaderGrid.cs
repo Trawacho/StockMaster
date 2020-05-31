@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace StockMaster.Output.TurnCards
+namespace StockMaster.Output.Wertungskarte
 {
     public class SpiegelHeaderGrid : SpiegelGrid
     {

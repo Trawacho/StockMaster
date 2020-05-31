@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace StockMaster.Output.TurnCards
+namespace StockMaster.Output.Wertungskarte
 {
     public class SpiegelGrid : Grid
     {

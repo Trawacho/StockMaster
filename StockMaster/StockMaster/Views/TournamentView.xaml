@@ -141,11 +141,11 @@
                 <Label Content="Name:" Grid.Row="0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Schiedsrichter.Name}"/>
+                     Text="{Binding Path=Schiedsrichter.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Verein:" Grid.Row="1"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Schiedsrichter.ClubName}"/>
+                     Text="{Binding Path=Schiedsrichter.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
             <Label Content="Wettbewerbsleiter" Grid.Row="9" Grid.Column="0"/>
             <Grid Grid.Row="9" Grid.Column="1">
@@ -160,11 +160,11 @@
                 <Label Content="Name:" Grid.Row="0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Wettbewerbsleiter.Name}"/>
+                     Text="{Binding Path=Wettbewerbsleiter.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Verein:" Grid.Row="1"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Wettbewerbsleiter.ClubName}"/>
+                     Text="{Binding Path=Wettbewerbsleiter.ClubName,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
             <Label Content="Rechenbüro" Grid.Row="10" Grid.Column="0"/>
@@ -180,11 +180,11 @@
                 <Label Content="Name:" Grid.Row="0"/>
                 <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Rechenbüro.Name}"/>
+                     Text="{Binding Path=Rechenbüro.Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Content="Verein:" Grid.Row="1"/>
                 <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
-                     Text="{Binding Path=Rechenbüro.ClubName}"/>
+                     Text="{Binding Path=Rechenbüro.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
 
         </Grid>

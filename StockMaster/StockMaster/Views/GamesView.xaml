@@ -170,7 +170,7 @@
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"/>
 
-            <Label Content="Spiegel:" 
+            <Label Content="Wertungskarte:" 
                    Grid.Row="4" Grid.Column="0"/>
             <CheckBox Content="Alle Runden zusammenfassen" 
                       Grid.Row="4" Grid.Column="1"  
@@ -182,14 +182,14 @@
             
             <Label  Content="Team-Name:" 
                     Grid.Row="5" Grid.Column="0"/>
-            <CheckBox Content="Teamnamen auf Spiegel drucken"
+            <CheckBox Content="Teamnamen auf Wertungskarte drucken"
                       Grid.Row="5" Grid.Column="1"
                       IsChecked="{Binding Path=TeamNameOnTurnCards}"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Center"/>
 
 
-            <Button Content="Spiegel drucken" 
+            <Button Content="Wertungskarten drucken" 
                     Grid.Column="0" Grid.Row="6"
                     Margin="10" Padding="10"
                     Command="{Binding Path=PrintTurnCardsCommand}"/>

@@ -3,7 +3,7 @@ using StockMaster.Converters;
 using System.Windows.Media;
 using System.Linq;
 
-namespace StockMaster.Output.TurnCards
+namespace StockMaster.Output.Wertungskarte
 {
     public class GameGrid : SpiegelGrid
     {

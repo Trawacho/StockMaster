@@ -9,14 +9,13 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace StockMaster.Output.TurnCards
+namespace StockMaster.Output.Wertungskarte
 {
-    public class Spiegel
+    public class Wertungskarte
     {
         FixedDocument document;
-        public Spiegel()
+        public Wertungskarte()
         {
-
 
         }
 
@@ -142,7 +141,7 @@ namespace StockMaster.Output.TurnCards
         {
             //alles was eine Karte braucht, kommt in ein StackPanel
             var panel = new StackPanel();
-            
+
 
             //Eine Linie zum Schneiden bzw Trennen zur nächsten Spiegelkarte
             panel.Children.Add(Tools.CutterLineTop());

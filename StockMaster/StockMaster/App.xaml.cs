@@ -19,15 +19,17 @@ namespace StockMaster
             dialogService.Register<LiveResultViewModel, LiveResultView>();
 
             var viewModel = new MainViewModel(dialogService);
-            var view = new MainWindow() { DataContext = viewModel };
+            var view = new MainWindow()
+            {
+                DataContext = viewModel
+            };
             viewModel.ExitApplicationAction = new Action(view.Close);
-            
+
             view.ShowDialog();
         }
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-         
             Application.Current.Shutdown(0);
         }
     }

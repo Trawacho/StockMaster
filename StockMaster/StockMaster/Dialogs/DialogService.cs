@@ -6,11 +6,16 @@ namespace StockMaster.Dialogs
 {
     public class DialogService : IDialogService
     {
-        private readonly Window owner;
+        private  Window owner;
         public DialogService(Window owner)
         {
             this.owner = owner;
             Mappings = new Dictionary<Type, Type>();
+        }
+
+        public void SetOwner(Window owner)
+        {
+            this.owner = owner;
         }
 
         public IDictionary<Type, Type> Mappings { get; }
@@ -60,14 +65,8 @@ namespace StockMaster.Dialogs
             handler = (sender, e) =>
             {
                 viewModel.WindowCloseRequested -= handler;
-                //if (e.DialogResult.HasValue)
-                //{
-                //    dialog.DialogResult = e.DialogResult;
-                //}
-                //else
-                //{
+                
                 dialog.Close();
-                //}
             };
 
             viewModel.WindowCloseRequested += handler;

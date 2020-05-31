@@ -196,7 +196,7 @@ namespace StockMaster.ViewModels
                 return _printTurnCardsCommand ?? (_printTurnCardsCommand = new RelayCommand(
                     (p) =>
                     {
-                        var x = new Output.TurnCards.Spiegel();
+                        var x = new Output.Wertungskarte.Wertungskarte();
                         PrintPreview printPreview = new PrintPreview();
                         var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
                         printPreview.Document = x.GetDocument(A4Size, tournament, TeamNameOnTurnCards, ConcatRoundsOnOutput);

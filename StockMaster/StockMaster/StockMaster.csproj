@@ -57,9 +57,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -116,7 +113,7 @@
     <Compile Include="Output\Results\ucStackPanelTeam.xaml.cs">
       <DependentUpon>ucStackPanelTeam.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Output\TurnCards\CutterLine.cs" />
+    <Compile Include="Output\Wertungskarte\CutterLine.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
@@ -194,17 +191,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModels\TournamentViewModel.cs" />
-    <Compile Include="Output\TurnCards\SpiegelFeld.cs" />
-    <Compile Include="Output\TurnCards\GameGrid.cs" />
-    <Compile Include="Output\TurnCards\GameSummaryGrid.cs" />
-    <Compile Include="Output\TurnCards\SpiegelGrid.cs" />
-    <Compile Include="Output\TurnCards\SpiegelHeader.cs" />
-    <Compile Include="Output\TurnCards\SpiegelHeaderGrid.cs" />
+    <Compile Include="Output\Wertungskarte\SpiegelFeld.cs" />
+    <Compile Include="Output\Wertungskarte\GameGrid.cs" />
+    <Compile Include="Output\Wertungskarte\GameSummaryGrid.cs" />
+    <Compile Include="Output\Wertungskarte\SpiegelGrid.cs" />
+    <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
+    <Compile Include="Output\Wertungskarte\SpiegelHeaderGrid.cs" />
     <Compile Include="Output\PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\PixelConverter.cs" />
-    <Compile Include="Output\TurnCards\Spiegel.cs" />
+    <Compile Include="Output\Wertungskarte\Wertungskarte.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
