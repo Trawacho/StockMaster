@@ -3,186 +3,182 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:StockMaster.Views"
              xmlns:viewmodels="clr-namespace:StockMaster.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:TournamentDesignViewModel, 
                             IsDesignTimeCreatable=True}" 
              d:DesignHeight="600" d:DesignWidth="800"
-             Background="WhiteSmoke"
              >
-    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Auto">
-        
-        <Grid Margin="25">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*" MaxWidth="400" MinWidth="200"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                </Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                    <Setter Property="Margin" Value="5"/>
-                </Style>
-            </Grid.Resources>
 
-            <Label Content="Turniername:"
-               Grid.Row="0" Grid.Column="0"/>
-            <TextBox Text="{Binding Path=TournamentName}"
-                 Grid.Row="0" Grid.Column="1"/>
+    <Grid Margin="20,10">
 
-            <Label Content="Veranstaltungsort:"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*" MaxWidth="350" MinWidth="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            </Style>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </Grid.Resources>
+
+        <Label Content="Allgemeine Turnier Daten" 
+               FontWeight="Bold"
+               FontSize="18"
+               HorizontalContentAlignment="Left"
+               HorizontalAlignment="Stretch"
+               Margin="0,0,0,15"
+               Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"/>
+
+        <Label Content="Turniername:"
                Grid.Row="1" Grid.Column="0"/>
-            <TextBox Text="{Binding Path=Venue}"
+        <TextBox Text="{Binding Path=TournamentName}"
                  Grid.Row="1" Grid.Column="1"/>
 
-            <Label Content="Veranstalter:"
+        <Label Content="Veranstaltungsort:"
                Grid.Row="2" Grid.Column="0"/>
-            <TextBox Text="{Binding Path=Organizer}"
+        <TextBox Text="{Binding Path=Venue}"
                  Grid.Row="2" Grid.Column="1"/>
 
-            <Label Content="Durchführer:"
+        <Label Content="Veranstalter:"
                Grid.Row="3" Grid.Column="0"/>
-            <TextBox Text="{Binding Path=Operator}"
+        <TextBox Text="{Binding Path=Organizer}"
                  Grid.Row="3" Grid.Column="1"/>
 
-            <Label Content="Datum:"
+        <Label Content="Durchführer:"
                Grid.Row="4" Grid.Column="0"/>
-            <DatePicker SelectedDate="{Binding Path=DateOfTournament}"
+        <TextBox Text="{Binding Path=Operator}"
+                 Grid.Row="4" Grid.Column="1"/>
+
+        <Label Content="Datum:"
+               Grid.Row="5" Grid.Column="0"/>
+        <DatePicker SelectedDate="{Binding Path=DateOfTournament}"
                     IsTodayHighlighted="True"
                     SelectedDateFormat="Long"
                     Background="Transparent"
-                    Grid.Row="4" Grid.Column="1"
+                    Grid.Row="5" Grid.Column="1"
                     VerticalContentAlignment="Center"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     HorizontalContentAlignment="Left"
                     Margin="5"/>
 
-            <Label Content="Spielbahn Richtung:"
-               Grid.Row="5" Grid.Column="0"
-               HorizontalAlignment="Right"
-               Margin="5"/>
-            <CheckBox Content="{Binding Path=DirectionOfCourtsDescription, Mode=OneWay}"
-                  Grid.Row="5" Grid.Column="1"
-                  IsChecked="{Binding Path=IsDirectionOfCourtsFromRightToLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsThreeState="False"
-                  HorizontalContentAlignment="Left"
-                  VerticalContentAlignment="Center"
-                  ToolTip="Nur in Verbindung mit StockTV relevant"
-                  Margin="5"/>
+        <!-- Row 5 ist nicht in Nutzung-->
 
-            <Label Content="Startgebühr:"
+        <Label Content="Startgebühr:"
                Grid.Column="0" Grid.Row="6"/>
-            <Grid   Grid.Row="6" Grid.Column="1" 
+        <Grid   Grid.Row="6" Grid.Column="1" 
                 HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label Content="Wert in EUR:" Grid.Row="0" Grid.Column="0"/>
-                <TextBox Text="{Binding Path=EntryFee.Value}" Grid.Row="0" Grid.Column="1" 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Wert in EUR:" Grid.Row="0" Grid.Column="0"/>
+            <TextBox Text="{Binding Path=EntryFee.Value}" Grid.Row="0" Grid.Column="1" 
                      Width="auto" MaxLength="3" Margin="0,5,5,5" Padding="5,0" 
                      HorizontalContentAlignment="Left"/>
-                <Label x:Name="labelFee" Content="in Worten:" Grid.Row="1" Grid.Column="0"/>
-                <TextBox Text="{Binding Path=EntryFee.Verbal}" 
+            <Label x:Name="labelFee" Content="in Worten:" Grid.Row="1" Grid.Column="0"/>
+            <TextBox Text="{Binding Path=EntryFee.Verbal}" 
                      Grid.Row="1" Grid.Column="1" Margin="0,5,5,5" Padding="5,0"/>
-            </Grid>
-            
-            
-           <!-- Row 7 is empty -->
-            
-                
-            
-            <Label Content="Schiedsrichter:"
-               Grid.Row="8" Grid.Column="0"/>
-            <Grid Grid.Row="8" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+        </Grid>
 
-                <Label Content="Name:" Grid.Row="0"/>
-                <TextBox Grid.Row="0" Grid.Column="1" 
+
+        <!-- Row 7 is empty -->
+
+
+
+        <Label Content="Schiedsrichter:"
+               Grid.Row="8" Grid.Column="0"/>
+        <Grid Grid.Row="8" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Name:" Grid.Row="0"/>
+            <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
                      Text="{Binding Path=Referee.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Label Content="Verein:" Grid.Row="1"/>
-                <TextBox Grid.Row="1" Grid.Column="1"
+            <Label Content="Verein:" Grid.Row="1"/>
+            <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
                      Text="{Binding Path=Referee.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
-            <Label Content="Wettbewerbsleiter" Grid.Row="9" Grid.Column="0"/>
-            <Grid Grid.Row="9" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label Content="Name:" Grid.Row="0"/>
-                <TextBox Grid.Row="0" Grid.Column="1" 
+        </Grid>
+        <Label Content="Wettbewerbsleiter" Grid.Row="9" Grid.Column="0"/>
+        <Grid Grid.Row="9" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Name:" Grid.Row="0"/>
+            <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
                      Text="{Binding Path=CompetitionManager.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Label Content="Verein:" Grid.Row="1"/>
-                <TextBox Grid.Row="1" Grid.Column="1"
+            <Label Content="Verein:" Grid.Row="1"/>
+            <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
                      Text="{Binding Path=CompetitionManager.ClubName,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
+        </Grid>
 
-            <Label Content="Rechenbüro" Grid.Row="10" Grid.Column="0"/>
-            <Grid Grid.Row="10" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label Content="Name:" Grid.Row="0"/>
-                <TextBox Grid.Row="0" Grid.Column="1" 
+        <Label Content="Rechenbüro" Grid.Row="10" Grid.Column="0"/>
+        <Grid Grid.Row="10" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Name:" Grid.Row="0"/>
+            <TextBox Grid.Row="0" Grid.Column="1" 
                      Margin="0,5,5,5" Padding="5,0"
                      Text="{Binding Path=ComputingOfficer.Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Label Content="Verein:" Grid.Row="1"/>
-                <TextBox Grid.Row="1" Grid.Column="1"
+            <Label Content="Verein:" Grid.Row="1"/>
+            <TextBox Grid.Row="1" Grid.Column="1"
                      Margin="0,5,5,5" Padding="5,0"
                      Text="{Binding Path=ComputingOfficer.ClubName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
-
         </Grid>
-    </ScrollViewer>
+
+    </Grid>
+
 
 </UserControl>

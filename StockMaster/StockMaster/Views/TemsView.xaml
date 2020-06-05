@@ -5,20 +5,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:StockMaster.ViewModels"
              xmlns:converters="clr-namespace:StockMaster.Converters"
-             xmlns:behaviours="clr-namespace:StockMaster.Behaviours"
              mc:Ignorable="d" 
-              d:DataContext="{d:DesignInstance 
+             d:DataContext="{d:DesignInstance 
                             Type=viewmodels:TeamsDesignviewModel, 
                             IsDesignTimeCreatable=True}" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="WhiteSmoke"
              >
     <UserControl.Resources>
         <converters:ValueNotNullToVisibilityConverter x:Key="ValueNotNullToVisibility"/>
     </UserControl.Resources>
-    <Grid Margin="25">
+    
+    <Grid Margin="20,10">
+        
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.7*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -26,36 +27,28 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <DataGrid Grid.Row="0" 
-                  Grid.Column="0" 
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <Label Content="Startliste" FontWeight="Bold" FontSize="18"/>
+
+            <DataGrid Margin="0,10,0,0" 
                   ItemsSource="{Binding Path=Teams}"
                   AutoGenerateColumns="False"
                   SelectedItem="{Binding Path=SelectedTeam}"
                   SelectionMode="Single"
+                  SelectionUnit="FullRow"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
-                  BorderThickness="0"
                   RowHeaderWidth="0"
+                  IsReadOnly="True"
                   Width="{Binding ElementName=stackPanelButtons, Path=ActualWidth}"
+                  Background="Transparent"
                   >
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Style.Triggers>
-                        
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="Background" Value="Green"/>
-                        </Trigger>
-                       
-                    </Style.Triggers>
-                </Style>
-               
-            </DataGrid.CellStyle>
+           
 
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="Start#" 
                                     Binding="{Binding Path=StartNumber}"
-                                    IsReadOnly="True"
                                     Width="auto"
                                     >
                     <DataGridTextColumn.ElementStyle>
@@ -68,7 +61,7 @@
                 </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Teamname" 
-                                    Binding="{Binding Path=TeamName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                    Binding="{Binding Path=TeamName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                                     Width="*">
 
                     <DataGridTextColumn.ElementStyle>
@@ -85,7 +78,10 @@
             </DataGrid.Columns>
 
         </DataGrid>
-
+        
+        </StackPanel>
+        
+        
         <StackPanel Grid.Row="1" Grid.Column="0" 
                     Orientation="Horizontal" 
                     x:Name="stackPanelButtons">
@@ -101,31 +97,39 @@
                     Margin="10" Padding="10" />
         </StackPanel>
 
-        <ScrollViewer Grid.Column="1" 
-                      Margin="20,0"
-                      HorizontalScrollBarVisibility="Auto" 
-                      VerticalScrollBarVisibility="Auto">
-            <StackPanel Visibility="{Binding Path=SelectedTeam, Converter={StaticResource ValueNotNullToVisibility}}">
-                <Label Content="{Binding Path=SelectedTeam.TeamName}" Margin="0,0,0,20" FontWeight="Bold" 
-                       FontSize="20"/>
-                <Label Content="Mannschaftsdaten" FontWeight="Bold"/>
-                <Grid>
+        <StackPanel Grid.Column="1" 
+                      Margin="20,0" Visibility="{Binding Path=SelectedTeam, Converter={StaticResource ValueNotNullToVisibility}}">
+                <Label Content="Mannschaftsdaten" FontWeight="Bold" FontSize="18"/>
+
+                <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Kreis / Nation:" HorizontalContentAlignment="Right"
-                           Grid.Row="0" Grid.Column="0"/>
-                    <TextBox Grid.Row="0" Grid.Column="1"
+
+                    <Label Grid.Row="0" Grid.Column="0" Margin="0,10,0,0"
+                           Content="Name:"  HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="0,10,0,0"
+                             Text="{Binding Path=SelectedTeam.TeamName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalContentAlignment="Center" 
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Margin="0,10,0,0"
+                           Content="Kreis / Nation:" HorizontalContentAlignment="Right"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,10,0,0"
                              Text="{Binding Path=SelectedTeam.Nation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             
                              HorizontalContentAlignment="Left" 
                              VerticalContentAlignment="Center"
                              MaxLength="20"/>
+                   
+                    
                 </Grid>
+                
                 <Label Content="Spieler" FontWeight="Bold" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Hinzufügen" 
@@ -139,7 +143,6 @@
                           SelectedItem="{Binding Path=SelectedPlayer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           AutoGenerateColumns="False"
                           SelectionMode="Single"
-                          BorderThickness="0"
                           RowHeaderWidth="0"
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
@@ -192,13 +195,6 @@
                 </DataGrid>
                 
             </StackPanel>
-        </ScrollViewer>
-
-
-
-
-
-
 
     </Grid>
 </UserControl>

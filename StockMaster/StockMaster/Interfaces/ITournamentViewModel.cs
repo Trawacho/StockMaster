@@ -11,8 +11,7 @@ namespace StockMaster.Interfaces
         string TournamentName { get; set; }
         DateTime DateOfTournament { get; set; }
         EntryFee EntryFee { get; set; }
-        bool IsDirectionOfCourtsFromRightToLeft { get; set; }
-        string DirectionOfCourtsDescription { get; }
+       
         Referee Referee { get; set; }
         CompetitionManager CompetitionManager { get; set; }
         ComputingOfficer ComputingOfficer { get; set; }

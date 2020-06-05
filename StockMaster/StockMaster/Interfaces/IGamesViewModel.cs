@@ -12,6 +12,11 @@ namespace StockMaster.Interfaces
         bool TwoPauseGames { get; set; }
         bool ConcatRoundsOnOutput { get; set; }
         bool TeamNameOnTurnCards { get; set; }
+
+        bool IsDirectionOfCourtsFromRightToLeft { get; set; }
+        string DirectionOfCourtsDescription { get; }
+
+
         bool Is8KehrenSpiel { get; set; }
         ICommand RemoveAllGamesCommand { get; }
         ICommand CreateGamesCommand { get; }

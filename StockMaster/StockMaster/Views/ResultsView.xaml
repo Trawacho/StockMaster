@@ -1,4 +1,4 @@
-﻿ <UserControl x:Class="StockMaster.Views.ResultsView"
+﻿<UserControl x:Class="StockMaster.Views.ResultsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,299 +10,343 @@
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:ResultsDesignViewModel, 
                             IsDesignTimeCreatable=True}" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="WhiteSmoke"
-             FontSize="16">
+             d:DesignHeight="450" d:DesignWidth="800" 
+             >
     <UserControl.Resources>
         <converters:ValueNotNullToVisibilityConverter x:Key="ValueNotNullToVisibilityConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <ScrollViewer MinWidth="600" 
-                  VerticalScrollBarVisibility="Auto" 
-                  HorizontalScrollBarVisibility="Auto">
-     
-        <Grid Margin="25">
-            
+
+
+    <Grid Margin="20,10" >
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="150"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
-            <Grid.RowDefinitions>
-            <RowDefinition/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0" Grid.Row="0">
-           
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            
-            <RadioButton Grid.Column="0" Grid.Row="0" 
-                         Content="pro Team" x:Name="radioButtonTeam"/>
-            
-            <ListView Grid.Column="0" Grid.Row="1"
-                      Visibility="{Binding ElementName=radioButtonTeam, 
+        <StackPanel Orientation="Vertical" Grid.Column="0"  Margin="10,5" >
+
+            <Label Content="Auswahl"
+                   FontWeight="Bold"
+                   FontSize="18"/>
+
+            <RadioButton IsChecked="False" 
+                         Content="pro Team" 
+                         x:Name="radioButtonTeam" 
+                         Margin="5" 
+                         VerticalContentAlignment="Center" 
+                         HorizontalAlignment="Left"/>
+
+            <RadioButton IsChecked="True"  
+                         Content="nach jedem Spiel" 
+                         x:Name="radioButtonGame" 
+                         Margin="5" 
+                         VerticalContentAlignment="Center" 
+                         HorizontalAlignment="Left"/>
+
+            <ListView Visibility="{Binding ElementName=radioButtonTeam, 
                                            Path=IsChecked, 
-                                           Converter={StaticResource BoolToVisibilityConverter}}"
+                                           Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+                      x:Name="listViewTeams"
                       Padding="10"
                       Margin="10"
+                      MaxHeight="800"
+                      Background="Transparent"
                       ItemsSource="{Binding Path=Teams, Mode=OneWay}"
                       SelectedItem="{Binding Path=SelectedTeam, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            <RadioButton IsChecked="True" Grid.Column="0" Grid.Row="2" 
-                         Content="nach jedem Spiel" x:Name="radioButtonGame"/>
-            
-            <ListView Grid.Column="0" Grid.Row="3" 
-                      Visibility="{Binding ElementName=radioButtonGame, 
+
+            <ListView Visibility="{Binding ElementName=radioButtonGame, 
                                            Path=IsChecked, 
-                                           Converter={StaticResource BoolToVisibilityConverter}}"
+                                           Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+                      x:Name="listViewGames"
                       Padding="10"
                       Margin="10"
-                      MaxHeight="500"
+                      MaxHeight="800"
+                      Background="Transparent"
                       ItemsSource="{Binding Path=Games, Mode=OneWay}"
                       SelectedItem="{Binding Path=SelectedGame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       DisplayMemberPath="GameName"/>
-        
-        </Grid>
 
-        <StackPanel Grid.Column="1" Margin="10" 
-                    Visibility="{Binding ElementName=radioButtonTeam, 
-                                         Path=IsChecked, 
-                                         Converter={StaticResource BoolToVisibilityConverter}}">
-            
-            <Label Content="{Binding Path=SelectedTeam.TeamName}" FontWeight="Bold"  Padding="10"/>
-            
-            <DataGrid ItemsSource="{Binding Path=PointsOfSelectedTeam, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                      Width="auto"
-                      MinHeight="100"
-                      MaxHeight="800"
-                      RowHeaderWidth="0"
-                      AutoGenerateColumns="False"
-                      SelectionMode="Single"
-                      SelectionUnit="Cell"
-                      CanUserAddRows="False"
-                      CanUserResizeColumns="False"
-                      CanUserDeleteRows="False"
-                      CanUserReorderColumns="False">
-
-                <DataGrid.Columns>
-
-                    <DataGridTextColumn Header="Spiel" Binding="{Binding Path=GameNumber, Mode=OneWay}"
-                                        Width="auto"
-                                        IsReadOnly="True">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Team" Binding="{Binding Path=StockPunkte, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="75"
-                                        TextBlock.TextAlignment="Center">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Gegner"  Binding="{Binding Path=StockPunkteGegner, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="75">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="--->"  Binding="{Binding Path=Gegner, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                        IsReadOnly="True"
-                                        Width="auto">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Left" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                </DataGrid.Columns>
-
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=IsPauseGame}" Value="True">
-                                <Setter Property="Background" Value="DarkGray"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.RowStyle>
-
-            </DataGrid>
-
-            
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Margin="10"
-                     Visibility="{Binding ElementName=radioButtonGame, 
-                                          Path=IsChecked, 
-                                          Converter={StaticResource BoolToVisibilityConverter}}">
-            
-            <Label Content="{Binding Path=SelectedGame.GameName}" FontWeight="Bold" Padding="10"/>
+        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,5">
 
-            <DataGrid ItemsSource="{Binding Path=PointsPerGameList, 
-                                            Mode=OneWay, 
-                                            UpdateSourceTrigger=PropertyChanged}"
-                      Width="auto"
-                      MinHeight="100"
-                      MaxHeight="800"
-                      RowHeaderWidth="0"
-                      AutoGenerateColumns="False"
-                      SelectionMode="Single"
-                      SelectionUnit="Cell"
-                      CanUserAddRows="False"
-                      CanUserResizeColumns="False"
-                      CanUserDeleteRows="False"
-                      CanUserReorderColumns="False">
+            <Label Content="Eingaben" FontWeight="Bold"
+                   FontSize="18"/>
 
-                <DataGrid.Columns>
+            <StackPanel Visibility="{Binding ElementName=radioButtonTeam, 
+                                         Path=IsChecked, 
+                                         Converter={StaticResource BoolToVisibilityConverter}}">
 
-                    <DataGridTextColumn Header="Bahn"  Binding="{Binding Path=Bahn, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+
+
+                <Label Content="{Binding Path=SelectedTeam.TeamName}" Padding="10"/>
+
+                <DataGrid ItemsSource="{Binding Path=PointsOfSelectedTeam, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                          x:Name="dataGridTeamResults"
+                          Width="auto"
+                          MinHeight="100"
+                          MaxHeight="800"
+                          RowHeaderWidth="0"
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="Cell"
+                          CanUserAddRows="False"
+                          CanUserResizeColumns="False"
+                          CanUserDeleteRows="False"
+                          CanUserReorderColumns="False">
+
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Background" Value="Green"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+
+                    </DataGrid.CellStyle>
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Spiel" Binding="{Binding Path=GameNumber, Mode=OneWay}"
+                                        Width="auto"
+                                        IsReadOnly="True">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Team" Binding="{Binding Path=StockPunkte, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="75"
+                                        TextBlock.TextAlignment="Center">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Gegner"  Binding="{Binding Path=StockPunkteGegner, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="75">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="--->"  Binding="{Binding Path=Gegner, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                         IsReadOnly="True"
                                         Width="auto">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Team"  
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsPauseGame}" Value="True">
+                                    <Setter Property="Background" Value="DarkGray"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                </DataGrid>
+
+
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding ElementName=radioButtonGame, 
+                                          Path=IsChecked, 
+                                          Converter={StaticResource BoolToVisibilityConverter}}">
+
+                <Label Content="{Binding Path=SelectedGame.GameName}"  Padding="10"/>
+
+                <DataGrid ItemsSource="{Binding Path=PointsPerGameList, 
+                                            Mode=OneWay, 
+                                            UpdateSourceTrigger=PropertyChanged}"
+                          x:Name="dataGridGameResults"
+                          Width="auto"
+                          MinHeight="100"
+                          MaxHeight="800"
+                          RowHeaderWidth="0"
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="Cell"
+                          CanUserAddRows="False"
+                          CanUserResizeColumns="False"
+                          CanUserDeleteRows="False"
+                          CanUserReorderColumns="False">
+
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Background" Value="Green"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+
+                    </DataGrid.CellStyle>
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Bahn"  Binding="{Binding Path=Bahn, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        IsReadOnly="True"
+                                        Width="auto">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Team"  
                                         Binding="{Binding Path=TeamNameA, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                         Width="auto"
                                         IsReadOnly="True">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="5"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="5"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-                    <DataGridTextColumn Header=" Stock&#x0a;Punkte"  
+                        <DataGridTextColumn Header=" Stock&#x0a;Punkte"  
                                         Binding="{Binding Path=StockPunkteA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         Width="75"
                                         IsReadOnly="False">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="Team"  Binding="{Binding Path=TeamNameB, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        <DataGridTextColumn Header="Team"  Binding="{Binding Path=TeamNameB, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                         Width="auto"
                                         IsReadOnly="True">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-                    <DataGridTextColumn Header=" Stock&#x0a;Punkte"  
+                        <DataGridTextColumn Header=" Stock&#x0a;Punkte"  
                                         Binding="{Binding Path=StockPunkteB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         Width="75"
                                         IsReadOnly="False">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="3"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="3"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
-                </DataGrid.Columns>
-                
-            </DataGrid>
+                    </DataGrid.Columns>
 
+                </DataGrid>
+
+
+            </StackPanel>
 
         </StackPanel>
 
-        <StackPanel Grid.Column="2">
+        <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10,5" >
+
+            <Label Content="Ausgabe" FontWeight="Bold"
+                   FontSize="18"/>
+
             <StackPanel Orientation="Horizontal">
                 <Label Content="Mannschaften mit Spielernamen:"/>
                 <TextBox Text="{Binding Path=NumberOfTeamsWithNamedPlayers,
                                         Mode=TwoWay,
                                         UpdateSourceTrigger=PropertyChanged}"
-                         MinWidth="60"
+                         MaxLength="2"
+                         MinWidth="30"
+                         HorizontalAlignment="Stretch"
                          HorizontalContentAlignment="Center"
                          VerticalContentAlignment="Center"/>
             </StackPanel>
-            <Button Content="Ergebnisliste" Margin="0,10" Padding="10" 
-                    Command="{Binding Path=PrintErgebnislisteCommand}"/>
+            <Button Content="Ergebnisliste" Margin="0,10" Padding="30,10" 
+                    Command="{Binding Path=PrintErgebnislisteCommand}"
+                    HorizontalAlignment="Left"/>
         </StackPanel>
-        
+
     </Grid>
 
-    </ScrollViewer>
+
 
 </UserControl>

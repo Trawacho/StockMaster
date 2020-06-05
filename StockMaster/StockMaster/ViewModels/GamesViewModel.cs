@@ -2,14 +2,9 @@
 using StockMaster.Commands;
 using StockMaster.Interfaces;
 using StockMaster.Output;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace StockMaster.ViewModels
@@ -105,7 +100,35 @@ namespace StockMaster.ViewModels
                 RaisePropertyChanged();
             }
         }
-       
+
+
+        public bool IsDirectionOfCourtsFromRightToLeft
+        {
+            get
+            {
+                return tournament.IsDirectionOfCourtsFromRightToLeft;
+            }
+            set
+            {
+                if (tournament.IsDirectionOfCourtsFromRightToLeft == value) return;
+
+                tournament.IsDirectionOfCourtsFromRightToLeft = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(DirectionOfCourtsDescription));
+            }
+        }
+
+        public string DirectionOfCourtsDescription
+        {
+            get
+            {
+                return IsDirectionOfCourtsFromRightToLeft
+                    ? "1. Bahn rechts, weitere folgen links"
+                    : "1. Bahn links, weitere folgen rechts";
+            }
+        }
+
+
         public bool TeamNameOnTurnCards { get; set; }
 
         public bool Is8KehrenSpiel
@@ -137,6 +160,10 @@ namespace StockMaster.ViewModels
                         Parallel.ForEach(tournament.Teams, (t) => t.ClearGames());
                         tournament.CreateGames();
                         RaisePropertyChanged(nameof(Teams));
+                    },
+                    (p) =>
+                    {
+                        return tournament.CountOfGames() == 0;
                     }
                     ));
 
@@ -154,6 +181,10 @@ namespace StockMaster.ViewModels
                         Parallel.ForEach(tournament.Teams, (t) => t.ClearGames());
                         tournament.RemoveAllVirtualTeams();
                         RaisePropertyChanged(nameof(Teams));
+                    },
+                    (p) =>
+                    {
+                        return tournament.CountOfGames() > 0;
                     }
                     ));
             }
@@ -201,6 +232,17 @@ namespace StockMaster.ViewModels
 
         public bool ConcatRoundsOnOutput { get; set; } = true;
         public bool TeamNameOnTurnCards { get; set; } = true;
+
+        public bool IsDirectionOfCourtsFromRightToLeft { get; set; } = true;
+        public string DirectionOfCourtsDescription
+        {
+            get
+            {
+                return IsDirectionOfCourtsFromRightToLeft
+                     ? "1. Bahn rechts, weitere folgen links"
+                     : "1. Bahn links, weitere folgen rechts";
+            }
+        }
 
         public bool Is8KehrenSpiel { get; set; } = true;
 

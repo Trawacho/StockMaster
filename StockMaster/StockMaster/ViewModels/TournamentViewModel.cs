@@ -118,31 +118,7 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public bool IsDirectionOfCourtsFromRightToLeft
-        {
-            get
-            {
-                return Tournament.IsDirectionOfCourtsFromRightToLeft;
-            }
-            set
-            {
-                if (Tournament.IsDirectionOfCourtsFromRightToLeft == value) return;
-
-                Tournament.IsDirectionOfCourtsFromRightToLeft = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(nameof(DirectionOfCourtsDescription));
-            }
-        }
-
-        public string DirectionOfCourtsDescription
-        {
-            get
-            {
-                return IsDirectionOfCourtsFromRightToLeft
-                    ? "1. Bahn rechts, weitere folgen links"
-                    : "1. Bahn links, weitere folgen rechts";
-            }
-        }
+        
 
 
         public Referee Referee
@@ -200,16 +176,7 @@ namespace StockMaster.ViewModels
 
         public DateTime DateOfTournament { get; set; } = DateTime.Now;
 
-        public bool IsDirectionOfCourtsFromRightToLeft { get; set; } = true;
-        public string DirectionOfCourtsDescription
-        {
-            get
-            {
-                return IsDirectionOfCourtsFromRightToLeft
-                     ? "1. Bahn rechts, weitere folgen links"
-                     : "1. Bahn links, weitere folgen rechts";
-            }
-        }
+       
 
         public EntryFee EntryFee { get; set; }
 

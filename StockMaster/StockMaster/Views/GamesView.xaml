@@ -12,9 +12,8 @@
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:GamesDesignViewModel, 
                             IsDesignTimeCreatable=True}" 
-             d:DesignHeight ="1024"
-             d:DesignWidth="1280"
-             Background="WhiteSmoke"
+             d:DesignHeight ="450"
+             d:DesignWidth="800"
              >
     <UserControl.Resources>
         <converters:GamesSortingConverter x:Key="gamesSorter"/>
@@ -34,23 +33,25 @@
    
     <Grid Margin="25">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" MinWidth="400"/>
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-
-
+        <Label Grid.Row="0" Grid.Column="0" 
+               Content="Liste aller Spiele" 
+               FontWeight="Bold"
+               FontSize="18"/>
         <TreeView ItemsSource="{Binding Source={StaticResource sortedTeams}}"
-                  Grid.Row="0" Grid.Column="0"
-                  Grid.RowSpan="3" 
-                  Padding="10">
+                  Grid.Row="1" Grid.Column="0"
+                  Background="Transparent"
+                  Padding="10"
+                  Margin="0,0,10,0">
             <TreeView.Resources>
 
                 <HierarchicalDataTemplate DataType="{x:Type self:Team}" x:Name="tlNode"
@@ -104,12 +105,24 @@
             </TreeView.Resources>
         </TreeView>
 
-        <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" Margin="20">
-            <Button Content="Erzeuge Spiele" Command="{Binding Path=CreateGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
-            <Button Content="Lösche alle Spiele" Command="{Binding Path=RemoveAllGamesCommand}" Margin="10" HorizontalAlignment="Right" Padding="10"/>
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" >
+            <Button Content="Erzeuge Spiele" 
+                    Command="{Binding Path=CreateGamesCommand}" 
+                    Margin="10"  
+                    Padding="10"/>
+            <Button Content="Lösche alle Spiele" 
+                    Command="{Binding Path=RemoveAllGamesCommand}" 
+                    Margin="10" 
+                    Padding="10"/>
         </StackPanel>
 
-        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"  Margin="40,0">
+        <Label Grid.Row="0" Grid.Column="1" 
+               Content="Spiel-Einstellungen" 
+               FontWeight="Bold"
+               FontSize="18"
+               Margin="10,0,0,0"/>
+
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -123,6 +136,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -149,11 +163,26 @@
                    HorizontalContentAlignment="Left"
                    HorizontalAlignment="Left"/>
 
+
+            <Label Content="Spielbahn Richtung:"
+               Grid.Row="2" Grid.Column="0"
+               HorizontalAlignment="Right"
+               Margin="5"/>
+            <CheckBox Content="{Binding Path=DirectionOfCourtsDescription, Mode=OneWay}"
+                  Grid.Row="2" Grid.Column="1"
+                  IsChecked="{Binding Path=IsDirectionOfCourtsFromRightToLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  IsThreeState="False"
+                  HorizontalContentAlignment="Left"
+                  VerticalContentAlignment="Center"
+                  ToolTip="Nur in Verbindung mit StockTV relevant"
+                  Margin="5"/>
+            
+            
             <Label Content="Anzahl der Aussetzer:"
-                   Grid.Row="2" Grid.Column="0"/>
+                   Grid.Row="3" Grid.Column="0"/>
             <CheckBox Content="2 Aussetzer pro Mannschaft"
                       ToolTip="Stanard ist kein Aussetzer"
-                      Grid.Row="2" Grid.Column="1"
+                      Grid.Row="3" Grid.Column="1"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"
                       IsChecked="{Binding Path=TwoPauseGames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -161,19 +190,19 @@
             
 
             <Label Content="Anzahl Kehren pro Spiel:"
-                   Grid.Row="3" Grid.Column="0"/>
+                   Grid.Row="4" Grid.Column="0"/>
             <CheckBox Content="8 Kehren pro Spiel"
                       ToolTip="Standard sind 6 Kehren"
-                      Grid.Row="3" Grid.Column="1"
+                      Grid.Row="4" Grid.Column="1"
                       IsChecked="{Binding Path=Is8KehrenSpiel, Mode=TwoWay, 
                                           UpdateSourceTrigger=PropertyChanged}"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"/>
 
             <Label Content="Wertungskarte:" 
-                   Grid.Row="4" Grid.Column="0"/>
+                   Grid.Row="5" Grid.Column="0"/>
             <CheckBox Content="Alle Runden zusammenfassen" 
-                      Grid.Row="4" Grid.Column="1"  
+                      Grid.Row="5" Grid.Column="1"  
                       HorizontalAlignment="Left"
                       VerticalAlignment="Center"
                       IsChecked="{Binding Path=ConcatRoundsOnOutput}"
@@ -181,16 +210,16 @@
                                           Converter={StaticResource numberIsGreaterThenOneConverter}}"/>
             
             <Label  Content="Team-Name:" 
-                    Grid.Row="5" Grid.Column="0"/>
+                    Grid.Row="6" Grid.Column="0"/>
             <CheckBox Content="Teamnamen auf Wertungskarte drucken"
-                      Grid.Row="5" Grid.Column="1"
+                      Grid.Row="6" Grid.Column="1"
                       IsChecked="{Binding Path=TeamNameOnTurnCards}"
                       HorizontalAlignment="Left"
                       VerticalAlignment="Center"/>
 
 
             <Button Content="Wertungskarten drucken" 
-                    Grid.Column="0" Grid.Row="6"
+                    Grid.Column="0" Grid.Row="7"
                     Margin="10" Padding="10"
                     Command="{Binding Path=PrintTurnCardsCommand}"/>
         </Grid>
