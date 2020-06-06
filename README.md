@@ -5,5 +5,5 @@ Auswertungsprogramm für den Stocksport
 - Anzeige von Live-Spielständen in Verbindung mit StockTV
 - Drucken von Quittungen
 - Erzeugen von Ergebnislisten
-- Erzeugen von Bahnblöcken
+- Erzeugen von Bahnblöcken (noch nicht implementiert)
 
