@@ -54,7 +54,46 @@ namespace StockMaster.ViewModels
             }
             set
             {
+                if (tournament.NumberOfGameRounds == value) return;
+
                 tournament.NumberOfGameRounds = value;
+                tournament.RemoveAllGames();
+                RaisePropertyChanged();
+            }
+        }
+
+
+        /// <summary>
+        /// bei gerader Anzahl an Manschaften, true, dann werden zwei Aussetzer gespielt
+        /// </summary>
+        public bool TwoPauseGames
+        {
+            get { return tournament.TwoPauseGames; }
+            set
+            {
+                if (tournament.TwoPauseGames == value) return;
+
+                tournament.TwoPauseGames = value;
+                tournament.RemoveAllGames();
+                RaisePropertyChanged();
+            }
+        }
+
+
+        public bool IsStartOfGameChanged
+        {
+            get
+            {
+
+                return tournament.NumberOfGameRounds > 1
+                    ? tournament.StartOfTeamChange
+                    : false;
+            }
+            set
+            {
+                if (tournament.StartOfTeamChange == value) return;
+                tournament.StartOfTeamChange = value;
+                tournament.RemoveAllGames();
                 RaisePropertyChanged();
             }
         }
@@ -67,37 +106,6 @@ namespace StockMaster.ViewModels
             get
             {
                 return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
-            }
-        }
-
-        /// <summary>
-        /// bei gerader Anzahl an Manschaften, true, dann werden zwei Aussetzer gespielt
-        /// </summary>
-        public bool TwoPauseGames
-        {
-            get { return tournament.TwoPauseGames; }
-            set
-            {
-                tournament.TwoPauseGames = value;
-                RaisePropertyChanged();
-            }
-        }
-
-       
-
-        private bool concatRoundsOnOutput;
-        public bool ConcatRoundsOnOutput
-        {
-            get
-            {
-                return NumberOfGameRounds == 1 ? true : concatRoundsOnOutput;
-            }
-            set
-            {
-                if (concatRoundsOnOutput == value) return;
-
-                concatRoundsOnOutput = value;
-                RaisePropertyChanged();
             }
         }
 
@@ -129,6 +137,24 @@ namespace StockMaster.ViewModels
         }
 
 
+        private bool concatRoundsOnOutput;
+        public bool ConcatRoundsOnOutput
+        {
+            get
+            {
+                return NumberOfGameRounds > 1
+                        ? concatRoundsOnOutput
+                        : false;
+            }
+            set
+            {
+                if (concatRoundsOnOutput == value) return;
+
+                concatRoundsOnOutput = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public bool TeamNameOnTurnCards { get; set; }
 
         public bool Is8KehrenSpiel
@@ -148,7 +174,6 @@ namespace StockMaster.ViewModels
 
         #region Commands
 
-
         private ICommand _createGamesCommand;
         public ICommand CreateGamesCommand
         {
@@ -157,38 +182,14 @@ namespace StockMaster.ViewModels
                 return _createGamesCommand ?? (_createGamesCommand = new RelayCommand(
                     (p) =>
                     {
-                        Parallel.ForEach(tournament.Teams, (t) => t.ClearGames());
-                        tournament.CreateGames();
+                        tournament.ReCreateGames();
                         RaisePropertyChanged(nameof(Teams));
-                    },
-                    (p) =>
-                    {
-                        return tournament.CountOfGames() == 0;
                     }
                     ));
 
             }
         }
 
-        private ICommand _removeAllGamesCommand;
-        public ICommand RemoveAllGamesCommand
-        {
-            get
-            {
-                return _removeAllGamesCommand ?? (_removeAllGamesCommand = new RelayCommand(
-                    (p) =>
-                    {
-                        Parallel.ForEach(tournament.Teams, (t) => t.ClearGames());
-                        tournament.RemoveAllVirtualTeams();
-                        RaisePropertyChanged(nameof(Teams));
-                    },
-                    (p) =>
-                    {
-                        return tournament.CountOfGames() > 0;
-                    }
-                    ));
-            }
-        }
 
         private ICommand _printTurnCardsCommand;
         public ICommand PrintTurnCardsCommand
@@ -246,9 +247,8 @@ namespace StockMaster.ViewModels
 
         public bool Is8KehrenSpiel { get; set; } = true;
 
-        public ICommand RemoveAllGamesCommand { get; }
         public ICommand CreateGamesCommand { get; }
         public ICommand PrintTurnCardsCommand { get; }
-
+        public bool IsStartOfGameChanged { get; set; } = true;
     }
 }

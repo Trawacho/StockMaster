@@ -282,6 +282,24 @@ namespace StockMaster.BaseClasses
 
         #endregion
 
+        /// <summary>
+        /// Removes all Games und Creates new Games
+        /// </summary>
+        internal void ReCreateGames()
+        {
+            RemoveAllGames();
+            CreateGames();
+        }
+
+        /// <summary>
+        /// Removes all Games from every Team and also removes the virtual Teams
+        /// </summary>
+        internal void RemoveAllGames()
+        {
+            Parallel.ForEach(Teams, (t) => t.ClearGames());
+            RemoveAllVirtualTeams();
+        }
+
         internal void CreateGames()
         {
             /*
@@ -349,7 +367,14 @@ namespace StockMaster.BaseClasses
 
                     #region Anspiel festlegen
 
-                    game.StartOfPlayTeamA = !(i % 2 == 0);
+                    game.StartOfPlayTeamA = (i % 2 == 0);
+
+                    if(spielRunde == 2 && StartOfTeamChange)
+                    {
+                        game.StartOfPlayTeamA = !game.StartOfPlayTeamA;
+                    }
+
+                       
 
                     #endregion
 
@@ -426,9 +451,15 @@ namespace StockMaster.BaseClasses
 
                         #region Anspiel berechnen  
 
-                        game.StartOfPlayTeamA = !(k % 2 == 0);
+                        game.StartOfPlayTeamA = (k % 2 == 0);
+                        
+                        if (spielRunde == 2 && StartOfTeamChange)
+                        {
+                            game.StartOfPlayTeamA = !game.StartOfPlayTeamA;
+                        }
 
                         #endregion
+
                         System.Diagnostics.Debug.WriteLine(game.ToString());
 
                         game.TeamA.AddGame(game);
