@@ -6,4 +6,5 @@ Auswertungsprogramm für den Stocksport
 - Drucken von Quittungen
 - Erzeugen von Ergebnislisten
 - Erzeugen von Bahnblöcken (noch nicht implementiert)
+- Speichern und Laden von Turnieren (noch nicht implementiert)
 

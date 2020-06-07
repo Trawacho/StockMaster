@@ -70,8 +70,8 @@ namespace StockMaster.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            this.tournament = TournamentExtension.CreateNewTournament(true);
-            //this.tournament = new Tournament();
+            //this.tournament = TournamentExtension.CreateNewTournament(true);
+            this.tournament = new Tournament();
             ViewModel = new TournamentViewModel(tournament);
         }
      
