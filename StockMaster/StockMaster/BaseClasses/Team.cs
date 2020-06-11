@@ -153,6 +153,14 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        public int SpielPunkteDifferenz
+        {
+            get
+            {
+                return SpielPunkte.positiv - SpielPunkte.negativ;
+            }
+        }
+
         public string SpielPunkteString
         {
             get
@@ -197,6 +205,8 @@ namespace StockMaster.BaseClasses
                 return StockPunkte.positiv - StockPunkte.negativ;
             }
         }
+
+        
 
         #endregion 
 

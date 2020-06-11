@@ -189,7 +189,7 @@ namespace StockMaster.BaseClasses
         {
             return Teams
                     .Where(v => !v.IsVirtual)
-                    .OrderByDescending(t => t.SpielPunkte.positiv)
+                    .OrderByDescending(t => t.SpielPunkteDifferenz)
                     .ThenByDescending(p => p.StockNote)
                     .ThenByDescending(d => d.StockPunkteDifferenz);
         }
