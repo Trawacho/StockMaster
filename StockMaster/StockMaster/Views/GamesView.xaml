@@ -11,7 +11,7 @@
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:GamesDesignViewModel, 
                             IsDesignTimeCreatable=True}" 
-             d:DesignHeight ="450"
+             d:DesignHeight ="800"
              d:DesignWidth="800"
              >
     <UserControl.Resources>
@@ -262,11 +262,19 @@
                       VerticalAlignment="Center"/>
 
                 <Button Content="Wertungskarten drucken" 
-                    Grid.Column="0" 
-                    Grid.Row="3"
-                    Margin="10" Padding="10"
-                    Command="{Binding Path=PrintTurnCardsCommand}"/>
+                        Grid.Column="0" 
+                        Grid.Row="3"
+                        x:Name="buttonWertungskarteDrucken"
+                        Margin="10" Padding="10"
+                        Command="{Binding Path=PrintTurnCardsCommand}"/>
             </Grid>
+
+            <Label Content="Bahnblock" FontWeight="Bold" Margin="0,20,0,0"/>
+            <Button Content="Bahnblock drucken" Margin="10" Padding="10"
+                    Width="{Binding ElementName=buttonWertungskarteDrucken, Path=ActualWidth}"
+                    HorizontalAlignment="Left"
+                    Command="{Binding Path=PrintBahnblockCommand}"/>
+                    
         </StackPanel>
 
     </Grid>

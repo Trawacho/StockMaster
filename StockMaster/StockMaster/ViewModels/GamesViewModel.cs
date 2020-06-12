@@ -196,7 +196,7 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return _printTurnCardsCommand ?? (_printTurnCardsCommand = new RelayCommand(
+                return _printTurnCardsCommand ??= new RelayCommand(
                     (p) =>
                     {
                         var x = new Output.Wertungskarte.Wertungskarte();
@@ -209,7 +209,30 @@ namespace StockMaster.ViewModels
                     {
                         return tournament.GetAllGames().Count() > 1;
                     }
-                    ));
+                    );
+            }
+        }
+
+        private ICommand _printBahnblockCommand;
+
+        public ICommand PrintBahnblockCommand
+        {
+            get
+            {
+                return _printBahnblockCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        var x = new Output.Bahnblock.BahnBlock();
+                        PrintPreview printPreview = new PrintPreview();
+                        var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
+                        printPreview.Document = x.GetDocument(A4Size, tournament);
+                        printPreview.ShowDialog();
+                    },
+                    (p) =>
+                    {
+                        return tournament.GetAllGames().Count() > 1;
+                    }
+                    );
             }
         }
 
@@ -249,6 +272,8 @@ namespace StockMaster.ViewModels
 
         public ICommand CreateGamesCommand { get; }
         public ICommand PrintTurnCardsCommand { get; }
+
+        public ICommand PrintBahnblockCommand { get; }
         public bool IsStartOfGameChanged { get; set; } = true;
     }
 }

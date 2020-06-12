@@ -20,5 +20,6 @@ namespace StockMaster.Interfaces
        
         ICommand CreateGamesCommand { get; }
         ICommand PrintTurnCardsCommand { get; }
+        ICommand PrintBahnblockCommand { get; }
     }
 }

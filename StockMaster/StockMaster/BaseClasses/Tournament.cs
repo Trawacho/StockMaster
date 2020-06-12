@@ -158,9 +158,13 @@ namespace StockMaster.BaseClasses
 
         #region Functions
 
+        /// <summary>
+        /// Alle Spiele aller Mannschaften
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Game> GetAllGames()
         {
-            return Teams.SelectMany(g => g.Games);
+            return Teams.SelectMany(g => g.Games).Distinct();
         }
 
         internal int CountOfGames()
@@ -367,7 +371,7 @@ namespace StockMaster.BaseClasses
 
                     #region Anspiel festlegen
 
-                    game.StartOfPlayTeamA = (i % 2 == 0);
+                    game.StartOfPlayTeamA = !(i % 2 == 0);
 
                     if(spielRunde == 2 && StartOfTeamChange)
                     {
@@ -451,7 +455,7 @@ namespace StockMaster.BaseClasses
 
                         #region Anspiel berechnen  
 
-                        game.StartOfPlayTeamA = (k % 2 == 0);
+                        game.StartOfPlayTeamA = !(k % 2 == 0);
                         
                         if (spielRunde == 2 && StartOfTeamChange)
                         {

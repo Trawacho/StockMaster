@@ -13,7 +13,8 @@ namespace StockMaster.Output.Wertungskarte
             string NumberOfGame = game.GameNumberOverAll.ToString();
             string NumberOfArea = game.CourtNumber.ToString();
             string Opponent = startNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
-            string StartOfGame = game.StartOfPlayTeamA ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
+            //string StartOfGame = game.StartOfPlayTeamA ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
+            string StartOfGame = game.StartingTeam.StartNumber.ToString();
 
             RowDefinitions.Add(new System.Windows.Controls.RowDefinition()
             {

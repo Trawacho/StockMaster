@@ -84,7 +84,6 @@ namespace StockMaster.ViewModels
                                         .Where(g => g.RoundOfGame == SelectedGame.RoundOfGame
                                                  && g.GameNumber == SelectedGame.GameNumber
                                                  && g.IsNotPauseGame)
-                                        .Distinct<Game>()
                                         .OrderBy(o => o.CourtNumber))
             {
                 PointsPerGameList.Add(new PointsPerGame(game));
@@ -151,7 +150,6 @@ namespace StockMaster.ViewModels
         {
             this.tournament = new Tournament();
             this.SelectedGame = tournament.GetAllGames().First(g => g.GameNumberOverAll == 1);
-            //this.SelectedTeam = tournament.Teams[0];
         }
 
         public ObservableCollection<Team> Teams

@@ -16,7 +16,6 @@ namespace StockMaster.Output.Wertungskarte
 
             BorderBrush = Brushes.Black;
             BorderThickness = new Thickness(1);
-            Margin = new Thickness(-1, -1, 0, 0);
 
             Textblock = new TextBlock
             {

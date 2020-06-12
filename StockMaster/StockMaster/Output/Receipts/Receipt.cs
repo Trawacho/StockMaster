@@ -24,10 +24,13 @@ namespace StockMaster.Output.Receipts
             document.DocumentPaginator.PageSize = pageSize;
 
 
-            var receipts = new List<Control>();
+            var receipts = new List<StackPanel>();
 
             foreach (var team in tournament.Teams.Where(t => !t.IsVirtual))
             {
+                var receiptStackPanel = new StackPanel();
+                receiptStackPanel.Children.Add(Tools.CutterLineTop());
+
                 var receipt = new ucReceipt();
                 receipt.labelAn.Content = tournament.Organizer;
                 receipt.labelVon.Content = team.TeamName;
@@ -35,21 +38,24 @@ namespace StockMaster.Output.Receipts
                 receipt.labelVerbal.Content = $"-- {tournament.EntryFee.Verbal} --";
                 receipt.labelZweck.Content = tournament.TournamentName;
                 receipt.labelOrtDatum.Content = tournament.Venue + ", " + tournament.DateOfTournament.ToString("dd.MM.yyyy");
+                receiptStackPanel.Children.Add(receipt);
 
-                receipts.Add(receipt);
+                receiptStackPanel.Children.Add(Tools.CutterLine());
+
+                receipts.Add(receiptStackPanel);
             }
 
 
             var pagePanel = new StackPanel();
 
-            foreach (var r in receipts)
+            foreach (var receipt in receipts)
             {
 
-                pagePanel.Children.Add(r);
+                pagePanel.Children.Add(receipt);
                 pagePanel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 pagePanel.Arrange(new Rect(0, 0, pagePanel.DesiredSize.Width, pagePanel.DesiredSize.Height));
 
-                if (pagePanel.ActualHeight + r.ActualHeight > document.DocumentPaginator.PageSize.Height)
+                if (pagePanel.ActualHeight + receipt.ActualHeight > document.DocumentPaginator.PageSize.Height)
                 {
                     SetPagePanelToDocument(pagePanel);
                     pagePanel = new StackPanel();
@@ -73,7 +79,7 @@ namespace StockMaster.Output.Receipts
             panel.VerticalAlignment = VerticalAlignment.Center;
             
             FixedPage.SetTop(panel, PixelConverter.CmToPx(1));
-            FixedPage.SetLeft(panel, PixelConverter.CmToPx(0.7));
+            FixedPage.SetLeft(panel, PixelConverter.CmToPx(2.0));
             newPage.Children.Add(panel);
 
             PageContent content = new PageContent();

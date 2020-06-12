@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              Background="White">
     <Border Padding="20" 
-            BorderThickness="1" BorderBrush="Black" Width="17cm" >
+            BorderThickness="0" BorderBrush="Black" Width="17cm" >
         <StackPanel Background="White">
             <Border Background="LightGray" HorizontalAlignment="Stretch">
                 <TextBlock Text="Q u i t t u n g" 
@@ -33,7 +33,7 @@
                 <Grid.Resources>
                     <Style TargetType="Label">
                         <Setter Property="HorizontalContentAlignment" Value="Right"/>
-                        <Setter Property="Margin" Value="10,5"/>
+                        <Setter Property="Margin" Value="10,0"/>
                         <Setter Property="FontSize" Value="18"/>
                     </Style>
                 </Grid.Resources>

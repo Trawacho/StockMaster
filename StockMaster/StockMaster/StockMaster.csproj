@@ -111,6 +111,10 @@
     <Compile Include="Dialogs\IDialogService.cs" />
     <Compile Include="Interfaces\IExecutive.cs" />
     <Compile Include="Interfaces\ITournamentViewModel.cs" />
+    <Compile Include="Output\Bahnblock\BahnBlock.cs" />
+    <Compile Include="Output\Bahnblock\ucBahnBlock.xaml.cs">
+      <DependentUpon>ucBahnBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Output\Helpers.cs" />
     <Compile Include="Output\Receipts\Receipt.cs" />
     <Compile Include="Output\Receipts\ucReceipt.xaml.cs">
@@ -123,7 +127,7 @@
     <Compile Include="Output\Results\ucStackPanelTeam.xaml.cs">
       <DependentUpon>ucStackPanelTeam.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Output\Wertungskarte\CutterLine.cs" />
+    <Compile Include="Output\CutterLine.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
@@ -145,6 +149,10 @@
     <Compile Include="Views\TournamentView.xaml.cs">
       <DependentUpon>TournamentView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Output\Bahnblock\ucBahnBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Output\Receipts\ucReceipt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -250,5 +258,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

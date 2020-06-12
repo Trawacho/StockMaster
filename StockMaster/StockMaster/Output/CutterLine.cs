@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace StockMaster.Output.Wertungskarte
+namespace StockMaster.Output
 {
     internal static class Tools
     {

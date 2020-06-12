@@ -189,6 +189,17 @@ namespace StockMaster.BaseClasses
         }
 
         /// <summary>
+        /// Das NICHT anspielende Team
+        /// </summary>
+        public Team NotStartingTeam
+        {
+            get
+            {
+                return StartOfPlayTeamA ? TeamB : TeamA;
+            }
+        }
+
+        /// <summary>
         /// Wer ist der Gegner
         /// </summary>
         /// <param name="team"></param>
