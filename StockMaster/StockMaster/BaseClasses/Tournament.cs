@@ -101,6 +101,8 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        
+
         /// <summary>
         /// On True, the TurnCard has 8 instead of 7 Turns per Team
         /// </summary>
@@ -172,14 +174,6 @@ namespace StockMaster.BaseClasses
             return GetAllGames().ToList().Count();
         }
 
-        public void DeleteAllTurnsInEveryGame()
-        {
-            Parallel.ForEach(GetAllGames(), (g) =>
-            {
-                g.Turns.Clear();
-            });
-        }
-
         public IEnumerable<Game> GetGamesOfCourt(int courtNumber)
         {
             return Teams.SelectMany(g => g.Games)
@@ -193,12 +187,22 @@ namespace StockMaster.BaseClasses
         {
             return Teams
                     .Where(v => !v.IsVirtual)
-                    .OrderByDescending(t => t.SpielPunkteDifferenz)
+                    .OrderByDescending(t => t.SpielPunkte.positiv)
                     .ThenByDescending(p => p.StockNote)
                     .ThenByDescending(d => d.StockPunkteDifferenz);
         }
 
-
+        /// <summary>
+        /// Es wird in allen Spielen die Master- und NetworkTurns auf 0:0 gesetzt
+        /// </summary>
+        internal void ResetAllGames()
+        {
+            Parallel.ForEach(GetAllGames(), (g) =>
+            {
+                g.NetworkTurn.Reset();
+                g.MasterTurn.Reset();
+            });
+        }
 
 
         #endregion

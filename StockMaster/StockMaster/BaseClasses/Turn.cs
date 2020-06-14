@@ -55,21 +55,6 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        /// <summary>
-        /// Nummer der Kehre (1 - normalerweise 6)
-        /// </summary>
-        public int Number
-        {
-            get => number;
-            set
-            {
-                if (number == value)
-                    return;
-
-                number = value;
-                RaisePropertyChanged();
-            }
-        }
 
         #endregion
 
@@ -77,15 +62,16 @@ namespace StockMaster.BaseClasses
 
         public Turn()
         {
-            Number = 0;
-        }
-
-        public Turn(int TurnNumber) : this()
-        {
-            Number = TurnNumber;
             PointsTeamA = 0;
             PointsTeamB = 0;
         }
+
+        internal void Reset()
+        {
+            PointsTeamA = 0;
+            PointsTeamB = 0;
+        }
+
 
         #endregion
     }

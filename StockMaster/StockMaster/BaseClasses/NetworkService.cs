@@ -87,7 +87,7 @@ namespace StockMaster.BaseClasses
                 {
                     if (receiveBytes?[0] == byte.MaxValue)
                     {
-                        tournament.DeleteAllTurnsInEveryGame();
+                        tournament.ResetAllGames();
                     }
                 }
 
@@ -116,19 +116,13 @@ namespace StockMaster.BaseClasses
 
         void DeSerialize(byte[] data)
         {
-            /* 0      1              2..
-             * Bahn - AnzahlKehren - KK.......   KK........  KK......
-             * 1       1             2*anzKehren 2*anzKehren max 2*anzKehren 
+            /* 
+             * 03 15 09 21 07 09 15
              *
              * Aufbau eines Datagramms: 
-             * 1 Im ersten Byte steht die Bahnnummer
-             * 2 Im zweiten Byte steht die Länge eines Spiels (Anzahl der Kehren)
-             * 3 In jedem weiteren Byte kommen die laufenden Kehren
-             *   Jede Kehre besteht aus zwei Byte, davon
-             *      das erste Byte hat Mannschaft links
-             *      das zweite Byte hat Mannschaft rechts
-             * Durch das zweite Byten im Datagramm (Anzahl der Kehren) kann man die einzelnen Spiele trennen  
-             * Das letzte Spiel kann kürzer sein. Es sind evtl. nicht alle Kehren im Datagramm
+             * Im ersten Byte steht die Bahnnummer ( 03 )
+             * In jedem weiteren Byte kommen die laufenden Spiele, erst der Wert der linken Mannschaft,
+             * dann der Wert der rechten Mannschaft
              * 
              */
 
@@ -137,80 +131,72 @@ namespace StockMaster.BaseClasses
 
             try
             {
+
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine($"{data.Length} -- Bahnnummer:{data[0]} -- {string.Join("-", data)}");
+#endif
+
                 byte bahnNumber = data[0];
                 var courtGames = tournament.GetGamesOfCourt(bahnNumber);
 
-                byte turnLength = data[1];
+                //Das erste Byte aus dem Array wird nicht mehr benötigt. Daten in ein neues Array kopieren
+                byte[] newData = new byte[data.Length - 1];
+                Array.Copy(data, 1, newData, 0, data.Length - 1);
 
-                //Die ersten beiden Byte aus dem Array werden nicht mehr benötigt, Daten in ein neues Array kopieren
-                byte[] newData = new byte[data.Length - 2];
-                Array.Copy(data, 2, newData, 0, data.Length - 2);
-
-                // Jede verfügbare Kehre im Datagramm durchgehen, i+2, da immer 2 Bytes pro Kehre
-                // Zähler für die Spiele mitzählen
                 int spielZähler = 1;
-                int kehrenZähler = 1;
-                var game = courtGames.First(g => g.GameNumber == spielZähler);
-                game.Turns.Clear();
 
+                //Jedes verfügbare Spiel im Datagramm durchgehen, i+2, da jedes Spiel 2 Bytes braucht. Im ersten Byte der Wert für Link, das zweite Byte für den Wert rechts
                 for (int i = 0; i < newData.Length; i += 2)
                 {
-                    if (kehrenZähler > turnLength)
+                    var preGame = courtGames.FirstOrDefault(g => g.GameNumber == spielZähler - 1);
+                    if(preGame != null)
                     {
-                        kehrenZähler = 1;
-                        spielZähler++;
-                        game = courtGames.First(g => g.GameNumber == spielZähler);
-                        game.Turns.Clear();
+                        preGame.MasterTurn.PointsTeamA = preGame.NetworkTurn.PointsTeamA;
+                        preGame.MasterTurn.PointsTeamB = preGame.NetworkTurn.PointsTeamB;
                     }
 
-                    if (tournament.IsDirectionOfCourtsFromRightToLeft) //Es wird von Rechts nach Links gespielt. Erste Bahn rechts, folgende links
+                    var game = courtGames.FirstOrDefault(g => g.GameNumber == spielZähler);
+                    if (game == null)
+                        continue;
+
+                    game.NetworkTurn.Reset();
+
+                    if (tournament.IsDirectionOfCourtsFromRightToLeft)
                     {
                         if (game.TeamA.SteigendeSpielNummern.Contains(game.GameNumberOverAll))
                         {
-                            // TeamA befindet sich bei diesem Spiel auf dieser Bahn rechts, das nächste Spiel ist auf einer Bahn mit höherer oder gleicher Bahnnummer (1->2->3->4->...)
-                            game.Turns.Push(new Turn(kehrenZähler)
-                            {
-                                PointsTeamA = newData[i + 1],
-                                PointsTeamB = newData[i]
-                            });
+                            // TeamA befindet sich bei diesem Spiel auf dieser Bahn rechts, 
+                            // das nächste Spiel ist auf einer Bahn mit höherer oder gleicher Bahnnummer (1-> 2-> 3-> 4->...)
+                            game.NetworkTurn.PointsTeamA = newData[i + 1];
+                            game.NetworkTurn.PointsTeamB = newData[i];
                         }
                         else
                         {
                             // TeamA befindet sich bei diesem Spiel auf der Bahn links, das nächste Spiel ist auf einer Bahn mit niedrigerer Bahnnummer (5->4->3->2->1)
-                            game.Turns.Push(new Turn(kehrenZähler)
-                            {
-                                PointsTeamA = newData[i],
-                                PointsTeamB = newData[i + 1]
-                            });
+                            game.NetworkTurn.PointsTeamA = newData[i];
+                            game.NetworkTurn.PointsTeamB = newData[i + 1];
                         }
                     }
-                    else                            // Es wird von Links nach Rechts gespielt. Erste Bahn links, folgende rechts
+                    else
                     {
                         if (game.TeamA.SteigendeSpielNummern.Contains(game.GameNumberOverAll))
                         {
                             // TeamA befindet sich in diesem Spiel auf dieser Bahn links, das nächste Spiel ist auf einer Bahn mit einer höheren Bahnnummer
-                            game.Turns.Push(new Turn(kehrenZähler)
-                            {
-                                PointsTeamA = newData[i],
-                                PointsTeamB = newData[i + 1]
-                            });
+                            game.NetworkTurn.PointsTeamA = newData[i];
+                            game.NetworkTurn.PointsTeamB = newData[i + 1];
                         }
                         else
                         {
                             // TeamA befindet sich in diesem Spiel auf dieser Bahn rechts, das nächste Spiel ist auf einer Bahn mit einer niedrigeren Bahnnummer
-                            game.Turns.Push(new Turn(kehrenZähler)
-                            {
-                                PointsTeamA = newData[i + 1],
-                                PointsTeamB = newData[i]
-                            });
+                            game.NetworkTurn.PointsTeamA = newData[i + 1];
+                            game.NetworkTurn.PointsTeamB = newData[i];
                         }
                     }
-                    
 
-                    kehrenZähler++;
+                    spielZähler++;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }

@@ -236,10 +236,9 @@ namespace StockMaster.BaseClasses
         }
 
         /// <summary>
-        /// Liste der Kehren von StockTV
+        /// Turn to work with StockTVs results
         /// </summary>
-        [XmlIgnore()]
-        public ConcurrentStack<Turn> Turns { get; set; }
+        public Turn NetworkTurn { get; set; }
 
         /// <summary>
         /// ErgebnisKehre. Wenn hier Werte enthalten sind, dann wird die Liste der Kehren nicht berücksichtigt
@@ -271,7 +270,7 @@ namespace StockMaster.BaseClasses
                 }
                 else
                 {
-                    return Turns?.Sum(x => x.PointsTeamB) ?? 0;
+                    return NetworkTurn?.PointsTeamB ?? 0;
                 }
             }
         }
@@ -283,7 +282,6 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                //In Kehre 0 stehen die manuellen Eingaben. In allen anderen Kehren die Werte von dem NetworkService.
                 //Wenn die Werte in Kehre 0 größer 0 sind, werden auch diese genommen und die Werte aus dem NetworkService ignoriert
                 if (MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
                 {
@@ -291,7 +289,7 @@ namespace StockMaster.BaseClasses
                 }
                 else
                 {
-                    return Turns?.Sum(x => x.PointsTeamA) ?? 0;
+                    return NetworkTurn?.PointsTeamA ?? 0;
 
                 }
             }
@@ -348,8 +346,9 @@ namespace StockMaster.BaseClasses
         public Game()
         {
             RoundOfGame = 1;
-            this.Turns = new ConcurrentStack<Turn>();
-            this.MasterTurn = new Turn(0);   //Default-Kehere für manuelle Eingabe
+           // this.Turns = new ConcurrentStack<Turn>();
+            this.NetworkTurn = new Turn();
+            this.MasterTurn = new Turn();   //Default-Kehere für manuelle Eingabe
         }
 
 
