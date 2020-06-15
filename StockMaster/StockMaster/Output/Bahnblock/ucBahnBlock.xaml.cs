@@ -20,6 +20,8 @@ namespace StockMaster.Output.Bahnblock
             this.StartTeamNumber.Content = $"{game.StartingTeam.StartNumber}";
             this.GegnerTeamName.Content = $"{game.NotStartingTeam.TeamName}";
             this.GegnerTeamNumber.Content = $"{game.NotStartingTeam.StartNumber}";
+            this.UnterschriftGegnerTeam.Content = $"Unterschrift {game.NotStartingTeam.TeamName}";
+            this.UnterschriftStartingTeam.Content = $"Unterschrift {game.StartingTeam.TeamName}";
         }
     }
 }

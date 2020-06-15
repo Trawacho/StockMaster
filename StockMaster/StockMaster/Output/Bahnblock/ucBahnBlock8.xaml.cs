@@ -6,9 +6,9 @@ namespace StockMaster.Output.Bahnblock
     /// <summary>
     /// Interaction logic for ucBahnBlock.xaml
     /// </summary>
-    public partial class ucBahnBlock : UserControl
+    public partial class ucBahnBlock8 : UserControl
     {
-        public ucBahnBlock(Game game)
+        public ucBahnBlock8(Game game)
         {
             InitializeComponent();
 
@@ -20,6 +20,8 @@ namespace StockMaster.Output.Bahnblock
             this.StartTeamNumber.Content = $"{game.StartingTeam.StartNumber}";
             this.GegnerTeamName.Content = $"{game.NotStartingTeam.TeamName}";
             this.GegnerTeamNumber.Content = $"{game.NotStartingTeam.StartNumber}";
+            this.UnterschriftGegnerTeam.Content = $"Unterschrift {game.NotStartingTeam.TeamName}";
+            this.UnterschriftStartingTeam.Content = $"Unterschrift {game.StartingTeam.TeamName}";
         }
     }
 }

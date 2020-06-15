@@ -210,10 +210,12 @@
             <Border Grid.Row="4" Grid.Column="16" Grid.ColumnSpan="2"/>
 
             <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="7"
+                   x:Name="UnterschriftGegnerTeam"
                    VerticalAlignment="Bottom"
                    Content="Unterschrift der gegnerischen Mannschaft"/>
 
             <Label Grid.Row="5" Grid.Column="9" Grid.ColumnSpan="7"
+                   x:Name="UnterschriftStartingTeam"
                    VerticalAlignment="Bottom"
                    Content="Unterschrift der gegnerischen Mannschaft"/>
 

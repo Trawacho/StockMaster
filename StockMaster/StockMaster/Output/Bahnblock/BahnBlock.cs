@@ -22,13 +22,13 @@ namespace StockMaster.Output.Bahnblock
             document = new FixedDocument();
             document.DocumentPaginator.PageSize = pageSize;
 
-            var allGames = tournament.GetAllGames().Where(g => g.IsNotPauseGame && g.CourtNumber >0);
+            var allGames = tournament.GetAllGames().Where(g => g.IsNotPauseGame && g.CourtNumber > 0);
 
             var bahnblöcke = new List<StackPanel>();
 
             foreach (var game in allGames.OrderBy(b => b.CourtNumber).ThenBy(r => r.RoundOfGame).ThenBy(g => g.GameNumber))
             {
-                bahnblöcke.Add(GetNewBahnblock(game));
+                bahnblöcke.Add(GetNewBahnblock(game, tournament.Is8KehrenSpiel));
             }
 
             var pagePanel = new StackPanel();
@@ -54,11 +54,16 @@ namespace StockMaster.Output.Bahnblock
             return document;
         }
 
-        private StackPanel GetNewBahnblock(Game game)
+        private StackPanel GetNewBahnblock(Game game, bool is8KehrenSpiel)
         {
             StackPanel panel = new StackPanel();
             panel.Children.Add(Tools.CutterLineTop());
-            panel.Children.Add(new ucBahnBlock(game));
+            
+            if (is8KehrenSpiel)
+                panel.Children.Add(new ucBahnBlock8(game));
+            else
+                panel.Children.Add(new ucBahnBlock(game));
+
             panel.Children.Add(Tools.CutterLine());
 
             return panel;

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="StockMaster.Output.Bahnblock.ucBahnBlock"
+﻿<UserControl x:Class="StockMaster.Output.Bahnblock.ucBahnBlock8"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -257,11 +257,13 @@
             <!--#region Unterschrift-->
             
             <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="10"
+                   x:Name="UnterschriftGegnerTeam"
                    VerticalAlignment="Bottom"
                    HorizontalContentAlignment="Left"
                    Content="Unterschrift der gegnerischen Mannschaft"/>
 
             <Label Grid.Row="5" Grid.Column="12" Grid.ColumnSpan="10"
+                   x:Name="UnterschriftStartingTeam"
                    VerticalAlignment="Bottom"
                    HorizontalContentAlignment="Left"
                    Content="Unterschrift der gegnerischen Mannschaft"/>
