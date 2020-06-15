@@ -16,7 +16,7 @@ namespace StockMaster.ViewModels
 
         private NetworkService _NetworkService;
         private Tournament tournament;
-        private LiveResultViewModel liveResultViewModel;
+       // private LiveResultViewModel liveResultViewModel;
         private BaseViewModel _viewModel;
 
         #endregion
@@ -98,7 +98,8 @@ namespace StockMaster.ViewModels
                     {
                         dialogService.SetOwner(App.Current.MainWindow);
                         dialogService.Show(
-                            liveResultViewModel ??= new LiveResultViewModel(tournament));
+                    //        liveResultViewModel ??= new LiveResultViewModel(tournament));
+                              new LiveResultViewModel(tournament));
                     },
                     (p) => true
                     );

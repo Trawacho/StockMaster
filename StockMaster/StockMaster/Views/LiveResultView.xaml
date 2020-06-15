@@ -36,7 +36,7 @@
     </Window.Resources>
 
     <Grid>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
@@ -53,40 +53,53 @@
                       >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Platz"
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                     ConverterParameter=Platzierung}"/>
+                                        Binding="{Binding Converter={StaticResource TVC},
+                                                          ConverterParameter=Platzierung}"/>
+
                     <DataGridTextColumn Header="Name" 
                                         CellStyle="{StaticResource TeamNameStyle}"
                                         Binding="{Binding Converter={StaticResource TVC}, 
-                                                      ConverterParameter=TeamName}"
-                                        Foreground="Black"/>
+                                                          ConverterParameter=TeamName}"/>
 
+                    <DataGridTextColumn Header="Punkte" 
+                                        CellStyle="{StaticResource CenterAligned}" 
+                                        Binding="{Binding Converter={StaticResource TVC},
+                                                          ConverterParameter=SpielPunkte}"/>
 
-                    <DataGridTextColumn Header="Punkte" CellStyle="{StaticResource CenterAligned}" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                      ConverterParameter=SpielPunkte}"/>
-                    <DataGridTextColumn Header="Stockpunkte" CellStyle="{StaticResource CenterAligned}" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                         ConverterParameter=StockPunkte}"/>
-                    <DataGridTextColumn Header="Stocknote" CellStyle="{StaticResource CenterAligned}" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                         ConverterParameter=StockNote}"/>
-                    <DataGridTextColumn Header="Differenz" CellStyle="{StaticResource CenterAligned}" 
-                                    Binding="{Binding Converter={StaticResource TVC},
-                                                                         ConverterParameter=StockPunkteDifferenz}"/>
+                    <DataGridTextColumn Header="Stockpunkte" 
+                                        CellStyle="{StaticResource CenterAligned}" 
+                                        Binding="{Binding Converter={StaticResource TVC},
+                                                          ConverterParameter=StockPunkte }"/>
+
+                    <DataGridTextColumn Header="Stocknote" 
+                                        CellStyle="{StaticResource CenterAligned}" 
+                                        Binding="{Binding Converter={StaticResource TVC},
+                                                          ConverterParameter=StockNote}"/>
+
+                    <DataGridTextColumn Header="Differenz" 
+                                        CellStyle="{StaticResource CenterAligned}" 
+                                        Binding="{Binding Converter={StaticResource TVC},
+                                                          ConverterParameter=StockPunkteDifferenz}"/>
                 </DataGrid.Columns>
             </DataGrid>
 
         </Viewbox>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            
+            <CheckBox IsChecked="{Binding Path=IsLive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      Content="Refresh nach jeder Kehre" 
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Left"
+                      VerticalContentAlignment="Center"
+                      Margin="10" Padding="10" IsThreeState="False">
+            </CheckBox>
             <Button Content="Refresh"
                 Command="{Binding Path=RefreshCommand}"
-                Margin="10" Padding="10"/>
+                Margin="10" Padding="10" HorizontalAlignment="Right"/>
             <Button Content="Close" 
                 Command="{Binding Path=CloseCommand}"
-                Margin="10" Padding="10" />
+                Margin="10" Padding="10" HorizontalAlignment="Right"/>
 
         </StackPanel>
 

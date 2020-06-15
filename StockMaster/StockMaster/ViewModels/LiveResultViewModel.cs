@@ -9,15 +9,6 @@ using System.Windows.Input;
 
 namespace StockMaster.ViewModels
 {
-    /// <summary>
-    /// file contains two classes and a interface
-    /// - Interface
-    /// - ViewModel
-    /// - ViewModel for Design
-    /// </summary>
-   
-
-
     public class LiveResultViewModel : BaseViewModel, IDialogRequestClose, ILiveResultViewModel
     {
         public event EventHandler<WindowCloseRequestedEventArgs> WindowCloseRequested;
@@ -34,6 +25,25 @@ namespace StockMaster.ViewModels
         private void Tournament_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(Ergebnisliste));
+        }
+
+        private bool isLive;
+        public bool IsLive
+        {
+            get
+            {
+                return isLive;
+            }
+            set
+            {
+                if (isLive == value)
+                {
+                    return;
+                }
+                isLive = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(Ergebnisliste));
+            }
         }
 
 
@@ -66,15 +76,15 @@ namespace StockMaster.ViewModels
             }
         }
 
-        public ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste
+        public ObservableCollection<(int Platzierung, Team Team, bool isLive)> Ergebnisliste
         {
             get
             {
-                var liste = new ObservableCollection<(int _platzierung, Team _team)>();
+                var liste = new ObservableCollection<(int _platzierung, Team _team, bool _isLive)>();
                 int i = 1;
-                foreach (var t in tournament.GetTeamsRanked())
+                foreach (var t in tournament.GetTeamsRanked(IsLive))
                 {
-                    liste.Add((i, t));
+                    liste.Add((i, t, this.IsLive));
                     i++;
                 }
                 return liste;
@@ -86,26 +96,26 @@ namespace StockMaster.ViewModels
     {
         public LiveResultDesignViewModel()
         {
-            this.Ergebnisliste = new ObservableCollection<(int, Team)>
+            this.Ergebnisliste = new ObservableCollection<(int, Team, bool)>
             {
-                (1, new Team("ESF Hankofen")),
-                (2, new Team("TV Geiselhöring")),
-                (3, new Team("EC EBRA Aiterhofen")),
-                (4, new Team("EC Pilsting")),
-                (5, new Team("DJK Leiblfing")),
-                (6, new Team("EC Welchenberg")),
-                (7, new Team("SV Salching")),
-                (8, new Team("EC Straßkirchen")),
-                (9, new Team("DJK Aigen am Inn"))
+                (1, new Team("ESF Hankofen"),true),
+                (2, new Team("TV Geiselhöring"), true),
+                (3, new Team("EC EBRA Aiterhofen"), true),
+                (4, new Team("EC Pilsting"), true),
+                (5, new Team("DJK Leiblfing"), true),
+                (6, new Team("EC Welchenberg"), true),
+                (7, new Team("SV Salching"), true),
+                (8, new Team("EC Straßkirchen"), true),
+                (9, new Team("DJK Aigen am Inn"), true)
             };
         }
 
 
-        public ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste
+        public ObservableCollection<(int Platzierung, Team Team, bool isLive)> Ergebnisliste
         {
             get;
         }
-
+        public bool IsLive { get; set; }
         public ICommand CloseCommand { get; }
         public ICommand RefreshCommand { get; }
     }

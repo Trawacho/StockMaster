@@ -129,7 +129,7 @@ namespace StockMaster.BaseClasses
             {
                 List<int> result = new List<int>();
                 var sortedGames = Games.OrderBy(g => g.GameNumberOverAll).ToList();
-                for (int i = 0; i < sortedGames.Count-1; i++)
+                for (int i = 0; i < sortedGames.Count - 1; i++)
                 {
                     if (sortedGames[i].CourtNumber <= sortedGames[i + 1].CourtNumber)
                         result.Add(sortedGames[i].GameNumberOverAll);
@@ -153,11 +153,27 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        public (int positiv, int negativ) SpielPunkte_LIVE
+        {
+            get
+            {
+                return (Games.Sum(g => g.GetSpielPunkte(this, true)),
+                        Games.Sum(g => g.GetSpielPunkteGegner(this, true)));
+            }
+        }
+
         public int SpielPunkteDifferenz
         {
             get
             {
                 return SpielPunkte.positiv - SpielPunkte.negativ;
+            }
+        }
+        public int SpielPunkteDifferenz_LIVE
+        {
+            get
+            {
+                return SpielPunkte_LIVE.positiv - SpielPunkte_LIVE.negativ;
             }
         }
 
@@ -166,6 +182,15 @@ namespace StockMaster.BaseClasses
             get
             {
                 return $"{SpielPunkte.positiv}:{SpielPunkte.negativ}";
+            }
+        }
+
+        public string SpielPunkteString_LIVE
+        {
+            get
+            {
+                return $"{SpielPunkte_LIVE.positiv}:{SpielPunkte_LIVE.negativ}";
+
             }
         }
 
@@ -178,11 +203,28 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        public (int positiv, int negativ) StockPunkte_LIVE
+        {
+            get
+            {
+                return (Games.Sum(g => g.GetStockPunkte(this, true)),
+                       Games.Sum(o => o.GetStockPunkteGegner(this, true)));
+            }
+        }
+
         public string StockPunkteString
         {
             get
             {
                 return $"{StockPunkte.positiv}:{StockPunkte.negativ}";
+            }
+        }
+
+        public string StockPunkteString_LIVE
+        {
+            get
+            {
+                return $"{StockPunkte_LIVE.positiv}:{StockPunkte_LIVE.negativ}";
             }
         }
 
@@ -198,6 +240,17 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        public double StockNote_LIVE
+        {
+            get
+            {
+                if (StockPunkte_LIVE.negativ == 0)
+                    return StockPunkte_LIVE.positiv;
+
+                return Math.Round((double)StockPunkte_LIVE.positiv / StockPunkte_LIVE.negativ, 3);
+            }
+        }
+
         public int StockPunkteDifferenz
         {
             get
@@ -206,9 +259,16 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        
+        public int StockPunkteDifferenz_LIVE
+        {
+            get
+            {
+                return StockPunkte_LIVE.positiv - StockPunkte_LIVE.negativ;
+            }
+        }
 
-        #endregion 
+
+        #endregion
 
         #region Constructor
 
@@ -220,7 +280,7 @@ namespace StockMaster.BaseClasses
             this.Games = games.AsReadOnly();
             this.Players = new List<Player>();
         }
-               
+
 
         /// <summary>
         /// Constructor 

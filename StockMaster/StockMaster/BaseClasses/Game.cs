@@ -264,14 +264,15 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                if (MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
-                {
-                    return MasterTurn.PointsTeamB;
-                }
-                else
-                {
-                    return NetworkTurn?.PointsTeamB ?? 0;
-                }
+                return MasterTurn.PointsTeamB;
+            }
+        }
+
+        public int StockPointsTeamB_LIVE
+        {
+            get
+            {
+                return NetworkTurn?.PointsTeamB ?? 0;
             }
         }
 
@@ -282,16 +283,15 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                //Wenn die Werte in Kehre 0 größer 0 sind, werden auch diese genommen und die Werte aus dem NetworkService ignoriert
-                if (MasterTurn.PointsTeamA + MasterTurn.PointsTeamB > 0)
-                {
-                    return MasterTurn.PointsTeamA;
-                }
-                else
-                {
-                    return NetworkTurn?.PointsTeamA ?? 0;
+                return MasterTurn.PointsTeamA;
+            }
+        }
 
-                }
+        public int StockPointsTeamA_LIVE
+        {
+            get
+            {
+                return NetworkTurn?.PointsTeamA ?? 0;
             }
         }
 
@@ -310,6 +310,23 @@ namespace StockMaster.BaseClasses
                     return 0;
 
                 if (StockPointsTeamB > StockPointsTeamA)
+                    return 2;
+
+                return 1;
+            }
+        }
+
+        public int SpielPunkteTeamB_LIVE
+        {
+            get
+            {
+                if (StockPointsTeamA_LIVE == 0 && StockPointsTeamB_LIVE == 0)
+                    return 0;
+
+                if (StockPointsTeamA_LIVE > StockPointsTeamB_LIVE)
+                    return 0;
+
+                if (StockPointsTeamB_LIVE > StockPointsTeamA_LIVE)
                     return 2;
 
                 return 1;
@@ -336,6 +353,23 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        public int SpielPunkteTeamA_LIVE
+        {
+            get
+            {
+                if (StockPointsTeamA_LIVE == 0 && StockPointsTeamB_LIVE == 0)
+                    return 0;
+
+                if (StockPointsTeamA_LIVE > StockPointsTeamB_LIVE)
+                    return 2;
+
+                if (StockPointsTeamB_LIVE > StockPointsTeamA_LIVE)
+                    return 0;
+
+                return 1;
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -346,7 +380,7 @@ namespace StockMaster.BaseClasses
         public Game()
         {
             RoundOfGame = 1;
-           // this.Turns = new ConcurrentStack<Turn>();
+            // this.Turns = new ConcurrentStack<Turn>();
             this.NetworkTurn = new Turn();
             this.MasterTurn = new Turn();   //Default-Kehere für manuelle Eingabe
         }
@@ -373,42 +407,41 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        public int GetStockPunkte(Team team)
+        public int GetStockPunkte(Team team, bool live = false)
         {
             if (team == TeamA)
-                return StockPointsTeamA;
+                return live ? StockPointsTeamA_LIVE : StockPointsTeamA;
             if (team == TeamB)
-                return StockPointsTeamB;
+                return live ? StockPointsTeamB_LIVE : StockPointsTeamB;
             return 0;
         }
 
-        public int GetStockPunkteGegner(Team team)
+        public int GetStockPunkteGegner(Team team, bool live = false)
         {
             if (team == TeamA)
-                return StockPointsTeamB;
+                return live ? StockPointsTeamB_LIVE : StockPointsTeamB;
             if (team == TeamB)
-                return StockPointsTeamA;
+                return live ? StockPointsTeamA_LIVE : StockPointsTeamA;
             return 0;
         }
 
-        public int GetSpielPunkte(Team team)
+        public int GetSpielPunkte(Team team, bool live = false)
         {
             if (team == TeamA)
-                return SpielPunkteTeamA;
+                return live ? SpielPunkteTeamA_LIVE : SpielPunkteTeamA;
             if (team == TeamB)
-                return SpielPunkteTeamB;
+                return live ? SpielPunkteTeamB_LIVE : SpielPunkteTeamB;
             return 0;
         }
 
-        public int GetSpielPunkteGegner(Team team)
+        public int GetSpielPunkteGegner(Team team, bool live = false)
         {
             if (team == TeamA)
-                return SpielPunkteTeamB;
+                return live ? SpielPunkteTeamB_LIVE : SpielPunkteTeamB;
             if (team == TeamB)
-                return SpielPunkteTeamA;
+                return live ? SpielPunkteTeamA_LIVE : SpielPunkteTeamA;
             return 0;
         }
-
 
 
         #endregion

@@ -6,7 +6,8 @@ namespace StockMaster.Interfaces
 {
     public interface ILiveResultViewModel
     {
-        ObservableCollection<(int Platzierung, Team Team)> Ergebnisliste { get; }
+        bool IsLive { get; set; }
+        ObservableCollection<(int Platzierung, Team Team, bool isLive)> Ergebnisliste { get; }
         ICommand RefreshCommand { get; }
         ICommand CloseCommand { get; }
     }

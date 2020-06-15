@@ -58,7 +58,6 @@ namespace StockMaster.BaseClasses
             {
                 return (Teams.Count(t => !t.IsVirtual) / 2); ;
             }
-
         }
 
         /// <summary>
@@ -101,8 +100,6 @@ namespace StockMaster.BaseClasses
             }
         }
 
-        
-
         /// <summary>
         /// On True, the TurnCard has 8 instead of 7 Turns per Team
         /// </summary>
@@ -143,17 +140,12 @@ namespace StockMaster.BaseClasses
 
             this._teams = new List<Team>();
             this.Teams = _teams.AsReadOnly();
-            //this.Teams = _teams;
-
 
             this.NumberOfTeamsWithNamedPlayerOnResult = 3;
             this.Referee = new Referee();
             this.CompetitionManager = new CompetitionManager();
             this.ComputingOfficer = new ComputingOfficer();
         }
-
-
-
 
 
         #endregion
@@ -183,13 +175,19 @@ namespace StockMaster.BaseClasses
                 .ThenBy(s => s.GameNumber);
         }
 
-        public IEnumerable<Team> GetTeamsRanked()
+        public IEnumerable<Team> GetTeamsRanked(bool live = false)
         {
-            return Teams
-                    .Where(v => !v.IsVirtual)
-                    .OrderByDescending(t => t.SpielPunkte.positiv)
-                    .ThenByDescending(p => p.StockNote)
-                    .ThenByDescending(d => d.StockPunkteDifferenz);
+                return live 
+                            ? Teams
+                                .Where(v => !v.IsVirtual)
+                                .OrderByDescending(t => t.SpielPunkte_LIVE.positiv)
+                                .ThenByDescending(p => p.StockNote_LIVE)
+                                .ThenByDescending(d => d.StockPunkteDifferenz_LIVE)
+                            : Teams
+                                .Where(v => !v.IsVirtual)
+                                .OrderByDescending(t => t.SpielPunkte.positiv)
+                                .ThenByDescending(p => p.StockNote)
+                                .ThenByDescending(d => d.StockPunkteDifferenz);
         }
 
         /// <summary>
