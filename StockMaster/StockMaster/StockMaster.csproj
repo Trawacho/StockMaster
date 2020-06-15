@@ -112,6 +112,9 @@
     <Compile Include="Interfaces\IExecutive.cs" />
     <Compile Include="Interfaces\ITournamentViewModel.cs" />
     <Compile Include="Output\Bahnblock\BahnBlock.cs" />
+    <Compile Include="Output\Bahnblock\ucBahnBlock8.xaml.cs">
+      <DependentUpon>ucBahnBlock8.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Output\Bahnblock\ucBahnBlock.xaml.cs">
       <DependentUpon>ucBahnBlock.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,10 @@
     <Compile Include="Views\TournamentView.xaml.cs">
       <DependentUpon>TournamentView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Output\Bahnblock\ucBahnBlock8.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Output\Bahnblock\ucBahnBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
