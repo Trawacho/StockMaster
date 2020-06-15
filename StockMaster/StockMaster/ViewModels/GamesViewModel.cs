@@ -86,13 +86,13 @@ namespace StockMaster.ViewModels
             {
 
                 return tournament.NumberOfGameRounds > 1
-                    ? tournament.StartOfTeamChange
+                    ? tournament.StartingTeamChange
                     : false;
             }
             set
             {
-                if (tournament.StartOfTeamChange == value) return;
-                tournament.StartOfTeamChange = value;
+                if (tournament.StartingTeamChange == value) return;
+                tournament.StartingTeamChange = value;
                 tournament.RemoveAllGames();
                 RaisePropertyChanged();
             }
@@ -161,11 +161,11 @@ namespace StockMaster.ViewModels
         {
             get
             {
-                return tournament.Is8KehrenSpiel;
+                return tournament.Is8TurnsGame;
             }
             set
             {
-                tournament.Is8KehrenSpiel = value;
+                tournament.Is8TurnsGame = value;
                 RaisePropertyChanged();
             }
         }

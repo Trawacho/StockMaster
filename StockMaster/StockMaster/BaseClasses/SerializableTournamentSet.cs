@@ -18,7 +18,6 @@ namespace StockMaster.BaseClasses
         {
             this.XTeams = tournament.Teams.ToList();
             this.Games = tournament.GetAllGames()
-                                 .Distinct<Game>()
                                  .OrderBy(r => r.RoundOfGame)
                                  .ThenBy(g => g.GameNumber)
                                  .ThenBy(c => c.CourtNumber)
@@ -29,8 +28,8 @@ namespace StockMaster.BaseClasses
             this.Organizer = tournament.Organizer;
             this.DateOfTournament = tournament.DateOfTournament;
             this.EntryFee = tournament.EntryFee;
-            this.StartOfTeamChange = tournament.StartOfTeamChange;
-            this.Is8KehrenSpiel = tournament.Is8KehrenSpiel;
+            this.StartingTeamChange = tournament.StartingTeamChange;
+            this.Is8TurnsGame = tournament.Is8TurnsGame;
             this.IsDirectionOfCourtsFromRightToLeft = tournament.IsDirectionOfCourtsFromRightToLeft;
             this.TwoPauseGames = tournament.TwoPauseGames;
             this.NumberOfGameRounds = tournament.NumberOfGameRounds;
@@ -50,14 +49,14 @@ namespace StockMaster.BaseClasses
                 Organizer = this.Organizer,
                 DateOfTournament = this.DateOfTournament,
                 EntryFee = this.EntryFee,
-                Is8KehrenSpiel = this.Is8KehrenSpiel,
+                Is8TurnsGame = this.Is8TurnsGame,
                 IsDirectionOfCourtsFromRightToLeft = this.IsDirectionOfCourtsFromRightToLeft,
                 TwoPauseGames = this.TwoPauseGames,
                 NumberOfGameRounds = this.NumberOfGameRounds,
                 NumberOfTeamsWithNamedPlayerOnResult = this.NumberOfTeamsWithNamedPlayerOnResult,
                 ComputingOfficer = this.ComputingOfficer,
                 Referee = this.Referee,
-                StartOfTeamChange = this.StartOfTeamChange,
+                StartingTeamChange = this.StartingTeamChange,
                 TournamentName = this.TournamentName,
                 CompetitionManager = this.CompetitionManager
             };
@@ -121,10 +120,10 @@ namespace StockMaster.BaseClasses
         public EntryFee EntryFee { get; set; }
 
         [XmlElement(Order = 8)]
-        public bool StartOfTeamChange { get; set; }
+        public bool StartingTeamChange { get; set; }
 
         [XmlElement(Order = 9)]
-        public bool Is8KehrenSpiel { get; set; }
+        public bool Is8TurnsGame { get; set; }
 
         [XmlElement(Order = 10)]
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
@@ -146,7 +145,6 @@ namespace StockMaster.BaseClasses
 
         [XmlElement(Order = 16)]
         public CompetitionManager CompetitionManager { get; set; }
-
 
 
         [XmlArray(ElementName = "Teams", Order = 90)]

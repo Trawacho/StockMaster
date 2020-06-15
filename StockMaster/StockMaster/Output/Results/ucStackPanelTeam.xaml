@@ -17,9 +17,13 @@
             <Label x:Name="_Platz" Content="{Binding Rank}" Width="1.5cm" HorizontalContentAlignment="Center" />
             <Label x:Name="_Team"  Content="{Binding TeamName}" Width="9cm" HorizontalContentAlignment="Left" />
             <Label x:Name="_Punkte" Content="{Binding SpielPunkte}" Width="2cm" HorizontalContentAlignment="Center" />
-            <Label x:Name="_StockPunkte" Content="{Binding StockPunkte}"   Width="3cm" HorizontalContentAlignment="Center" />
+            <Label x:Name="_StockPunkte" Content="{Binding StockPunkte}"   Width="2.75cm" HorizontalContentAlignment="Center" />
             <Label x:Name="_Note"  Content="{Binding StockNote}" Width="1.5cm" HorizontalContentAlignment="Center"/>
         </StackPanel>
-        <TextBlock MaxWidth="16cm" Grid.Row="1" x:Name="_SpielerListe" Text="{Binding SpielerListe}" TextAlignment="Left" TextWrapping="Wrap" Margin="1.5cm, 0,0,0"/>
+        <TextBlock MaxWidth="16cm" Grid.Row="1" x:Name="_SpielerListe" 
+                   Text="{Binding SpielerListe}" 
+                   FontStyle="Italic"
+                   FontWeight="Thin"
+                   TextAlignment="Left" TextWrapping="Wrap" Margin="1.5cm, 0,0,0"/>
     </Grid>
 </UserControl>

@@ -103,12 +103,12 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// On True, the TurnCard has 8 instead of 7 Turns per Team
         /// </summary>
-        public bool Is8KehrenSpiel { get; set; }
+        public bool Is8TurnsGame { get; set; }
 
         /// <summary>
         /// True, wenn bei einer Mehrfachrunde das Anspiel bei jeder Runde gewechselt wird
         /// </summary>
-        public bool StartOfTeamChange { get; set; }
+        public bool StartingTeamChange { get; set; }
 
         /// <summary>
         /// Startgebühr pro Mannschaft
@@ -133,9 +133,9 @@ namespace StockMaster.BaseClasses
             this.IsDirectionOfCourtsFromRightToLeft = true;
             this.NumberOfGameRounds = 1;
             this.TwoPauseGames = false;
-            this.Is8KehrenSpiel = false;
+            this.Is8TurnsGame = false;
             this.EntryFee = new EntryFee();
-            StartOfTeamChange = false;
+            StartingTeamChange = false;
             DateOfTournament = DateTime.Now;
 
             this._teams = new List<Team>();
@@ -373,11 +373,11 @@ namespace StockMaster.BaseClasses
 
                     #region Anspiel festlegen
 
-                    game.StartOfPlayTeamA = !(i % 2 == 0);
+                    game.IsTeamA_Starting = !(i % 2 == 0);
 
-                    if(spielRunde == 2 && StartOfTeamChange)
+                    if(spielRunde == 2 && StartingTeamChange)
                     {
-                        game.StartOfPlayTeamA = !game.StartOfPlayTeamA;
+                        game.IsTeamA_Starting = !game.IsTeamA_Starting;
                     }
 
                        
@@ -457,11 +457,11 @@ namespace StockMaster.BaseClasses
 
                         #region Anspiel berechnen  
 
-                        game.StartOfPlayTeamA = !(k % 2 == 0);
+                        game.IsTeamA_Starting = !(k % 2 == 0);
                         
-                        if (spielRunde == 2 && StartOfTeamChange)
+                        if (spielRunde == 2 && StartingTeamChange)
                         {
-                            game.StartOfPlayTeamA = !game.StartOfPlayTeamA;
+                            game.IsTeamA_Starting = !game.IsTeamA_Starting;
                         }
 
                         #endregion

@@ -13,7 +13,7 @@ namespace StockMaster.BaseClasses
         private int gameNumber;
         private int gameNumberOverall;
         private int courtNumber;
-        private bool startOfPlayTeam1;
+        private bool isTeamA_Starting;
         private Turn masterTurn;
         private int startNumberTeamA;
         private int startNumberTeamB;
@@ -164,15 +164,15 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Das Team A hat Anspiel
         /// </summary>
-        public bool StartOfPlayTeamA
+        public bool IsTeamA_Starting
         {
-            get => startOfPlayTeam1;
+            get => isTeamA_Starting;
             set
             {
-                if (startOfPlayTeam1 == value)
+                if (isTeamA_Starting == value)
                     return;
 
-                startOfPlayTeam1 = value;
+                isTeamA_Starting = value;
                 RaisePropertyChanged();
             }
         }
@@ -184,7 +184,7 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return StartOfPlayTeamA ? TeamA : TeamB;
+                return IsTeamA_Starting ? TeamA : TeamB;
             }
         }
 
@@ -195,7 +195,7 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return StartOfPlayTeamA ? TeamB : TeamA;
+                return IsTeamA_Starting ? TeamB : TeamA;
             }
         }
 
@@ -393,7 +393,7 @@ namespace StockMaster.BaseClasses
 
         public override string ToString()
         {
-            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber}({GameNumberOverAll}) -- {TeamA.StartNumber} : {TeamB.StartNumber}    T1A:{StartOfPlayTeamA}     P:{IsPauseGame} ";
+            return $"R#:{RoundOfGame} C#:{CourtNumber} G#:{GameNumber}({GameNumberOverAll}) -- {TeamA.StartNumber} : {TeamB.StartNumber}    T1A:{IsTeamA_Starting}     P:{IsPauseGame} ";
         }
 
         /// <summary>

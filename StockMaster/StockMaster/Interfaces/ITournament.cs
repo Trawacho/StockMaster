@@ -63,12 +63,12 @@ namespace StockMaster.Interfaces
         /// <summary>
         /// On True, the TurnCard has 8 instead of 7 Turns per Team
         /// </summary>
-        bool Is8KehrenSpiel { get; set; }
+        bool Is8TurnsGame { get; set; }
 
         /// <summary>
         /// If true, the Game-Start is switched after every round of game
         /// </summary>
-        bool StartOfTeamChange { get; set; }
+        bool StartingTeamChange { get; set; }
 
         /// <summary>
         /// EntryFee per Team

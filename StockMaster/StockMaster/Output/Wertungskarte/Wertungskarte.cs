@@ -31,11 +31,11 @@ namespace StockMaster.Output.Wertungskarte
             {
                 if (concatRounds)
                 {
-                    teamPanels.Add(GetTeamPanel(team, printTeamName, tournament.Is8KehrenSpiel));
+                    teamPanels.Add(GetTeamPanel(team, printTeamName, tournament.Is8TurnsGame));
                 }
                 else
                 {
-                    teamPanels.AddRange(GetTeamPanels(team, printTeamName, tournament.Is8KehrenSpiel));
+                    teamPanels.AddRange(GetTeamPanels(team, printTeamName, tournament.Is8TurnsGame));
                 }
             }
 

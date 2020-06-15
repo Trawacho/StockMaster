@@ -28,7 +28,7 @@ namespace StockMaster.Output.Bahnblock
 
             foreach (var game in allGames.OrderBy(b => b.CourtNumber).ThenBy(r => r.RoundOfGame).ThenBy(g => g.GameNumber))
             {
-                bahnblöcke.Add(GetNewBahnblock(game, tournament.Is8KehrenSpiel));
+                bahnblöcke.Add(GetNewBahnblock(game, tournament.Is8TurnsGame));
             }
 
             var pagePanel = new StackPanel();

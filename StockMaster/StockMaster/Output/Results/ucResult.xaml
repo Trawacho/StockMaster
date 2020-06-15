@@ -86,11 +86,13 @@
                     <Label Content="Platz" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
                     <Label Content="Mannschaft" Width="9cm" HorizontalContentAlignment="Left" FontWeight="Bold"/>
                     <Label Content="Punkte" Width="2cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
-                    <Label Content="Stockpunkte" Width="3cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                    <Label Content="Stockpunkte" Width="2.75cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
                     <Label Content="Note" Width="1.5cm" HorizontalContentAlignment="Center" FontWeight="Bold"/>
                 </StackPanel>
 
             </StackPanel>
+            
+            
         </Viewbox>
 
         <Grid Margin="1cm">

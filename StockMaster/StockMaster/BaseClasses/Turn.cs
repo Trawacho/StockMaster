@@ -17,7 +17,6 @@ namespace StockMaster.BaseClasses
 
         private int pointsTeamA;
         private int pointsTeamB;
-        private int number;
 
         #endregion
 
