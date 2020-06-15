@@ -148,14 +148,14 @@ namespace StockMaster.BaseClasses
                 //Jedes verfügbare Spiel im Datagramm durchgehen, i+2, da jedes Spiel 2 Bytes braucht. Im ersten Byte der Wert für Link, das zweite Byte für den Wert rechts
                 for (int i = 0; i < newData.Length; i += 2)
                 {
-                    var preGame = courtGames.FirstOrDefault(g => g.GameNumber == spielZähler - 1);
+                    var preGame = courtGames.FirstOrDefault(g => g.GameNumberOverAll == spielZähler - 1);
                     if(preGame != null)
                     {
                         preGame.MasterTurn.PointsTeamA = preGame.NetworkTurn.PointsTeamA;
                         preGame.MasterTurn.PointsTeamB = preGame.NetworkTurn.PointsTeamB;
                     }
 
-                    var game = courtGames.FirstOrDefault(g => g.GameNumber == spielZähler);
+                    var game = courtGames.FirstOrDefault(g => g.GameNumberOverAll == spielZähler);
                     if (game == null)
                         continue;
 
