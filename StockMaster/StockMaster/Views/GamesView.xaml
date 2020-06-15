@@ -205,9 +205,10 @@
 
             </Grid>
 
-            <Label Content="Wertungskarte" FontWeight="Bold" Margin="0,20,0,0"/>
+            <Label Content="Wertungskarte / Bahnblock" FontWeight="Bold" Margin="0,20,0,0"/>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -267,13 +268,17 @@
                         x:Name="buttonWertungskarteDrucken"
                         Margin="10" Padding="10"
                         Command="{Binding Path=PrintTurnCardsCommand}"/>
+
+                <Button Content="Bahnblock drucken" 
+                        Grid.Column="0" 
+                        Grid.Row="4"
+                        Width="{Binding ElementName=buttonWertungskarteDrucken, Path=ActualWidth}"
+                        HorizontalAlignment="Left"
+                        Margin="10,0,10,10" Padding="10"
+                        Command="{Binding Path=PrintBahnblockCommand}"/>
             </Grid>
 
-            <Label Content="Bahnblock" FontWeight="Bold" Margin="0,20,0,0"/>
-            <Button Content="Bahnblock drucken" Margin="10" Padding="10"
-                    Width="{Binding ElementName=buttonWertungskarteDrucken, Path=ActualWidth}"
-                    HorizontalAlignment="Left"
-                    Command="{Binding Path=PrintBahnblockCommand}"/>
+            
                     
         </StackPanel>
 
