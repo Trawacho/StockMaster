@@ -28,6 +28,9 @@ namespace StockMaster.ViewModels
         }
 
         private bool isLive;
+        /// <summary>
+        /// Zeige Ergebnis aus StockTV nach jeder Kehre (true) oder nach jedem Spiel (false)
+        /// </summary>
         public bool IsLive
         {
             get
@@ -46,6 +49,39 @@ namespace StockMaster.ViewModels
             }
         }
 
+        private bool showStockPunkte;
+        /// <summary>
+        /// Zeige im DataGrid die StockPunkte
+        /// </summary>
+        public bool ShowStockPunkte
+        {
+            get { return showStockPunkte; }
+            set
+            {
+                if (showStockPunkte == value) return;
+
+                showStockPunkte = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool showDifferenz;
+        /// <summary>
+        /// Zeige im DataGrid die StockPunkteDifferenz
+        /// </summary>
+        public bool ShowDifferenz
+        {
+            get { return showDifferenz; }
+            set
+            {
+                if (ShowDifferenz == value) return;
+
+                showDifferenz = value;
+                RaisePropertyChanged();
+
+            }
+        }
 
         private ICommand _closeCommand;
         public ICommand CloseCommand
@@ -109,13 +145,13 @@ namespace StockMaster.ViewModels
                 (9, new Team("DJK Aigen am Inn"), true)
             };
         }
-
-
         public ObservableCollection<(int Platzierung, Team Team, bool isLive)> Ergebnisliste
         {
             get;
         }
         public bool IsLive { get; set; }
+        public bool ShowDifferenz { get; set; } = false;
+        public bool ShowStockPunkte { get; set; } = false;
         public ICommand CloseCommand { get; }
         public ICommand RefreshCommand { get; }
     }
