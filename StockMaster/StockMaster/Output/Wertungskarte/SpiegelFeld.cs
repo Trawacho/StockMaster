@@ -12,10 +12,11 @@ namespace StockMaster.Output.Wertungskarte
 
         public SpiegelFeld(string Text, int RotateAngle = 0)
         {
-            FntFamily = new FontFamily("Bahnschrift");
+            //FntFamily = new FontFamily("Bahnschrift");
+            FntFamily = new FontFamily("Segoe UI");
 
             BorderBrush = Brushes.Black;
-            BorderThickness = new Thickness(1);
+            BorderThickness = new Thickness(0.5);
 
             Textblock = new TextBlock
             {
@@ -27,6 +28,8 @@ namespace StockMaster.Output.Wertungskarte
                 TextAlignment = TextAlignment.Center,
                 FontWeight = FontWeights.Normal,
                 LayoutTransform = new RotateTransform(RotateAngle),
+                Margin = new Thickness(0),
+                Padding= new Thickness(0),
                 Text = Text
             };
 
@@ -36,8 +39,8 @@ namespace StockMaster.Output.Wertungskarte
         public SpiegelFeld(Brush brush)
         {
             BorderBrush = Brushes.Black;
-            BorderThickness = new Thickness(1);
-            Margin = new Thickness(-1, -1, 0, 0);
+            BorderThickness = new Thickness(0.5);
+            Margin = new Thickness(0);
             Background = brush;
         }
 
