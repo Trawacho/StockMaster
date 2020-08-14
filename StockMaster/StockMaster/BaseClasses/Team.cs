@@ -121,18 +121,45 @@ namespace StockMaster.BaseClasses
         /// <summary>
         /// Alle Spielnummern, bei denen die Mannschaft auf einer "steigenden Bahn" ist.
         /// Bedeutet, dass die nächste Bahn eine höhere Nummer hat
+        /// Das Property wird für den NetworkService benötigt.
         /// </summary>
         [XmlIgnore()]
         public List<int> SteigendeSpielNummern
         {
+            /* 
+             * Im NetworkService werden pro Bahn die Ergebnisse übertragen. Durch das Property
+             * --> IsDirectionOfCourtsFromRightToLeft <-- im Tournament wird die Richtung der Bahnnummer eingestellt
+             * So kann erkannt werden ob die "steigenedeMannschaft" links oder rechts auf der Bahn steht. Die Ergebnisse                 
+             * im NetworkService können dann zugeordnet werden
+             * Bsp: Bahn1 befindet sich rechts, die weiteren Bahnen links davon
+             * Mannschaft1 befindet sich im 1. Spiel somit auf der rechten Seite des Spielfelds
+             * Die nächsten Spiele bis zur letzten Bahn ganz links sind somit "steigende Spiele", die Mannschaft1 befindet
+             * sich bei diesen Spielen immer rechts. 
+             */
+             
             get
             {
+                /*
+                 * Alle Spiele nacheinander prüfen, ob die nächste Bahn eine höhrere Nummer hat
+                 */
+                // Ergebnisliste mit SpielNummern (GameNumberOverAll) 
                 List<int> result = new List<int>();
+                
+                // Nach SpielNummer sortierte Liste
                 var sortedGames = Games.OrderBy(g => g.GameNumberOverAll).ToList();
+                
+                // Schleife durch alle Spiele (das letzte Spiel wird nicht geprüft)
                 for (int i = 0; i < sortedGames.Count - 1; i++)
                 {
                     if (sortedGames[i].CourtNumber <= sortedGames[i + 1].CourtNumber)
-                        result.Add(sortedGames[i].GameNumberOverAll);
+                        if (sortedGames[i].IsNotPauseGame)
+                            result.Add(sortedGames[i].GameNumberOverAll);
+                }
+                
+                // Das letzte Spiel mit dem vorletzten vergleichen.
+                if (sortedGames[sortedGames.Count - 1].CourtNumber > sortedGames[sortedGames.Count - 2].CourtNumber)
+                {
+                    result.Add(sortedGames[sortedGames.Count - 1].GameNumberOverAll);
                 }
                 return result;
             }
