@@ -14,9 +14,8 @@ namespace StockMaster.ViewModels
 
         private readonly IDialogService dialogService;
 
-        private NetworkService _NetworkService;
-        private Tournament tournament;
-       // private LiveResultViewModel liveResultViewModel;
+        private readonly NetworkService _NetworkService;
+        private Tournament _Tournament;
         private BaseViewModel _viewModel;
 
         #endregion
@@ -70,11 +69,17 @@ namespace StockMaster.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            //this.tournament = TournamentExtension.CreateNewTournament(true);
-            this.tournament = new Tournament();
-            ViewModel = new TournamentViewModel(tournament);
+            this._Tournament = new Tournament();
+            ViewModel = new TournamentViewModel(_Tournament);
+            this._NetworkService = new NetworkService(this._Tournament, null);
+            this._NetworkService.StartStopStateChanged += _NetworkService_StartStopStateChanged;
         }
-     
+
+        private void _NetworkService_StartStopStateChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged(nameof(UdpButtonContent));
+        }
+
         /// <summary>
         /// Default-Constructor
         /// </summary>
@@ -98,8 +103,7 @@ namespace StockMaster.ViewModels
                     {
                         dialogService.SetOwner(App.Current.MainWindow);
                         dialogService.Show(
-                    //        liveResultViewModel ??= new LiveResultViewModel(tournament));
-                              new LiveResultViewModel(tournament));
+                              new LiveResultViewModel(_Tournament, _NetworkService));
                     },
                     (p) => true
                     );
@@ -115,22 +119,7 @@ namespace StockMaster.ViewModels
                     new RelayCommand(
                             (p) =>
                             {
-                                if (_NetworkService == null)
-                                {
-                                    _NetworkService = new NetworkService(tournament,
-                                        () =>
-                                        {
-                                            tournament.RaisePropertyChanged("");
-                                        });
-                                    _NetworkService.Start();
-                                }
-                                else
-                                {
-                                    if (_NetworkService.IsRunning())
-                                        _NetworkService.Stop();
-                                    else
-                                        _NetworkService.Start();
-                                }
+                                _NetworkService.SwitchStartStopState();
                                 RaisePropertyChanged(nameof(UdpButtonContent));
                             },
                             (o) => { return true; }
@@ -146,7 +135,7 @@ namespace StockMaster.ViewModels
                 return _showTournamentViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        ViewModel = new TournamentViewModel(tournament);
+                        ViewModel = new TournamentViewModel(_Tournament);
                     },
                     (p) => true
                     );
@@ -161,7 +150,7 @@ namespace StockMaster.ViewModels
                 return _showTeamsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new TeamsViewModel(tournament);
+                        this.ViewModel = new TeamsViewModel(_Tournament);
                     },
                     (p) => true
                     ); ;
@@ -176,11 +165,11 @@ namespace StockMaster.ViewModels
                 return _showGamesViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new GamesViewModel(tournament);
+                        this.ViewModel = new GamesViewModel(_Tournament);
                     },
                     (p) =>
                     {
-                        return tournament.Teams.Count > 0;
+                        return _Tournament.Teams.Count > 0;
                     });
             }
         }
@@ -193,11 +182,11 @@ namespace StockMaster.ViewModels
                 return _showResultsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new ResultsViewModel(tournament);
+                        this.ViewModel = new ResultsViewModel(_Tournament);
                     },
                     (p) =>
                     {
-                        return tournament.CountOfGames() > 0;
+                        return _Tournament.CountOfGames() > 0;
                     });
             }
         }
@@ -223,8 +212,8 @@ namespace StockMaster.ViewModels
                 return _newTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.tournament = new Tournament();
-                        ViewModel = new TournamentViewModel(this.tournament);
+                        this._Tournament = new Tournament();
+                        ViewModel = new TournamentViewModel(this._Tournament);
                     });
             }
         }
@@ -246,7 +235,7 @@ namespace StockMaster.ViewModels
                         if (dialogResult == DialogResult.OK)
                         {
                             var filePath = sfd.FileName;
-                            TournamentExtension.Save(tournament, filePath);
+                            TournamentExtension.Save(_Tournament, filePath);
                         }
                     });
             }
@@ -272,8 +261,8 @@ namespace StockMaster.ViewModels
                         {
                             var filePath = ofd.FileName;
 
-                            this.tournament = TournamentExtension.Load(filePath);
-                            ViewModel = new TournamentViewModel(this.tournament);
+                            this._Tournament = TournamentExtension.Load(filePath);
+                            ViewModel = new TournamentViewModel(this._Tournament);
                         }
 
 

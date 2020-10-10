@@ -15,11 +15,19 @@ namespace StockMaster.ViewModels
         public event EventHandler<DialogCloseRequestedEventArgs> DialogCloseRequested;
 
         readonly Tournament tournament;
+        readonly NetworkService networkService;
 
-        public LiveResultViewModel(Tournament tournament)
+        public LiveResultViewModel(Tournament tournament, NetworkService networkService)
         {
             this.tournament = tournament;
+            this.networkService = networkService;
             tournament.PropertyChanged += Tournament_PropertyChanged;
+            networkService.StartStopStateChanged += NetworkService_StartStopStateChanged;
+        }
+
+        private void NetworkService_StartStopStateChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged(nameof(IsListenerOnline));
         }
 
         private void Tournament_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -65,7 +73,6 @@ namespace StockMaster.ViewModels
             }
         }
 
-
         private bool showDifferenz;
         /// <summary>
         /// Zeige im DataGrid die StockPunkteDifferenz
@@ -82,6 +89,23 @@ namespace StockMaster.ViewModels
 
             }
         }
+
+        /// <summary>
+        /// Zeigt ob der Listener Online ist bzw. ändert den Status
+        /// </summary>
+        public bool IsListenerOnline
+        {
+            get
+            {
+                return this.networkService?.IsRunning() ?? false;
+            }
+            set
+            {
+                this.networkService.SwitchStartStopState();
+                RaisePropertyChanged();
+            }
+        }
+
 
         private ICommand _closeCommand;
         public ICommand CloseCommand
@@ -151,6 +175,7 @@ namespace StockMaster.ViewModels
         }
         public bool IsLive { get; set; }
         public bool ShowDifferenz { get; set; } = false;
+        public bool IsListenerOnline { get; set; } = false;
         public bool ShowStockPunkte { get; set; } = false;
         public ICommand CloseCommand { get; }
         public ICommand RefreshCommand { get; }

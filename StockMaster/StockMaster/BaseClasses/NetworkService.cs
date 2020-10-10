@@ -7,12 +7,18 @@ using System.Net.Sockets;
 
 namespace StockMaster.BaseClasses
 {
-    internal class NetworkService
+    public class NetworkService
     {
         private UdpClient udpClient;
         private UdpState state;
         private readonly Tournament tournament;
         private readonly Action _CallBackAfterUpdateAction;
+
+        public event EventHandler StartStopStateChanged;
+        protected virtual void OnStartStopStateChanged(NetworkServiceEventArgs e)
+        {
+            StartStopStateChanged?.Invoke(this, e);
+        }
 
 
         private class UdpState
@@ -49,6 +55,7 @@ namespace StockMaster.BaseClasses
             }
 
             ReceiveBroadcast();
+            OnStartStopStateChanged(new NetworkServiceEventArgs(true));
         }
 
         public void Stop()
@@ -57,6 +64,8 @@ namespace StockMaster.BaseClasses
             udpClient = null;
             state.udpClient = null;
             state = null;
+
+            OnStartStopStateChanged(new NetworkServiceEventArgs(false));
         }
 
         public bool IsRunning()
@@ -64,6 +73,13 @@ namespace StockMaster.BaseClasses
             return (udpClient != null);
         }
 
+        public void SwitchStartStopState()
+        {
+            if (IsRunning())
+                Stop();
+            else
+                Start();
+        }
 
         private void ReceiveBroadcast()
         {
@@ -149,7 +165,7 @@ namespace StockMaster.BaseClasses
                 for (int i = 0; i < newData.Length; i += 2)
                 {
                     var preGame = courtGames.FirstOrDefault(g => g.GameNumberOverAll == spielZähler - 1);
-                    if(preGame != null)
+                    if (preGame != null)
                     {
                         preGame.MasterTurn.PointsTeamA = preGame.NetworkTurn.PointsTeamA;
                         preGame.MasterTurn.PointsTeamB = preGame.NetworkTurn.PointsTeamB;
@@ -205,9 +221,6 @@ namespace StockMaster.BaseClasses
                 _CallBackAfterUpdateAction();
             }
         }
-
-
-
 
     }
 }

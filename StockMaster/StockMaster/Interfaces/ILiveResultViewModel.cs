@@ -9,6 +9,7 @@ namespace StockMaster.Interfaces
         bool IsLive { get; set; }
         bool ShowDifferenz { get; set; }
         bool ShowStockPunkte { get; set; }
+        bool IsListenerOnline { get; set; }
         ObservableCollection<(int Platzierung, Team Team, bool isLive)> Ergebnisliste { get; }
         ICommand RefreshCommand { get; }
         ICommand CloseCommand { get; }
