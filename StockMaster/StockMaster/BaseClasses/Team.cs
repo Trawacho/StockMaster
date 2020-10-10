@@ -165,6 +165,26 @@ namespace StockMaster.BaseClasses
             }
         }
 
+        [XmlIgnore()]
+        public List<int> SpieleMitAnspiel
+        {
+            get
+            {
+                List<int> result = new List<int>();
+                var sortedGames = Games.OrderBy(g => g.GameNumberOverAll).ToList();
+
+                for (int i = 0; i < sortedGames.Count; i++)
+                {
+                    if(sortedGames[i].StartingTeam == this)
+                    {
+                        result.Add(sortedGames[i].GameNumberOverAll);
+                    }
+                }
+
+                return result;
+            }
+        }
+
 
         #endregion
 

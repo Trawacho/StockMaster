@@ -132,6 +132,14 @@
       <DependentUpon>ucStackPanelTeam.xaml</DependentUpon>
     </Compile>
     <Compile Include="Output\CutterLine.cs" />
+    <Compile Include="Output\WertungsKarteBase\TextBlockGesamt.cs" />
+    <Compile Include="Output\WertungsKarteBase\WertungskarteBase.cs" />
+    <Compile Include="Output\WertungskarteStockTV\GameGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\GameSummaryGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\SpiegelGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\SpiegelHeader.cs" />
+    <Compile Include="Output\WertungskarteStockTV\SpiegelHeaderGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\WertungskarteStockTV.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
@@ -217,7 +225,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModels\TournamentViewModel.cs" />
-    <Compile Include="Output\Wertungskarte\SpiegelFeld.cs" />
+    <Compile Include="Output\WertungsKarteBase\SpiegelFeld.cs" />
     <Compile Include="Output\Wertungskarte\GameGrid.cs" />
     <Compile Include="Output\Wertungskarte\GameSummaryGrid.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelGrid.cs" />

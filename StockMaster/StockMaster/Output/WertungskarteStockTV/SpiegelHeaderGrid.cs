@@ -1,13 +1,15 @@
 ﻿using StockMaster.Converters;
+using StockMaster.Output.Wertungskarte;
 using StockMaster.Output.WertungsKarteBase;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace StockMaster.Output.Wertungskarte
+
+namespace StockMaster.Output.WertungskarteStockTV
 {
-    public class SpiegelHeaderGrid : SpiegelGrid
+    class SpiegelHeaderGrid : SpiegelGrid
     {
-        public SpiegelHeaderGrid(bool kehren8):base(kehren8)
+        public SpiegelHeaderGrid(bool kehren8) : base(kehren8)
         {
             //Two Rows
             RowDefinitions.Add(new RowDefinition() { Height = new GridLength(PixelConverter.CmToPx(0.60)) });
@@ -32,38 +34,47 @@ namespace StockMaster.Output.Wertungskarte
             SetRow(BorderSpiel, 0);
             Children.Add(BorderBahn);
             colCounter++;
-       
+
             SpiegelFeld BorderAnspiel = new SpiegelFeld("Anspiel", 270);
             SetRowSpan(BorderAnspiel, 2);
             SetColumn(BorderAnspiel, colCounter);
             SetRow(BorderSpiel, 0);
             Children.Add(BorderAnspiel);
             colCounter++;
-          
+
+            SpiegelFeld BorderEingabe = new SpiegelFeld("Eingabe", 0);
+            SetColumn(BorderEingabe, 4);
+            SetColumn(BorderEingabe, colCounter);
+            SetRowSpan(BorderEingabe, 4);
+            Children.Add(BorderEingabe);
+            colCounter++;
+
             SpiegelFeld BorderKehre = new SpiegelFeld("K e h r e n");
             SetColumnSpan(BorderKehre, kehrenColSpan);
             SetColumn(BorderKehre, colCounter);
             SetRow(BorderKehre, 0);
             Children.Add(BorderKehre);
 
+            
+
             SpiegelFeld BorderKehre1 = new SpiegelFeld("1");
             SetColumn(BorderKehre1, colCounter);
             SetRow(BorderKehre1, 1);
             Children.Add(BorderKehre1);
             colCounter++;
-   
+
             SpiegelFeld BorderKehre2 = new SpiegelFeld("2");
             SetColumn(BorderKehre2, colCounter);
             SetRow(BorderKehre2, 1);
             Children.Add(BorderKehre2);
             colCounter++;
-         
+
             SpiegelFeld BorderKehre3 = new SpiegelFeld("3");
             SetColumn(BorderKehre3, colCounter);
             SetRow(BorderKehre3, 1);
             Children.Add(BorderKehre3);
             colCounter++;
-        
+
             SpiegelFeld BorderKehre4 = new SpiegelFeld("4");
             SetColumn(BorderKehre4, colCounter);
             SetRow(BorderKehre4, 1);
@@ -103,11 +114,7 @@ namespace StockMaster.Output.Wertungskarte
             Children.Add(BorderSumme);
             colCounter++;
 
-            SpiegelFeld BorderStrafSumme = new SpiegelFeld("Straf-\r\npunkte", 0);
-            SetColumn(BorderStrafSumme, colCounter);
-            SetRowSpan(BorderStrafSumme, 2);
-            Children.Add(BorderStrafSumme);
-            colCounter++;
+            
 
             SpiegelFeld BorderPunkte = new SpiegelFeld("Gewinn-\r\npunkte", 0);
             BorderPunkte.Textblock.FontWeight = FontWeights.Bold;
@@ -191,12 +198,6 @@ namespace StockMaster.Output.Wertungskarte
             SetColumn(BorderSummeG, colCounter);
             SetRowSpan(BorderSummeG, 2);
             Children.Add(BorderSummeG);
-            colCounter++;
-
-            SpiegelFeld BorderStrafSummeG = new SpiegelFeld("Straf-\r\npunkte", 0);
-            SetColumn(BorderStrafSummeG, colCounter);
-            SetRowSpan(BorderStrafSummeG, 2);
-            Children.Add(BorderStrafSummeG);
             colCounter++;
 
             SpiegelFeld BorderPunkteG = new SpiegelFeld("Gewinn-\r\npunkte", 0);

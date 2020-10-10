@@ -2,6 +2,7 @@
 using StockMaster.Commands;
 using StockMaster.Interfaces;
 using StockMaster.Output;
+using StockMaster.Output.WertungsKarteBase;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -170,6 +171,22 @@ namespace StockMaster.ViewModels
             }
         }
 
+        private bool isTurnCardForStockTv;
+        public bool IsTurnCardForStockTV
+        {
+            get
+            {
+                return isTurnCardForStockTv;
+            }
+            set
+            {
+                if (isTurnCardForStockTv == value)
+                    return;
+                isTurnCardForStockTv = value;
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -199,7 +216,10 @@ namespace StockMaster.ViewModels
                 return _printTurnCardsCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var x = new Output.Wertungskarte.Wertungskarte();
+                        var x = IsTurnCardForStockTV
+                                                     ? new Output.WertungskarteStockTV.WertungskarteStockTV()
+                                                     : new Output.Wertungskarte.Wertungskarte() as WertungskarteBase;
+
                         PrintPreview printPreview = new PrintPreview();
                         var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
                         printPreview.Document = x.GetDocument(A4Size, tournament, TeamNameOnTurnCards, ConcatRoundsOnOutput);
@@ -269,6 +289,8 @@ namespace StockMaster.ViewModels
         }
 
         public bool Is8KehrenSpiel { get; set; } = true;
+
+        public bool IsTurnCardForStockTV { get; set; } = true;
 
         public ICommand CreateGamesCommand { get; }
         public ICommand PrintTurnCardsCommand { get; }

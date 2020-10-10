@@ -3,17 +3,23 @@ using StockMaster.Converters;
 using StockMaster.Output.WertungsKarteBase;
 using System.Windows.Media;
 
-namespace StockMaster.Output.Wertungskarte
+
+namespace StockMaster.Output.WertungskarteStockTV
 {
     public class GameGrid : SpiegelGrid
     {
         public GameGrid(Game game, Team team, bool kehren8) : base(kehren8)
         {
+            int startNumber = team.StartNumber;
             int colCounter = kehren8 ? 27 : 25;
             string NumberOfGame = game.GameNumberOverAll.ToString();
             string NumberOfArea = game.CourtNumber.ToString();
-            string Opponent = team.StartNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
+            string Opponent = startNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
             string StartOfGame = game.StartingTeam.StartNumber.ToString();
+
+            string InputColor = game.StartingTeam.StartNumber == team.StartNumber
+                ? "GRÜN" : "ROT";
+
 
             RowDefinitions.Add(new System.Windows.Controls.RowDefinition()
             {
@@ -79,6 +85,10 @@ namespace StockMaster.Output.Wertungskarte
 
                         case 2:
                             t = StartOfGame;
+                            break;
+
+                        case 3:
+                            t = InputColor;
                             break;
 
                         case 14:

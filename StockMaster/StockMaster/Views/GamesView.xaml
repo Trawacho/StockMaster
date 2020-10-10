@@ -174,8 +174,7 @@
                   IsThreeState="False"
                   HorizontalContentAlignment="Left"
                   VerticalContentAlignment="Center"
-                  ToolTip="Nur in Verbindung mit StockTV relevant"
-                  Margin="5"/>
+                  ToolTip="Nur in Verbindung mit StockTV relevant"/>
 
 
                 <Label Content="Anzahl der Aussetzer:"
@@ -262,16 +261,23 @@
                       HorizontalAlignment="Left"
                       VerticalAlignment="Center"/>
 
+                <Label Content="StockTV optimiert:"
+                       Grid.Row="3" Grid.Column="0"/>
+                <CheckBox Content="Ausgabe für StockTV optimiert"
+                          Grid.Row="3" Grid.Column="1"
+                          IsChecked="{Binding Path=IsTurnCardForStockTV}"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"/>
                 <Button Content="Wertungskarten drucken" 
                         Grid.Column="0" 
-                        Grid.Row="3"
+                        Grid.Row="4"
                         x:Name="buttonWertungskarteDrucken"
                         Margin="10" Padding="10"
                         Command="{Binding Path=PrintTurnCardsCommand}"/>
 
                 <Button Content="Bahnblock drucken" 
                         Grid.Column="0" 
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Width="{Binding ElementName=buttonWertungskarteDrucken, Path=ActualWidth}"
                         HorizontalAlignment="Left"
                         Margin="10,0,10,10" Padding="10"
