@@ -39,6 +39,9 @@
                 <MenuItem Header="Turnier speichern" 
                           InputGestureText="Strg+S"
                           Command="{Binding Path=SaveTournamentCommand}"/>
+                <MenuItem Header="Turnier speichern als" 
+                          InputGestureText="Strg+S"
+                          Command="{Binding Path=SaveAsTournamentCommand}"/>
                 <Separator/>
                 <MenuItem Header="Beenden" Command="{Binding Path=ExitApplicationCommand}"/>
             </MenuItem>

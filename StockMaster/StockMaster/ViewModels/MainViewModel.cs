@@ -18,6 +18,8 @@ namespace StockMaster.ViewModels
         private Tournament _Tournament;
         private BaseViewModel _viewModel;
 
+        private string tournamentFileName = string.Empty;
+
         #endregion
 
         #region Properties
@@ -226,17 +228,20 @@ namespace StockMaster.ViewModels
                 return _SaveTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var sfd = new SaveFileDialog
-                        {
-                            DefaultExt = "skmr",
-                            Filter = "StockMaster File (*.skmr)|*.skmr"
-                        };
-                        var dialogResult = sfd.ShowDialog();
-                        if (dialogResult == DialogResult.OK)
-                        {
-                            var filePath = sfd.FileName;
-                            TournamentExtension.Save(_Tournament, filePath);
-                        }
+                        Save(tournamentFileName);
+                    });
+            }
+        }
+
+        private ICommand _SaveAsTournamentCommand;
+        public ICommand SaveAsTournamentCommand
+        {
+            get
+            {
+                return _SaveAsTournamentCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        Save(null);
                     });
             }
         }
@@ -249,22 +254,27 @@ namespace StockMaster.ViewModels
                 return _OpenTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var ofd = new OpenFileDialog
+                        try
                         {
-                            Filter = "StockMaster Files (*.skmr)|*.skmr",
-                            DefaultExt = "skmr"
-                        };
+                            var ofd = new OpenFileDialog
+                            {
+                                Filter = "StockMaster Files (*.skmr)|*.skmr",
+                                DefaultExt = "skmr"
+                            };
 
-                        var dialogResult = ofd.ShowDialog();
+                            if (ofd.ShowDialog() == DialogResult.OK)
+                            {
+                                var filePath = ofd.FileName;
 
-                        if (dialogResult == DialogResult.OK)
-                        {
-                            var filePath = ofd.FileName;
-
-                            this._Tournament = TournamentExtension.Load(filePath);
-                            ViewModel = new TournamentViewModel(this._Tournament);
+                                this._Tournament = TournamentExtension.Load(filePath);
+                                ViewModel = new TournamentViewModel(this._Tournament);
+                                this.tournamentFileName = filePath;
+                            }
                         }
-
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show("Fehler beim Öffnen:\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
 
                     });
             }
@@ -272,6 +282,31 @@ namespace StockMaster.ViewModels
 
         #endregion
 
+        private void Save(string fileName)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                var saveFileDlg = new SaveFileDialog
+                {
+                    DefaultExt = "skmr",
+                    Filter = "StockMaster File (*skmr)|*.skmr"
+                };
+                var dlgResult = saveFileDlg.ShowDialog();
+                if (dlgResult == DialogResult.OK)
+                {
+                    fileName = saveFileDlg.FileName;
+                }
+            }
 
+            try
+            {
+                TournamentExtension.Save(_Tournament, fileName);
+                this.tournamentFileName = fileName;
+            }
+            catch( Exception ex)
+            {
+                MessageBox.Show("Fehler beim Speicher:\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
