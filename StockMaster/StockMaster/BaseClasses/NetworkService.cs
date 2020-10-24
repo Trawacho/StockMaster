@@ -179,7 +179,7 @@ namespace StockMaster.BaseClasses
 
                     if (tournament.IsDirectionOfCourtsFromRightToLeft)
                     {
-                        if (game.TeamA.SteigendeSpielNummern.Contains(game.GameNumberOverAll))
+                        if (game.TeamA.SpieleAufStartSeite.Contains(game.GameNumberOverAll))
                         {
                             // TeamA befindet sich bei diesem Spiel auf dieser Bahn rechts, 
                             // das nächste Spiel ist auf einer Bahn mit höherer oder gleicher Bahnnummer (1-> 2-> 3-> 4->...)
@@ -195,7 +195,7 @@ namespace StockMaster.BaseClasses
                     }
                     else
                     {
-                        if (game.TeamA.SteigendeSpielNummern.Contains(game.GameNumberOverAll))
+                        if (game.TeamA.SpieleAufStartSeite.Contains(game.GameNumberOverAll))
                         {
                             // TeamA befindet sich in diesem Spiel auf dieser Bahn links, das nächste Spiel ist auf einer Bahn mit einer höheren Bahnnummer
                             game.NetworkTurn.PointsTeamA = newData[i];

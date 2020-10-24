@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using StockMaster.BaseClasses;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using StockMaster.BaseClasses;
 
 namespace StockMaster.Output.WertungskarteStockTV
 {
@@ -27,7 +27,7 @@ namespace StockMaster.Output.WertungskarteStockTV
                 FontSize = 12,
                 FontFamily = fnt
             };
-            SetColumnSpan(textBlockStartnummer, 4);
+            SetColumnSpan(textBlockStartnummer, 3);
             SetColumn(textBlockStartnummer, 0);
             Children.Add(textBlockStartnummer);
 
@@ -105,12 +105,12 @@ namespace StockMaster.Output.WertungskarteStockTV
                 Text = string.Concat("Runde: ", numberOfRound),
                 FontWeight = FontWeights.Bold,
                 FontSize = 12,
-                FontFamily = fnt
+                FontFamily = fnt,
+                TextAlignment = TextAlignment.Right
             };
             SetColumnSpan(textBlockRound, 2);
-            SetColumn(textBlockRound, 23);
+            SetColumn(textBlockRound, this.ColumnDefinitions.Count - 2);
             Children.Add(textBlockRound);
         }
-
     }
 }

@@ -85,10 +85,9 @@ namespace StockMaster.ViewModels
         {
             get
             {
-
                 return tournament.NumberOfGameRounds > 1
-                    ? tournament.StartingTeamChange
-                    : false;
+                        ? tournament.StartingTeamChange
+                        : false;
             }
             set
             {

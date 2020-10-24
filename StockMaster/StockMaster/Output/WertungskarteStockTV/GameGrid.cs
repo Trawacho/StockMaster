@@ -11,15 +11,19 @@ namespace StockMaster.Output.WertungskarteStockTV
         public GameGrid(Game game, Team team, bool kehren8) : base(kehren8)
         {
             int startNumber = team.StartNumber;
-            int colCounter = kehren8 ? 27 : 25;
+            int colCounter = kehren8 
+                            ? 27 
+                            : 25;
             string NumberOfGame = game.GameNumberOverAll.ToString();
             string NumberOfArea = game.CourtNumber.ToString();
-            string Opponent = startNumber == game.TeamA.StartNumber ? game.TeamB.StartNumber.ToString() : game.TeamA.StartNumber.ToString();
+            string Opponent = startNumber == game.TeamA.StartNumber 
+                            ? game.TeamB.StartNumber.ToString() 
+                            : game.TeamA.StartNumber.ToString();
             string StartOfGame = game.StartingTeam.StartNumber.ToString();
 
-            string InputColor = game.StartingTeam.StartNumber == team.StartNumber
-                ? "GRÜN" : "ROT";
-
+            string ColorName = team.SpieleAufStartSeite.Contains(game.GameNumberOverAll) 
+                            ? "GRÜN" 
+                            : "ROT";
 
             RowDefinitions.Add(new System.Windows.Controls.RowDefinition()
             {
@@ -67,43 +71,18 @@ namespace StockMaster.Output.WertungskarteStockTV
                 for (int i = 0; i < colCounter; i++)
                 {
                     //leerer Spalt übersrpingen
-                    //if (i == 13)
                     if (i == (kehren8 ? 14 : 13))
                         i++;
-
-                    string t;
-
-                    switch (i)
+                    string t = i switch
                     {
-                        case 0:
-                            t = NumberOfArea;
-                            break;
-
-                        case 1:
-                            t = Opponent;
-                            break;
-
-                        case 2:
-                            t = StartOfGame;
-                            break;
-
-                        case 3:
-                            t = InputColor;
-                            break;
-
-                        case 14:
-                            t = !kehren8 ? NumberOfGame : "";
-                            break;
-
-                        case 15:
-                            t = kehren8 ? NumberOfGame : "";
-                            break;
-
-                        default:
-                            t = string.Empty;
-                            break;
-                    }
-
+                        0 => NumberOfArea,
+                        1 => Opponent,
+                        2 => StartOfGame,
+                        3 => ColorName,
+                        14 => !kehren8 ? NumberOfGame : "",
+                        15 => kehren8 ? NumberOfGame : "",
+                        _ => string.Empty,
+                    };
                     var b = new SpiegelFeld(t, 0);
 
                     SetColumn(b, i);

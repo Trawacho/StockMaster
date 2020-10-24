@@ -59,6 +59,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -140,6 +141,7 @@
     <Compile Include="Output\WertungskarteStockTV\SpiegelHeader.cs" />
     <Compile Include="Output\WertungskarteStockTV\SpiegelHeaderGrid.cs" />
     <Compile Include="Output\WertungskarteStockTV\WertungskarteStockTV.cs" />
+    <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
@@ -229,7 +231,6 @@
     <Compile Include="Output\Wertungskarte\GameGrid.cs" />
     <Compile Include="Output\Wertungskarte\GameSummaryGrid.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelGrid.cs" />
-    <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelHeaderGrid.cs" />
     <Compile Include="Output\PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>

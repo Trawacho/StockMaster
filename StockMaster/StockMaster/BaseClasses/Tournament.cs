@@ -56,7 +56,7 @@ namespace StockMaster.BaseClasses
         {
             get
             {
-                return (Teams.Count(t => !t.IsVirtual) / 2); ;
+                return Teams.Count(t => !t.IsVirtual) / 2; ;
             }
         }
 
@@ -84,6 +84,9 @@ namespace StockMaster.BaseClasses
         /// </summary>
         public bool IsDirectionOfCourtsFromRightToLeft { get; set; }
 
+        /// <summary>
+        /// True, if every Team has two pause
+        /// </summary>
         public bool TwoPauseGames
         {
             get

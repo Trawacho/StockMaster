@@ -35,17 +35,17 @@ namespace StockMaster.BaseClasses
         #region Standard-Properties
 
         /// <summary>
-        /// True, wenn das Team nur zur Berechnung verwendet wird
+        /// True, wenn es sich um virtuelles Team handelt, dass nur zur Berechnung des Spielplans verwendet wird
         /// </summary>
         public bool IsVirtual
         {
-            get => isVirtual;
+            get => this.isVirtual;
             set
             {
-                if (isVirtual == value)
+                if (this.isVirtual == value)
                     return;
 
-                isVirtual = value;
+                this.isVirtual = value;
                 RaisePropertyChanged();
             }
         }
@@ -119,12 +119,11 @@ namespace StockMaster.BaseClasses
         public ReadOnlyCollection<Game> Games { get; private set; }
 
         /// <summary>
-        /// Alle Spielnummern, bei denen die Mannschaft auf einer "steigenden Bahn" ist.
-        /// Bedeutet, dass die nächste Bahn eine höhere Nummer hat
-        /// Das Property wird für den NetworkService benötigt.
+        /// Alle Spielnummern, bei denen die Mannschaft auf der "grünen" bzw. Start-Seite steht.
+        /// Das Property wird für den NetworkService und die WertungskarteTV benötigt.
         /// </summary>
         [XmlIgnore()]
-        public List<int> SteigendeSpielNummern
+        public List<int> SpieleAufStartSeite
         {
             /* 
              * Im NetworkService werden pro Bahn die Ergebnisse übertragen. Durch das Property
@@ -139,27 +138,16 @@ namespace StockMaster.BaseClasses
              
             get
             {
-                /*
-                 * Alle Spiele nacheinander prüfen, ob die nächste Bahn eine höhrere Nummer hat
-                 */
                 // Ergebnisliste mit SpielNummern (GameNumberOverAll) 
                 List<int> result = new List<int>();
                 
                 // Nach SpielNummer sortierte Liste
                 var sortedGames = Games.OrderBy(g => g.GameNumberOverAll).ToList();
-                
-                // Schleife durch alle Spiele (das letzte Spiel wird nicht geprüft)
-                for (int i = 0; i < sortedGames.Count - 1; i++)
+
+                for (int i = 0; i < sortedGames.Count; i++)
                 {
-                    if (sortedGames[i].CourtNumber <= sortedGames[i + 1].CourtNumber)
-                        if (sortedGames[i].IsNotPauseGame)
-                            result.Add(sortedGames[i].GameNumberOverAll);
-                }
-                
-                // Das letzte Spiel mit dem vorletzten vergleichen.
-                if (sortedGames[sortedGames.Count - 1].CourtNumber > sortedGames[sortedGames.Count - 2].CourtNumber)
-                {
-                    result.Add(sortedGames[sortedGames.Count - 1].GameNumberOverAll);
+                    if (sortedGames[i].TeamA == this && !sortedGames[i].IsPauseGame)
+                        result.Add(sortedGames[i].GameNumberOverAll);
                 }
                 return result;
             }

@@ -2,6 +2,7 @@
 using StockMaster.Commands;
 using StockMaster.Dialogs;
 using System;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -59,6 +60,14 @@ namespace StockMaster.ViewModels
                 return _NetworkService.IsRunning()
                             ? "Stop Listener"
                             : "Start Listener";
+            }
+        }
+
+        public string VersionNumber
+        {
+            get
+            {
+                return $"Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
             }
         }
 

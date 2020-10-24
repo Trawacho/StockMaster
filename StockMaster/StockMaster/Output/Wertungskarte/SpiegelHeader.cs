@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using StockMaster.BaseClasses;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using StockMaster.BaseClasses;
 
 namespace StockMaster.Output.Wertungskarte
 {
@@ -11,7 +11,7 @@ namespace StockMaster.Output.Wertungskarte
         private readonly FontFamily fnt = new FontFamily("Consolas");
 
         public string StartNummer { get; set; }
-        public SpiegelHeader(Team team, bool printTeamName, bool kehren8):base(kehren8)
+        public SpiegelHeader(Team team, bool printTeamName, bool kehren8) : base(kehren8)
         {
             int columnSpan = kehren8 ? 8 : 7;
 
@@ -27,14 +27,14 @@ namespace StockMaster.Output.Wertungskarte
                 FontSize = 12,
                 FontFamily = fnt
             };
-            SetColumnSpan(textBlockStartnummer, 4);
+            SetColumnSpan(textBlockStartnummer, 3);
             SetColumn(textBlockStartnummer, 0);
             Children.Add(textBlockStartnummer);
 
             //Moarschaft
             TextBlock textBlockMoarschaft = new TextBlock()
             {
-                Text =  "Moarschaft:",
+                Text = "Moarschaft:",
                 FontWeight = FontWeights.Normal,
                 FontSize = 12,
                 FontFamily = fnt,
@@ -58,7 +58,7 @@ namespace StockMaster.Output.Wertungskarte
                     TextAlignment = TextAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Bottom,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    Margin = new Thickness(5,0,0,0)
+                    Margin = new Thickness(5, 0, 0, 0)
                 };
                 SetColumnSpan(textBlockTeamName, columnSpan);
                 SetColumn(textBlockTeamName, 6);
@@ -98,19 +98,19 @@ namespace StockMaster.Output.Wertungskarte
             Children.Add(textBlockGegner);
         }
 
-        public SpiegelHeader(Team team, bool printTeamName, bool kehren8, int numberOfRound): this(team, printTeamName, kehren8)
+        public SpiegelHeader(Team team, bool printTeamName, bool kehren8, int numberOfRound) : this(team, printTeamName, kehren8)
         {
             TextBlock textBlockRound = new TextBlock()
             {
                 Text = string.Concat("Runde: ", numberOfRound),
                 FontWeight = FontWeights.Bold,
                 FontSize = 12,
-                FontFamily = fnt
+                FontFamily = fnt,
+                TextAlignment = TextAlignment.Right
             };
             SetColumnSpan(textBlockRound, 2);
-            SetColumn(textBlockRound, 23);
+            SetColumn(textBlockRound, this.ColumnDefinitions.Count - 2);
             Children.Add(textBlockRound);
         }
-        
     }
 }

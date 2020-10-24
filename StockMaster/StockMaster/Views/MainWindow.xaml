@@ -54,7 +54,7 @@
         </Menu>
 
         <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock/>
+            <TextBlock Text="{Binding Path=VersionNumber}"/>
         </StatusBar>
 
         <StackPanel DockPanel.Dock="Left" Margin="5" Background="#FF0E3A59">
