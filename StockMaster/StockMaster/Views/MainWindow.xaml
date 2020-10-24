@@ -39,6 +39,9 @@
                 <MenuItem Header="Turnier speichern" 
                           InputGestureText="Strg+S"
                           Command="{Binding Path=SaveTournamentCommand}"/>
+                <MenuItem Header="Turnier speichern als" 
+                          InputGestureText="Strg+S"
+                          Command="{Binding Path=SaveAsTournamentCommand}"/>
                 <Separator/>
                 <MenuItem Header="Beenden" Command="{Binding Path=ExitApplicationCommand}"/>
             </MenuItem>
@@ -51,7 +54,7 @@
         </Menu>
 
         <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock/>
+            <TextBlock Text="{Binding Path=VersionNumber}"/>
         </StatusBar>
 
         <StackPanel DockPanel.Dock="Left" Margin="5" Background="#FF0E3A59">

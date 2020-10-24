@@ -16,6 +16,7 @@ namespace StockMaster.Interfaces
         string DirectionOfCourtsDescription { get; }
         bool IsStartOfGameChanged { get; set; }
         bool Is8KehrenSpiel { get; set; }
+        bool IsTurnCardForStockTV { get; set; }
         
        
         ICommand CreateGamesCommand { get; }

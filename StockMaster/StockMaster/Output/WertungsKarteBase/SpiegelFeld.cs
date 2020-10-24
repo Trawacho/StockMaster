@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace StockMaster.Output.Wertungskarte
+namespace StockMaster.Output.WertungsKarteBase
 {
     public class SpiegelFeld : Border
     {

@@ -99,6 +99,15 @@
 
         <WrapPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
 
+            <CheckBox IsChecked="{Binding Path=IsListenerOnline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      Content="Listener"
+                      x:Name="checkBoxIsListenerOnline"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Left"
+                      VerticalAlignment="Stretch"
+                      VerticalContentAlignment="Center"
+                      Margin="10" Padding="10" IsThreeState="False"/>
+            
             <CheckBox IsChecked="{Binding Path=ShowDifferenz, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       Content="Differenz"
                       x:Name="checkBoxShowDifferenz"

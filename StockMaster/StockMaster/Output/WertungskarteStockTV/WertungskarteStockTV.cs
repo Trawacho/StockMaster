@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
-namespace StockMaster.Output.Wertungskarte
+namespace StockMaster.Output.WertungskarteStockTV
 {
-    public class Wertungskarte : WertungskarteBase
+    class WertungskarteStockTV  : WertungskarteBase
     {
-        public Wertungskarte()
+      
+        public WertungskarteStockTV()
         {
 
         }
+
 
         /// <summary>
         /// Get Panels from a Team for each Round
@@ -93,9 +95,5 @@ namespace StockMaster.Output.Wertungskarte
             return panel;
         }
 
-
     }
-
-
 }
-

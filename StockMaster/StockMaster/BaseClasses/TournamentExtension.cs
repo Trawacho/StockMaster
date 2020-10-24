@@ -63,5 +63,7 @@ namespace StockMaster.BaseClasses
             var set = serializer.Deserialize(reader) as SerializableTournamentSet;
             return set.GetTournament();
         }
+
+
     }
 }

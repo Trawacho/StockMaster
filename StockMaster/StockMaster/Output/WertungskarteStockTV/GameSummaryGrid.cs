@@ -3,7 +3,8 @@ using StockMaster.Output.WertungsKarteBase;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace StockMaster.Output.Wertungskarte
+
+namespace StockMaster.Output.WertungskarteStockTV
 {
     public class GameSummaryGrid : SpiegelGrid
     {
@@ -24,8 +25,7 @@ namespace StockMaster.Output.Wertungskarte
             SetColumnSpan(textBlockWerbung, 8);
             Children.Add(textBlockWerbung);
 
-
-            int startColumn = kehren8 ? 9 : 8;
+            int startColumn = kehren8 ? 10 : 9;
 
             var textBlockGesamt = new TextBlockGesamt();
             SetColumn(textBlockGesamt, startColumn);
@@ -37,11 +37,6 @@ namespace StockMaster.Output.Wertungskarte
             BorderSumme.Textblock.FontWeight = FontWeights.Bold;
             SetColumn(BorderSumme, startColumn);
             Children.Add(BorderSumme);
-            startColumn++;
-
-            SpiegelFeld BorderStrafSumme = new SpiegelFeld(string.Empty, 0);
-            SetColumn(BorderStrafSumme, startColumn);
-            Children.Add(BorderStrafSumme);
             startColumn++;
 
             SpiegelFeld BorderPunkte = new SpiegelFeld(string.Empty, 0);
@@ -63,11 +58,6 @@ namespace StockMaster.Output.Wertungskarte
             Children.Add(BorderSummeG);
             startColumn++;
 
-            SpiegelFeld BorderStrafSummeG = new SpiegelFeld(string.Empty, 0);
-            SetColumn(BorderStrafSummeG, startColumn);
-            Children.Add(BorderStrafSummeG);
-            startColumn++;
-
             SpiegelFeld BorderPunkteG = new SpiegelFeld(string.Empty, 0);
             BorderPunkteG.Textblock.FontWeight = FontWeights.Bold;
             SetColumn(BorderPunkteG, startColumn);
@@ -76,5 +66,5 @@ namespace StockMaster.Output.Wertungskarte
 
         }
     }
-
+   
 }

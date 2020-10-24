@@ -59,6 +59,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -81,6 +82,7 @@
     </ApplicationDefinition>
     <Compile Include="BaseClasses\EntryFee.cs" />
     <Compile Include="BaseClasses\Executive.cs" />
+    <Compile Include="BaseClasses\NetworkServiceEventArgs.cs" />
     <Compile Include="BaseClasses\TExecutiveClass.cs" />
     <Compile Include="Interfaces\IGamesViewModel.cs" />
     <Compile Include="Interfaces\ILiveResultViewModel.cs" />
@@ -131,6 +133,15 @@
       <DependentUpon>ucStackPanelTeam.xaml</DependentUpon>
     </Compile>
     <Compile Include="Output\CutterLine.cs" />
+    <Compile Include="Output\WertungsKarteBase\TextBlockGesamt.cs" />
+    <Compile Include="Output\WertungsKarteBase\WertungskarteBase.cs" />
+    <Compile Include="Output\WertungskarteStockTV\GameGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\GameSummaryGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\SpiegelGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\SpiegelHeader.cs" />
+    <Compile Include="Output\WertungskarteStockTV\SpiegelHeaderGrid.cs" />
+    <Compile Include="Output\WertungskarteStockTV\WertungskarteStockTV.cs" />
+    <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
@@ -216,11 +227,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModels\TournamentViewModel.cs" />
-    <Compile Include="Output\Wertungskarte\SpiegelFeld.cs" />
+    <Compile Include="Output\WertungsKarteBase\SpiegelFeld.cs" />
     <Compile Include="Output\Wertungskarte\GameGrid.cs" />
     <Compile Include="Output\Wertungskarte\GameSummaryGrid.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelGrid.cs" />
-    <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelHeaderGrid.cs" />
     <Compile Include="Output\PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
