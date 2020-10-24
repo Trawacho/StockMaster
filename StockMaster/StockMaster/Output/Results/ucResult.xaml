@@ -72,6 +72,11 @@
 
         </Grid>
 
+        <TextBlock Text="created by StockMaster" FontSize="7" HorizontalAlignment="Left" Margin="40,0,0,3"/>
+        <Line X1="4" X2="1" Y1="0" Y2="0" StrokeThickness="1" Stretch="Fill" Stroke="Black"/>
+
+
+
         <Viewbox Height="2cm">
             <Label Content="E R G E B N I S"
                HorizontalContentAlignment="Center"

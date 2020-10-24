@@ -261,7 +261,7 @@
                       HorizontalAlignment="Left"
                       VerticalAlignment="Center"/>
 
-                <Label Content="StockTV optimiert:"
+                <Label Content="StockTV:"
                        Grid.Row="3" Grid.Column="0"/>
                 <CheckBox Content="Ausgabe für StockTV optimiert"
                           Grid.Row="3" Grid.Column="1"

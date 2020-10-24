@@ -7,15 +7,26 @@ namespace StockMaster.Output.Wertungskarte
 {
     public class GameSummaryGrid : SpiegelGrid
     {
-        public GameSummaryGrid(bool kehren8):base(kehren8)
+        public GameSummaryGrid(bool kehren8) : base(kehren8)
         {
             RowDefinitions.Add(new RowDefinition()
             {
                 Height = new GridLength(PixelConverter.CmToPx(0.6))
             });
 
-            int startColumn = kehren8 ? 9: 8;
-            
+            var textBlockWerbung = new TextBlock()
+            {
+                Text = "created by StockMaster",
+                FontSize = 7.0,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+            SetColumn(textBlockWerbung, 0);
+            SetColumnSpan(textBlockWerbung, 8);
+            Children.Add(textBlockWerbung);
+
+
+            int startColumn = kehren8 ? 9 : 8;
+
             var textBlockGesamt = new TextBlockGesamt();
             SetColumn(textBlockGesamt, startColumn);
             SetColumnSpan(textBlockGesamt, 2);
@@ -62,8 +73,8 @@ namespace StockMaster.Output.Wertungskarte
             SetColumn(BorderPunkteG, startColumn);
             Children.Add(BorderPunkteG);
 
-            
+
         }
     }
-   
+
 }

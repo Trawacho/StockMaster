@@ -64,6 +64,15 @@ namespace StockMaster.Output.Bahnblock
             else
                 panel.Children.Add(new ucBahnBlock(game));
 
+            panel.Children.Add(
+                new TextBlock()
+                {
+                    Text = "created by StockMaster",
+                    FontSize = 7,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    HorizontalAlignment = HorizontalAlignment.Left
+                });
+
             panel.Children.Add(Tools.CutterLine());
 
             return panel;

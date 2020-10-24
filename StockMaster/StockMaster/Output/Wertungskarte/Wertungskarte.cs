@@ -13,32 +13,6 @@ namespace StockMaster.Output.Wertungskarte
 
         }
 
-        
-
-        //private void SetPagePanelToDocument(StackPanel panel)
-        //{
-        //    var newPage = GetNewPage(document.DocumentPaginator.PageSize);
-
-        //    //Wenn die aktuelle Höhe + die neue Höhe > seiten-Höhe
-        //    FixedPage.SetTop(panel, PixelConverter.CmToPx(1));
-        //    FixedPage.SetLeft(panel, PixelConverter.CmToPx(0.7));
-        //    newPage.Children.Add(panel);
-
-        //    PageContent content = new PageContent();
-        //    ((IAddChild)content).AddChild(newPage);
-        //    document.Pages.Add(content);
-        //}
-
-        //private FixedPage GetNewPage(Size pageSize)
-        //{
-        //    FixedPage page = new FixedPage
-        //    {
-        //        Width = pageSize.Width,
-        //        Height = pageSize.Height
-        //    };
-        //    return page;
-        //}
-
         /// <summary>
         /// Get Panels from a Team for each Round
         /// </summary>

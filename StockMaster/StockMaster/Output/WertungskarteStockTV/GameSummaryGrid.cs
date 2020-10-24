@@ -15,6 +15,16 @@ namespace StockMaster.Output.WertungskarteStockTV
                 Height = new GridLength(PixelConverter.CmToPx(0.6))
             });
 
+            var textBlockWerbung = new TextBlock()
+            {
+                Text = "created by StockMaster",
+                FontSize = 7.0,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+            SetColumn(textBlockWerbung, 0);
+            SetColumnSpan(textBlockWerbung, 8);
+            Children.Add(textBlockWerbung);
+
             int startColumn = kehren8 ? 10 : 9;
 
             var textBlockGesamt = new TextBlockGesamt();

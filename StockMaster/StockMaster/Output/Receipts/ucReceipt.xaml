@@ -81,8 +81,9 @@
                        HorizontalContentAlignment="Left"/>
 
             </Grid>
-            
-            <StackPanel Orientation="Horizontal" Margin="10,20,10,10">
+            <TextBlock Text="created by StockMaster" FontSize="7" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+
+            <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
                 <Label Content="Ort/Datum:" Margin="10,0"/>
                 <Label x:Name="labelOrtDatum" />
                 <Label Content="Unterschrift:" Margin="50,0"/>
