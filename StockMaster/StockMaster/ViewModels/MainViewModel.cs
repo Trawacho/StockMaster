@@ -82,7 +82,7 @@ namespace StockMaster.ViewModels
         {
             this._Tournament = new Tournament();
             ViewModel = new TournamentViewModel(_Tournament);
-            this._NetworkService = new NetworkService(this._Tournament, null);
+            this._NetworkService = new NetworkService(this._Tournament, () => this._Tournament.RaisePropertyChanged(""));
             this._NetworkService.StartStopStateChanged += _NetworkService_StartStopStateChanged;
         }
 
