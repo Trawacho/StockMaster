@@ -27,6 +27,6 @@ Es empfiehlt sich, alle bestehende Regeln bzgl. der StockMaster.exe zu löschen 
 - Windows Firewall Editor starten: wf.msc
 - auf der linken Seite die "eingehende Regeln" wählen
 - in der mittleren Ansicht am Besten nach Name sortieren und alle Einträge mit stockmaster.exe löschen
-- in der Eingabeaufforderung (Dos-FensteR) folgenden Befehl ausführen (Eingabeaufforderung als Administrator starten!!!)<br>
+- in der Eingabeaufforderung (Dos-Fenster) folgenden Befehl ausführen (Eingabeaufforderung als Administrator starten!!!)<br>
   `C:\>netsh advfirewall firewall add rule name="Open UDP 4711" dir=in action=allow protocol=UDP localport=4711 profile=any description="Open UDP 4711 for StockMaster/StockTV"`
   
