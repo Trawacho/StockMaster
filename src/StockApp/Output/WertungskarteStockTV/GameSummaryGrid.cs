@@ -1,10 +1,10 @@
-﻿using StockMaster.Converters;
-using StockMaster.Output.WertungsKarteBase;
+﻿using StockApp.Converters;
+using StockApp.Output.WertungsKarteBase;
 using System.Windows;
 using System.Windows.Controls;
 
 
-namespace StockMaster.Output.WertungskarteStockTV
+namespace StockApp.Output.WertungskarteStockTV
 {
     public class GameSummaryGrid : SpiegelGrid
     {
@@ -17,7 +17,7 @@ namespace StockMaster.Output.WertungskarteStockTV
 
             var textBlockWerbung = new TextBlock()
             {
-                Text = "created by StockMaster",
+                Text = "created by StockApp",
                 FontSize = 7.0,
                 VerticalAlignment = VerticalAlignment.Bottom
             };

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public class NetworkService
     {

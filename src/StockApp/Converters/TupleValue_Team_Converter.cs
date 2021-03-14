@@ -1,9 +1,9 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace StockMaster.Converters
+namespace StockApp.Converters
 {
     class TupleValue_Team_Converter : IValueConverter
     {

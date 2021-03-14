@@ -1,10 +1,10 @@
-﻿using StockMaster.Dialogs;
-using StockMaster.ViewModels;
-using StockMaster.Views;
+﻿using StockApp.Dialogs;
+using StockApp.ViewModels;
+using StockApp.Views;
 using System;
 using System.Windows;
 
-namespace StockMaster
+namespace StockApp
 {
     /// <summary>
     /// Interaktionslogik für "App.xaml"

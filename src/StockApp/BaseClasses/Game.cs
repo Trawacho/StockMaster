@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public class Game : TBaseClass, IEquatable<Game>
     {

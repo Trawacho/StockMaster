@@ -1,9 +1,9 @@
-﻿using StockMaster.Converters;
+﻿using StockApp.Converters;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace StockMaster.Output
+namespace StockApp.Output
 {
     internal static class Tools
     {

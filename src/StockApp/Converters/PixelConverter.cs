@@ -1,4 +1,4 @@
-﻿namespace StockMaster.Converters
+﻿namespace StockApp.Converters
 {
     public class PixelConverter
     {

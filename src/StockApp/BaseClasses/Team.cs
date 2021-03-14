@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public class Team : TBaseClass, IEquatable<Team>
     {

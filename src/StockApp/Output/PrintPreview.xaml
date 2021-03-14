@@ -1,9 +1,9 @@
-﻿<Window x:Class="StockMaster.Output.PrintPreview"
+﻿<Window x:Class="StockApp.Output.PrintPreview"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:StockMaster.Output"
+        xmlns:local="clr-namespace:StockApp.Output"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="DocumentViewer" Height="450" Width="800">

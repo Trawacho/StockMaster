@@ -1,5 +1,5 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Converters;
+﻿using StockApp.BaseClasses;
+using StockApp.Converters;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 
-namespace StockMaster.Output.Receipts
+namespace StockApp.Output.Receipts
 {
     public class Receipt
     {

@@ -1,10 +1,10 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Converters;
-using StockMaster.Output.WertungsKarteBase;
+﻿using StockApp.BaseClasses;
+using StockApp.Converters;
+using StockApp.Output.WertungsKarteBase;
 using System.Windows.Media;
 
 
-namespace StockMaster.Output.WertungskarteStockTV
+namespace StockApp.Output.WertungskarteStockTV
 {
     public class GameGrid : SpiegelGrid
     {

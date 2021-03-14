@@ -1,11 +1,11 @@
-﻿using StockMaster.Interfaces;
+﻿using StockApp.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public class Referee : TExecutiveClass
     {

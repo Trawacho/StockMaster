@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StockMaster.Output.Receipts
+namespace StockApp.Output.Receipts
 {
     /// <summary>
     /// Interaction logic for ucReceipt.xaml

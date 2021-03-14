@@ -1,7 +1,7 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System.Windows.Controls;
 
-namespace StockMaster.Output.Bahnblock
+namespace StockApp.Output.Bahnblock
 {
     /// <summary>
     /// Interaction logic for ucBahnBlock.xaml

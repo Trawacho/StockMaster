@@ -1,4 +1,4 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StockMaster.Output.Results
+namespace StockApp.Output.Results
 {
     /// <summary>
     /// Interaction logic for ucStackPanelTeam.xaml

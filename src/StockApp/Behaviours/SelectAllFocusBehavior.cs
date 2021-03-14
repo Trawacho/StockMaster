@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace StockMaster.Behaviours
+namespace StockApp.Behaviours
 {
     public class SelectAllFocusBehavior
     {

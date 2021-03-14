@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 
-namespace StockMaster.Output
+namespace StockApp.Output
 {
     /// <summary>
     /// Interaktionslogik für DocumentViewer.xaml

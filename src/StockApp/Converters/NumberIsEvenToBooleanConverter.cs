@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace StockMaster.Converters
+namespace StockApp.Converters
 {
     class NumberIsEvenToBooleanConverter : IValueConverter
     {

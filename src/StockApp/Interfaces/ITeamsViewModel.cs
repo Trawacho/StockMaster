@@ -1,8 +1,8 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace StockMaster.Interfaces
+namespace StockApp.Interfaces
 {
     public interface ITeamsViewModel
     {

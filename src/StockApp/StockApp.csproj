@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0E9198E2-7A05-4385-B80C-653A439C1DB7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>StockMaster</RootNamespace>
-    <AssemblyName>StockMaster</AssemblyName>
+    <RootNamespace>StockApp</RootNamespace>
+    <AssemblyName>StockApp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>StockMaster.App</StartupObject>
+    <StartupObject>StockApp.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>

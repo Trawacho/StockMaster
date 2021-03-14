@@ -1,12 +1,12 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Commands;
-using StockMaster.Dialogs;
+﻿using StockApp.BaseClasses;
+using StockApp.Commands;
+using StockApp.Dialogs;
 using System;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace StockMaster.ViewModels
+namespace StockApp.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
@@ -267,7 +267,7 @@ namespace StockMaster.ViewModels
                         {
                             var ofd = new OpenFileDialog
                             {
-                                Filter = "StockMaster Files (*.skmr)|*.skmr",
+                                Filter = "StockApp Files (*.skmr)|*.skmr",
                                 DefaultExt = "skmr"
                             };
 
@@ -298,7 +298,7 @@ namespace StockMaster.ViewModels
                 var saveFileDlg = new SaveFileDialog
                 {
                     DefaultExt = "skmr",
-                    Filter = "StockMaster File (*skmr)|*.skmr"
+                    Filter = "StockApp File (*skmr)|*.skmr"
                 };
                 var dlgResult = saveFileDlg.ShowDialog();
                 if (dlgResult == DialogResult.OK)

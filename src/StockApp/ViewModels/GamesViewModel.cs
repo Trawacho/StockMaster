@@ -1,14 +1,14 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Commands;
-using StockMaster.Interfaces;
-using StockMaster.Output;
-using StockMaster.Output.WertungsKarteBase;
+﻿using StockApp.BaseClasses;
+using StockApp.Commands;
+using StockApp.Interfaces;
+using StockApp.Output;
+using StockApp.Output.WertungsKarteBase;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace StockMaster.ViewModels
+namespace StockApp.ViewModels
 {
     public class GamesViewModel : BaseViewModel, IGamesViewModel
     {

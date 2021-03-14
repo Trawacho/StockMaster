@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace StockMaster.Converters
+namespace StockApp.Converters
 {
     class BooleanToVisibilityConverter : IValueConverter
     {

@@ -1,14 +1,14 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Commands;
-using StockMaster.Interfaces;
-using StockMaster.Output;
+﻿using StockApp.BaseClasses;
+using StockApp.Commands;
+using StockApp.Interfaces;
+using StockApp.Output;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace StockMaster.ViewModels
+namespace StockApp.ViewModels
 {
     public class ResultsViewModel : BaseViewModel, IResultsViewModel
     {

@@ -1,5 +1,5 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Converters;
+﻿using StockApp.BaseClasses;
+using StockApp.Converters;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -7,7 +7,7 @@ using System.Windows.Markup;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace StockMaster.Output.Bahnblock
+namespace StockApp.Output.Bahnblock
 {
     internal class BahnBlock
     {
@@ -67,7 +67,7 @@ namespace StockMaster.Output.Bahnblock
             panel.Children.Add(
                 new TextBlock()
                 {
-                    Text = "created by StockMaster",
+                    Text = "created by StockApp",
                     FontSize = 7,
                     VerticalAlignment = VerticalAlignment.Bottom,
                     HorizontalAlignment = HorizontalAlignment.Left

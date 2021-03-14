@@ -1,9 +1,9 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace StockMaster.Converters
+namespace StockApp.Converters
 {
     public class TeamToOpponentConverter : IMultiValueConverter
     {

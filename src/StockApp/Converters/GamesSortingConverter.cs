@@ -1,11 +1,11 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace StockMaster.Converters
+namespace StockApp.Converters
 {
     public class GamesSortingConverter : IValueConverter
     {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 
-namespace StockMaster.Output
+namespace StockApp.Output
 {
     internal static class Helpers
     {

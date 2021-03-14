@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     internal class TournamentExtension
     {

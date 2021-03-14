@@ -1,8 +1,8 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Interfaces;
+﻿using StockApp.BaseClasses;
+using StockApp.Interfaces;
 using System;
 
-namespace StockMaster.ViewModels
+namespace StockApp.ViewModels
 {
     public class TournamentViewModel : BaseViewModel, ITournamentViewModel
     {

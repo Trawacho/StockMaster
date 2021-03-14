@@ -1,11 +1,11 @@
-﻿using StockMaster.Interfaces;
+﻿using StockApp.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public class SerializableTournamentSet : ITournament
     {

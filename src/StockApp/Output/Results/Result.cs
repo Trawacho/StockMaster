@@ -1,11 +1,11 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Converters;
+﻿using StockApp.BaseClasses;
+using StockApp.Converters;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 
-namespace StockMaster.Output.Results
+namespace StockApp.Output.Results
 {
     public class Result
     {

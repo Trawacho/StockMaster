@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StockMaster.Dialogs
+namespace StockApp.Dialogs
 {
     public class DialogCloseRequestedEventArgs : EventArgs
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace StockMaster.Commands
+namespace StockApp.Commands
 {
     // <summary>
     /// A simple relay Command for easy use of the Command pattern.

@@ -1,8 +1,8 @@
-﻿using StockMaster.ViewModels;
-using StockMaster.Output;
+﻿using StockApp.ViewModels;
+using StockApp.Output;
 using System.Windows;
 
-namespace StockMaster
+namespace StockApp
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml

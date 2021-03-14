@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace StockMaster.Dialogs
+namespace StockApp.Dialogs
 {
     public class DialogService : IDialogService
     {

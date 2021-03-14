@@ -1,13 +1,13 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Commands;
-using StockMaster.Dialogs;
-using StockMaster.Interfaces;
+﻿using StockApp.BaseClasses;
+using StockApp.Commands;
+using StockApp.Dialogs;
+using StockApp.Interfaces;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace StockMaster.ViewModels
+namespace StockApp.ViewModels
 {
     public class LiveResultViewModel : BaseViewModel, IDialogRequestClose, ILiveResultViewModel
     {

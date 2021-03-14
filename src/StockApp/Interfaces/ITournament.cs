@@ -1,8 +1,8 @@
-﻿using StockMaster.BaseClasses;
+﻿using StockApp.BaseClasses;
 using System;
 using System.Collections.ObjectModel;
 
-namespace StockMaster.Interfaces
+namespace StockApp.Interfaces
 {
     internal interface ITournament
     {

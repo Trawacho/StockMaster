@@ -1,4 +1,4 @@
-﻿namespace StockMaster.BaseClasses
+﻿namespace StockApp.BaseClasses
 {
     public class Player : TBaseClass
     {

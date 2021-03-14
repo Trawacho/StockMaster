@@ -1,10 +1,10 @@
-﻿using StockMaster.BaseClasses;
-using StockMaster.Output.WertungsKarteBase;
+﻿using StockApp.BaseClasses;
+using StockApp.Output.WertungsKarteBase;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
-namespace StockMaster.Output.Wertungskarte
+namespace StockApp.Output.Wertungskarte
 {
     public class Wertungskarte : WertungskarteBase
     {

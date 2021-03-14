@@ -1,11 +1,11 @@
-﻿using StockMaster.Converters;
-using StockMaster.Output.Wertungskarte;
-using StockMaster.Output.WertungsKarteBase;
+﻿using StockApp.Converters;
+using StockApp.Output.Wertungskarte;
+using StockApp.Output.WertungsKarteBase;
 using System.Windows;
 using System.Windows.Controls;
 
 
-namespace StockMaster.Output.WertungskarteStockTV
+namespace StockApp.Output.WertungskarteStockTV
 {
     class SpiegelHeaderGrid : SpiegelGrid
     {

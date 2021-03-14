@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace StockMaster.Output.WertungsKarteBase
+namespace StockApp.Output.WertungsKarteBase
 {
     public class TextBlockGesamt : TextBlock
     {

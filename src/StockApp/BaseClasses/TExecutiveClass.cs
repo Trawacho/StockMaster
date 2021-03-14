@@ -1,6 +1,6 @@
-﻿using StockMaster.Interfaces;
+﻿using StockApp.Interfaces;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public class TExecutiveClass : TBaseClass, IExecutive
     {

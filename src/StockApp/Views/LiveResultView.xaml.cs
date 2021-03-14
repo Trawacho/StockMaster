@@ -1,7 +1,7 @@
-﻿using StockMaster.Dialogs;
+﻿using StockApp.Dialogs;
 using System.Windows;
 
-namespace StockMaster.Views
+namespace StockApp.Views
 {
     /// <summary>
     /// Interaction logic for LiveResultView.xaml

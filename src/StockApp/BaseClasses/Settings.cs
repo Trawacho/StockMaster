@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockMaster.BaseClasses
+namespace StockApp.BaseClasses
 {
     public sealed class Settings
     {

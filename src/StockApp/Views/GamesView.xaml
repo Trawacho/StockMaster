@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="StockMaster.Views.GamesView"
+﻿<UserControl x:Class="StockApp.Views.GamesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:converters="clr-namespace:StockMaster.Converters"
-             xmlns:viewmodels="clr-namespace:StockMaster.ViewModels"
-             xmlns:self="clr-namespace:StockMaster.BaseClasses"
+             xmlns:converters="clr-namespace:StockApp.Converters"
+             xmlns:viewmodels="clr-namespace:StockApp.ViewModels"
+             xmlns:self="clr-namespace:StockApp.BaseClasses"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:GamesDesignViewModel, 
