@@ -10,20 +10,22 @@ namespace StockApp.ViewModels
 {
     public class TeamsViewModel : BaseViewModel, ITeamsViewModel
     {
-        private readonly Tournament tournament;
-        public TeamsViewModel(Tournament tournament)
+        private readonly Turnier turnier;
+        private readonly TeamBewerb teamBewerb;
+        public TeamsViewModel(Turnier turnier)
         {
-            this.tournament = tournament;
+            this.turnier = turnier;
+            teamBewerb = turnier.Wettbewerb as TeamBewerb;
         }
 
         public ObservableCollection<Team> Teams
         {
             get
             {
-                return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
+                return new ObservableCollection<Team>(teamBewerb.Teams.Where(t => !t.IsVirtual));
             }
         }
-       
+
         public ObservableCollection<Player> Players
         {
             get
@@ -74,7 +76,7 @@ namespace StockApp.ViewModels
                 return _removeTeamCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        tournament.RemoveTeam(SelectedTeam);
+                        teamBewerb.RemoveTeam(SelectedTeam);
                         RaisePropertyChanged(nameof(Teams));
                     },
                 (o) =>
@@ -93,7 +95,7 @@ namespace StockApp.ViewModels
                 return _addTeamCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        tournament.AddTeam(new Team($"default {tournament.Teams.Count + 1}"), true);
+                        teamBewerb.AddTeam(new Team($"default {teamBewerb.Teams.Count + 1}"), true);
                         RaisePropertyChanged(nameof(Teams));
                     },
                     (p) =>
@@ -111,7 +113,7 @@ namespace StockApp.ViewModels
                 return printQuittungenCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var x = new Output.Receipts.Receipt(tournament);
+                        var x = new Output.Receipts.Receipt(turnier);
                         PrintPreview printPreview = new PrintPreview();
                         var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
                         printPreview.Document = x.CreateReceipts(A4Size);
@@ -157,10 +159,10 @@ namespace StockApp.ViewModels
         }
     }
 
-    public class TeamsDesignviewModel : ITeamsViewModel
+    public class TeamsDesignViewModel : ITeamsViewModel
     {
-        private readonly Tournament t = TournamentExtension.CreateNewTournament(true);
-        public TeamsDesignviewModel()
+        private readonly TeamBewerb t = TeamBewerbExtension.CreateNewTournament(true);
+        public TeamsDesignViewModel()
         {
             SelectedTeam = t.Teams[3];
             Teams = new ObservableCollection<Team>(t.Teams);

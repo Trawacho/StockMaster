@@ -9,19 +9,19 @@ using System.Windows.Input;
 
 namespace StockApp.ViewModels
 {
-    public class LiveResultViewModel : BaseViewModel, IDialogRequestClose, ILiveResultViewModel
+    public class LiveResultViewModel : BaseViewModel, IDialogRequestClose, ILiveResultViewModel, IDisposable
     {
         public event EventHandler<WindowCloseRequestedEventArgs> WindowCloseRequested;
         public event EventHandler<DialogCloseRequestedEventArgs> DialogCloseRequested;
 
-        readonly Tournament tournament;
+        readonly TeamBewerb bewerb;
         readonly NetworkService networkService;
 
-        public LiveResultViewModel(Tournament tournament, NetworkService networkService)
+        public LiveResultViewModel(TeamBewerb bewerb)
         {
-            this.tournament = tournament;
-            this.networkService = networkService;
-            tournament.PropertyChanged += Tournament_PropertyChanged;
+            this.bewerb = bewerb;
+            this.networkService = NetworkService.Instance;
+            this.bewerb.PropertyChanged += Tournament_PropertyChanged;
             networkService.StartStopStateChanged += NetworkService_StartStopStateChanged;
         }
 
@@ -33,6 +33,11 @@ namespace StockApp.ViewModels
         private void Tournament_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(Ergebnisliste));
+        }
+
+        public void Dispose()
+        {
+            this.networkService.StartStopStateChanged -= NetworkService_StartStopStateChanged;
         }
 
         private bool isLive;
@@ -101,7 +106,11 @@ namespace StockApp.ViewModels
             }
             set
             {
-                this.networkService.SwitchStartStopState();
+                if (this.networkService.IsRunning())
+                    this.networkService.Stop();
+                else
+                    this.networkService.Start(this.bewerb);
+
                 RaisePropertyChanged();
             }
         }
@@ -142,7 +151,7 @@ namespace StockApp.ViewModels
             {
                 var liste = new ObservableCollection<(int _platzierung, Team _team, bool _isLive)>();
                 int i = 1;
-                foreach (var t in tournament.GetTeamsRanked(IsLive))
+                foreach (var t in bewerb.GetTeamsRanked(IsLive))
                 {
                     liste.Add((i, t, this.IsLive));
                     i++;
@@ -183,3 +192,4 @@ namespace StockApp.ViewModels
 
 
 }
+

@@ -1,4 +1,5 @@
 ﻿using StockApp.BaseClasses;
+using StockApp.BaseClasses.Zielschiessen;
 using StockApp.Commands;
 using StockApp.Dialogs;
 using System;
@@ -8,16 +9,16 @@ using System.Windows.Input;
 
 namespace StockApp.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel, IDisposable
     {
 
         #region Fields
 
         private readonly IDialogService dialogService;
 
-        private readonly NetworkService _NetworkService;
-        private Tournament _Tournament;
         private BaseViewModel _viewModel;
+
+        private Turnier _Turnier;
 
         private string tournamentFileName = string.Empty;
 
@@ -54,20 +55,36 @@ namespace StockApp.ViewModels
         {
             get
             {
-                if (_NetworkService == null)
-                    return "Start Listener";
-
-                return _NetworkService.IsRunning()
+                return NetworkService.Instance.IsRunning()
                             ? "Stop Listener"
                             : "Start Listener";
             }
         }
 
+        /// <summary>
+        /// Zeigt die Versionsnummer vom Assembly
+        /// </summary>
         public string VersionNumber
         {
             get
             {
-                return $"Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
+                return $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
+            }
+        }
+
+        public bool IsTeamBewerb
+        {
+            get
+            {
+                return _Turnier.Wettbewerb is TeamBewerb;
+            }
+        }
+
+        public bool IsZielBewerb
+        {
+            get
+            {
+                return _Turnier.Wettbewerb is Zielbewerb;
             }
         }
 
@@ -80,13 +97,28 @@ namespace StockApp.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            this._Tournament = new Tournament();
-            ViewModel = new TournamentViewModel(_Tournament);
-            this._NetworkService = new NetworkService(this._Tournament, () => this._Tournament.RaisePropertyChanged(""));
-            this._NetworkService.StartStopStateChanged += _NetworkService_StartStopStateChanged;
+            this._Turnier = new Turnier
+            {
+                Wettbewerb = new TeamBewerb()
+            };
+
+            ViewModel = new TurnierViewModel(_Turnier);
+
+            NetworkService.Instance.StartStopStateChanged += NetworkService_StartStopStateChanged;
+
+            this._Turnier.PropertyChanged += Turnier_WettbewerbChanged;
         }
 
-        private void _NetworkService_StartStopStateChanged(object sender, EventArgs e)
+        private void Turnier_WettbewerbChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Turnier.Wettbewerb))
+            {
+                RaisePropertyChanged(nameof(this.IsTeamBewerb));
+                RaisePropertyChanged(nameof(this.IsZielBewerb));
+            }
+        }
+
+        private void NetworkService_StartStopStateChanged(object sender, EventArgs e)
         {
             RaisePropertyChanged(nameof(UdpButtonContent));
         }
@@ -114,23 +146,31 @@ namespace StockApp.ViewModels
                     {
                         dialogService.SetOwner(App.Current.MainWindow);
                         dialogService.Show(
-                              new LiveResultViewModel(_Tournament, _NetworkService));
+                              new LiveResultViewModel(_Turnier.Wettbewerb as TeamBewerb));
                     },
-                    (p) => true
+                    (p) =>
+                    {
+                        return IsTeamBewerb;
+                    }
                     );
             }
         }
 
-        private ICommand _StartStopUdpReceiverCommand;
+        private ICommand _startStopUdpReceiverCommand;
         public ICommand StartStopUdpReceiverCommand
         {
             get
             {
-                return _StartStopUdpReceiverCommand ??=
+                return _startStopUdpReceiverCommand ??=
                     new RelayCommand(
                             (p) =>
                             {
-                                _NetworkService.SwitchStartStopState();
+
+                                if (NetworkService.Instance.IsRunning())
+                                    NetworkService.Instance.Stop();
+                                else
+                                    NetworkService.Instance.Start(this._Turnier.Wettbewerb);
+
                                 RaisePropertyChanged(nameof(UdpButtonContent));
                             },
                             (o) => { return true; }
@@ -146,7 +186,7 @@ namespace StockApp.ViewModels
                 return _showTournamentViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        ViewModel = new TournamentViewModel(_Tournament);
+                        ViewModel = new TurnierViewModel(_Turnier);
                     },
                     (p) => true
                     );
@@ -161,9 +201,12 @@ namespace StockApp.ViewModels
                 return _showTeamsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new TeamsViewModel(_Tournament);
+                        this.ViewModel = new TeamsViewModel(_Turnier);
                     },
-                    (p) => true
+                    (p) =>
+                    {
+                        return IsTeamBewerb;
+                    }
                     ); ;
             }
         }
@@ -176,11 +219,11 @@ namespace StockApp.ViewModels
                 return _showGamesViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new GamesViewModel(_Tournament);
+                        this.ViewModel = new GamesViewModel(_Turnier.Wettbewerb as TeamBewerb);
                     },
                     (p) =>
                     {
-                        return _Tournament.Teams.Count > 0;
+                        return (_Turnier.Wettbewerb as TeamBewerb)?.Teams.Count > 0;
                     });
             }
         }
@@ -193,11 +236,11 @@ namespace StockApp.ViewModels
                 return _showResultsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new ResultsViewModel(_Tournament);
+                        this.ViewModel = new ResultsViewModel(_Turnier);
                     },
                     (p) =>
                     {
-                        return _Tournament.CountOfGames() > 0;
+                        return (_Turnier.Wettbewerb as TeamBewerb)?.CountOfGames() > 0;
                     });
             }
         }
@@ -223,18 +266,18 @@ namespace StockApp.ViewModels
                 return _newTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this._Tournament = new Tournament();
-                        ViewModel = new TournamentViewModel(this._Tournament);
+                        this._Turnier = new Turnier();
+                        ViewModel = new TurnierViewModel(this._Turnier);
                     });
             }
         }
 
-        private ICommand _SaveTournamentCommand;
+        private ICommand _saveTournamentCommand;
         public ICommand SaveTournamentCommand
         {
             get
             {
-                return _SaveTournamentCommand ??= new RelayCommand(
+                return _saveTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
                         Save(tournamentFileName);
@@ -242,12 +285,12 @@ namespace StockApp.ViewModels
             }
         }
 
-        private ICommand _SaveAsTournamentCommand;
+        private ICommand _saveAsTournamentCommand;
         public ICommand SaveAsTournamentCommand
         {
             get
             {
-                return _SaveAsTournamentCommand ??= new RelayCommand(
+                return _saveAsTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
                         Save(null);
@@ -255,19 +298,19 @@ namespace StockApp.ViewModels
             }
         }
 
-        private ICommand _OpenTournamentCommand;
+        private ICommand _openTournamentCommand;
         public ICommand OpenTournamentCommand
         {
             get
             {
-                return _OpenTournamentCommand ??= new RelayCommand(
+                return _openTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
                         try
                         {
                             var ofd = new OpenFileDialog
                             {
-                                Filter = "StockApp Files (*.skmr)|*.skmr",
+                                Filter = "StockMaster Files (*.skmr)|*.skmr",
                                 DefaultExt = "skmr"
                             };
 
@@ -275,17 +318,36 @@ namespace StockApp.ViewModels
                             {
                                 var filePath = ofd.FileName;
 
-                                this._Tournament = TournamentExtension.Load(filePath);
-                                ViewModel = new TournamentViewModel(this._Tournament);
+                                //this._Tournament = TeamBewerbExtension.Load(filePath);
+                                this._Turnier = TeamBewerbExtension.Load(filePath);
+                                ViewModel = new TurnierViewModel(this._Turnier);
                                 this.tournamentFileName = filePath;
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MessageBox.Show("Fehler beim Öffnen:\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
                     });
+            }
+        }
+
+        private ICommand _showZielSpielerViewCommand;
+        public ICommand ShowZielSpielerViewCommand
+        {
+            get
+            {
+                return
+                   _showZielSpielerViewCommand ??= new RelayCommand(
+                       (p) =>
+                       {
+                           this.ViewModel = new ZielSpielerViewModel(_Turnier);
+                       },
+                       (p) =>
+                       {
+                           return (_Turnier.Wettbewerb is Zielbewerb);
+                       });
             }
         }
 
@@ -298,7 +360,7 @@ namespace StockApp.ViewModels
                 var saveFileDlg = new SaveFileDialog
                 {
                     DefaultExt = "skmr",
-                    Filter = "StockApp File (*skmr)|*.skmr"
+                    Filter = "StockMaster File (*skmr)|*.skmr"
                 };
                 var dlgResult = saveFileDlg.ShowDialog();
                 if (dlgResult == DialogResult.OK)
@@ -309,13 +371,23 @@ namespace StockApp.ViewModels
 
             try
             {
-                TournamentExtension.Save(_Tournament, fileName);
+                TeamBewerbExtension.Save(_Turnier, fileName);
                 this.tournamentFileName = fileName;
             }
-            catch( Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Fehler beim Speicher:\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+
+
+        public void Dispose()
+        {
+            
+        }
     }
 }
+

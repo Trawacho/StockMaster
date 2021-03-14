@@ -4,38 +4,12 @@ using System.Collections.ObjectModel;
 
 namespace StockApp.Interfaces
 {
-    internal interface ITournament
+    internal interface ITeamBewerb
     {
-
         /// <summary>
         /// Liste aller Teams
         /// </summary>
-        ReadOnlyCollection<Team> Teams { get;  }
-
-        /// <summary>
-        /// Veranstaltungsort
-        /// </summary>
-        string Venue { get; set; }
-
-        /// <summary>
-        /// Organisator / Veranstalter
-        /// </summary>
-        string Organizer { get; set; }
-
-        /// <summary>
-        /// Datum / Zeit des Turniers
-        /// </summary>
-        DateTime DateOfTournament { get; set; }
-
-        /// <summary>
-        /// Durchführer
-        /// </summary>
-        string Operator { get; set; }
-
-        /// <summary>
-        /// Turniername
-        /// </summary>
-        string TournamentName { get; set; }
+        ReadOnlyCollection<Team> Teams { get; }
 
         /// <summary>
         /// Anzahl der Stockbahnen / Spielfächen
@@ -71,28 +45,10 @@ namespace StockApp.Interfaces
         bool StartingTeamChange { get; set; }
 
         /// <summary>
-        /// EntryFee per Team
-        /// </summary>
-        EntryFee EntryFee { get; set; }
-
-        /// <summary>
         /// Number of Top Teams, where the names of the players are on the printed Result
         /// </summary>
         int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
 
-        /// <summary>
-        /// Referee
-        /// </summary>
-        Referee Referee { get; set; }
-
-        /// <summary>
-        /// CompetitionManager
-        /// </summary>
-        CompetitionManager CompetitionManager { get; set; }
-
-        /// <summary>
-        /// ComputingOfficer
-        /// </summary>
-        ComputingOfficer ComputingOfficer { get; set; }
     }
 }
+

@@ -7,65 +7,69 @@ using System.Xml.Serialization;
 
 namespace StockApp.BaseClasses
 {
-    public class SerializableTournamentSet : ITournament
+    public class SerializableTournamentSet : ITeamBewerb
     {
         public SerializableTournamentSet()
         {
 
         }
 
-        public void SetTournament(Tournament tournament)
+        public void SetTournament(Turnier turnier)
         {
+            var tournament = turnier.Wettbewerb as TeamBewerb;
+
             this.XTeams = tournament.Teams.ToList();
             this.Games = tournament.GetAllGames()
                                  .OrderBy(r => r.RoundOfGame)
                                  .ThenBy(g => g.GameNumber)
                                  .ThenBy(c => c.CourtNumber)
                                  .ToList();
-            this.TournamentName = tournament.TournamentName;
-            this.Venue = tournament.Venue;
-            this.Operator = tournament.Operator;
-            this.Organizer = tournament.Organizer;
-            this.DateOfTournament = tournament.DateOfTournament;
-            this.EntryFee = tournament.EntryFee;
+            this.TournamentName = turnier.OrgaDaten.TournamentName;
+            this.Venue = turnier.OrgaDaten.Venue;
+            this.Operator = turnier.OrgaDaten.Operator;
+            this.Organizer = turnier.OrgaDaten.Organizer;
+            this.DateOfTournament = turnier.OrgaDaten.DateOfTournament;
+            this.EntryFee = turnier.OrgaDaten.EntryFee;
             this.StartingTeamChange = tournament.StartingTeamChange;
             this.Is8TurnsGame = tournament.Is8TurnsGame;
             this.IsDirectionOfCourtsFromRightToLeft = tournament.IsDirectionOfCourtsFromRightToLeft;
             this.TwoPauseGames = tournament.TwoPauseGames;
             this.NumberOfGameRounds = tournament.NumberOfGameRounds;
             this.NumberOfTeamsWithNamedPlayerOnResult = tournament.NumberOfTeamsWithNamedPlayerOnResult;
-            this.ComputingOfficer = tournament.ComputingOfficer;
-            this.Referee = tournament.Referee;
-            this.CompetitionManager = tournament.CompetitionManager;
+            this.ComputingOfficer = turnier.OrgaDaten.ComputingOfficer;
+            this.Referee = turnier.OrgaDaten.Referee;
+            this.CompetitionManager = turnier.OrgaDaten.CompetitionManager;
         }
 
 
-        public Tournament GetTournament()
+        public Turnier GetTournament()
         {
-            Tournament tournament = new Tournament
+            Turnier turnier = new Turnier();
+            turnier.OrgaDaten.Venue = this.Venue;
+            turnier.OrgaDaten.Operator = this.Operator;
+            turnier.OrgaDaten.Organizer = this.Organizer;
+            turnier.OrgaDaten.DateOfTournament = this.DateOfTournament;
+            turnier.OrgaDaten.EntryFee = this.EntryFee;
+            turnier.OrgaDaten.ComputingOfficer = this.ComputingOfficer;
+            turnier.OrgaDaten.Referee = this.Referee;
+            turnier.OrgaDaten.TournamentName = this.TournamentName;
+            turnier.OrgaDaten.CompetitionManager = this.CompetitionManager;
+
+            TeamBewerb teambewerb = new TeamBewerb
             {
-                Venue = this.Venue,
-                Operator = this.Operator,
-                Organizer = this.Organizer,
-                DateOfTournament = this.DateOfTournament,
-                EntryFee = this.EntryFee,
                 Is8TurnsGame = this.Is8TurnsGame,
                 IsDirectionOfCourtsFromRightToLeft = this.IsDirectionOfCourtsFromRightToLeft,
                 TwoPauseGames = this.TwoPauseGames,
                 NumberOfGameRounds = this.NumberOfGameRounds,
                 NumberOfTeamsWithNamedPlayerOnResult = this.NumberOfTeamsWithNamedPlayerOnResult,
-                ComputingOfficer = this.ComputingOfficer,
-                Referee = this.Referee,
                 StartingTeamChange = this.StartingTeamChange,
-                TournamentName = this.TournamentName,
-                CompetitionManager = this.CompetitionManager
             };
 
-            tournament.RemoveAllTeams();
+            teambewerb.RemoveAllTeams();
 
             foreach (var team in XTeams)
             {
-                tournament.AddTeam(team);
+                teambewerb.AddTeam(team);
             }
 
             foreach (var game in Games)
@@ -73,15 +77,16 @@ namespace StockApp.BaseClasses
                 game.TeamA = XTeams.First(t => t.StartNumber == game.StartNumberTeamA);
                 game.TeamB = XTeams.First(t => t.StartNumber == game.StartNumberTeamB);
 
-                tournament.Teams.First(t => t == game.TeamA).AddGame(game);
-                tournament.Teams.First(t => t == game.TeamB).AddGame(game);
+                teambewerb.Teams.First(t => t == game.TeamA).AddGame(game);
+                teambewerb.Teams.First(t => t == game.TeamB).AddGame(game);
             }
 
-            return tournament;
+            turnier.Wettbewerb = teambewerb;
+            return turnier;
         }
 
         [XmlIgnore()]
-        [Obsolete ("not available in serialization", true)]
+        [Obsolete("not available in serialization", true)]
         public ReadOnlyCollection<Team> Teams
         {
             get
@@ -91,7 +96,7 @@ namespace StockApp.BaseClasses
         }
 
         [XmlIgnore()]
-        [Obsolete ("not available in serialization", true)]
+        [Obsolete("not available in serialization", true)]
         public int NumberOfCourts
         {
             get
@@ -117,7 +122,7 @@ namespace StockApp.BaseClasses
         public DateTime DateOfTournament { get; set; }
 
         [XmlElement(Order = 7)]
-        public EntryFee EntryFee { get; set; }
+        public Startgebuehr EntryFee { get; set; }
 
         [XmlElement(Order = 8)]
         public bool StartingTeamChange { get; set; }
@@ -138,13 +143,13 @@ namespace StockApp.BaseClasses
         public int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
 
         [XmlElement(Order = 14)]
-        public ComputingOfficer ComputingOfficer { get; set; }
+        public Rechenbuero ComputingOfficer { get; set; }
 
         [XmlElement(Order = 15)]
-        public Referee Referee { get; set; }
+        public Schiedsrichter Referee { get; set; }
 
         [XmlElement(Order = 16)]
-        public CompetitionManager CompetitionManager { get; set; }
+        public Wettbewerbsleiter CompetitionManager { get; set; }
 
 
         [XmlArray(ElementName = "Teams", Order = 90)]

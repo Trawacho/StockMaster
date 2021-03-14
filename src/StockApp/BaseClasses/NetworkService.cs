@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockApp.BaseClasses.Zielschiessen;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -7,51 +8,63 @@ using System.Net.Sockets;
 
 namespace StockApp.BaseClasses
 {
-    public class NetworkService
+    public sealed class NetworkService
     {
+
+        private static readonly Lazy<NetworkService> lazy =
+        new Lazy<NetworkService>(() => new NetworkService());
+
+        public static NetworkService Instance { get { return lazy.Value; } }
+
         private UdpClient udpClient;
         private UdpState state;
-        private readonly Tournament tournament;
-        private readonly Action _CallBackAfterUpdateAction;
+        private TBaseBewerb bewerb;
+        private Action _CallBackAfterUpdateAction;
 
         public event EventHandler StartStopStateChanged;
-        protected virtual void OnStartStopStateChanged(NetworkServiceEventArgs e)
+        void OnStartStopStateChanged(NetworkServiceEventArgs e)
         {
             StartStopStateChanged?.Invoke(this, e);
         }
 
-
-        private class UdpState
+        private NetworkService()
         {
-            public UdpClient udpClient;
-            public IPEndPoint ipEndPoint;
-            public IAsyncResult result;
+
         }
 
-
-        public NetworkService(Tournament tournament, Action callBackAfterUpdateAction)
+        public void Start(TBaseBewerb bewerb, Action callBackAfterUpdateAction)
         {
-            this.tournament = tournament;
             this._CallBackAfterUpdateAction = callBackAfterUpdateAction;
+            this.Start(bewerb);
         }
 
-        public void Start()
-        {
-            if (udpClient == null)
-            {
-                udpClient = new UdpClient(Settings.Instanze.BroadcastPort);
-                udpClient.Client.ReceiveTimeout = 500;
-                udpClient.EnableBroadcast = true;
-                udpClient.Client.Blocking = false;
 
-            }
-            if (state == null)
+        public void Start(TBaseBewerb bewerb)
+        {
+            this.bewerb = bewerb;
+
+            try
             {
-                state = new UdpState()
+                if (udpClient == null)
                 {
-                    udpClient = udpClient,
-                    ipEndPoint = new IPEndPoint(IPAddress.Any, Settings.Instanze.BroadcastPort),
-                };
+                    udpClient = new UdpClient(Settings.Instanze.BroadcastPort);
+                    udpClient.Client.ReceiveTimeout = 500;
+                    udpClient.EnableBroadcast = true;
+                    udpClient.Client.Blocking = false;
+
+                }
+                if (state == null)
+                {
+                    state = new UdpState()
+                    {
+                        udpClient = udpClient,
+                        ipEndPoint = new IPEndPoint(IPAddress.Any, Settings.Instanze.BroadcastPort),
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             ReceiveBroadcast();
@@ -60,6 +73,7 @@ namespace StockApp.BaseClasses
 
         public void Stop()
         {
+            udpClient.Close();
             udpClient.Dispose();
             udpClient = null;
             state.udpClient = null;
@@ -71,14 +85,6 @@ namespace StockApp.BaseClasses
         public bool IsRunning()
         {
             return (udpClient != null);
-        }
-
-        public void SwitchStartStopState()
-        {
-            if (IsRunning())
-                Stop();
-            else
-                Start();
         }
 
         private void ReceiveBroadcast()
@@ -97,21 +103,24 @@ namespace StockApp.BaseClasses
                 byte[] receiveBytes = u?.EndReceive(ar, ref e);
                 if (receiveBytes?.Length > 1)
                 {
-                    DeSerialize(DeCompress(receiveBytes));
+                    if (bewerb is TeamBewerb)
+                        DeSerializeTeamBewerb(DeCompress(receiveBytes));
+                    else if (bewerb is Zielbewerb)
+                        DeSerializeZielBewerb(DeCompress(receiveBytes));
                 }
                 else
                 {
                     if (receiveBytes?[0] == byte.MaxValue)
                     {
-                        tournament.ResetAllGames();
+                        (bewerb as TeamBewerb).ResetAllGames();
                     }
                 }
 
                 r = u?.BeginReceive(new AsyncCallback(ReceiveCallback), state);
             }
-            catch (ObjectDisposedException e)
+            catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine($"ReceiveCallback: {e.Message}");
             }
         }
 
@@ -130,7 +139,55 @@ namespace StockApp.BaseClasses
             return output.ToArray();
         }
 
-        void DeSerialize(byte[] data)
+        void DeSerializeZielBewerb(byte[] data)
+        {
+            /*
+             * 03 04 08 00 06 10 02 05 10 02 00 10 
+             * 
+             * Aufbau: 
+             * Im ersten Byte steht die Bahnnummer ( 03 )
+             * In jedem weiteren Byte kommen die laufenden Versuche (max 24) 
+             * Somit ist ein Datagramm max 25 Bytes lang
+             * 
+             */
+            if (data == null)
+                return;
+
+            try
+            {
+
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine($"{data.Length} -- Bahnnummer:{data[0]} -- {string.Join("-", data)}");
+#endif
+
+                if ((bewerb as Zielbewerb).Teilnehmerliste.FirstOrDefault(t => t.AktuelleBahn == data[0]) is Teilnehmer spieler)
+                {
+                    if (spieler.Onlinewertung.VersucheAllEntered() && data.Length == 1)
+                    {
+                        spieler.DeleteAktuellBahn();
+                    }
+                    else
+                    {
+                        spieler.Onlinewertung.Reset();
+
+                        for (int i = 1; i < data.Length; i++)
+                        {
+                            spieler?.SetVersuch(i, data[i]);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DeSerializeZielBewerb: {ex.Message}");
+            }
+            finally
+            {
+                _CallBackAfterUpdateAction?.Invoke();
+            }
+
+        }
+        void DeSerializeTeamBewerb(byte[] data)
         {
             /* 
              * 03 15 09 21 07 09 15
@@ -145,6 +202,10 @@ namespace StockApp.BaseClasses
             if (data == null)
                 return;
 
+            //Es muss immer eine ungerade Anzahl an Daten vorhanden sein
+            if (data.Length % 2 == 0)
+                return;
+
             try
             {
 
@@ -153,7 +214,7 @@ namespace StockApp.BaseClasses
 #endif
 
                 byte bahnNumber = data[0];
-                var courtGames = tournament.GetGamesOfCourt(bahnNumber);
+                var courtGames = (bewerb as TeamBewerb).GetGamesOfCourt(bahnNumber);
 
                 //Das erste Byte aus dem Array wird nicht mehr benötigt. Daten in ein neues Array kopieren
                 byte[] newData = new byte[data.Length - 1];
@@ -177,7 +238,7 @@ namespace StockApp.BaseClasses
 
                     game.NetworkTurn.Reset();
 
-                    if (tournament.IsDirectionOfCourtsFromRightToLeft)
+                    if ((bewerb as TeamBewerb).IsDirectionOfCourtsFromRightToLeft)
                     {
                         if (game.TeamA.SpieleAufStartSeite.Contains(game.GameNumberOverAll))
                         {
@@ -214,13 +275,21 @@ namespace StockApp.BaseClasses
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine($"DeSerializeTeamBewerb: {ex.Message}");
             }
             finally
             {
-                _CallBackAfterUpdateAction();
+                _CallBackAfterUpdateAction?.Invoke();
             }
         }
 
+
+
+        private class UdpState
+        {
+            public UdpClient udpClient;
+            public IPEndPoint ipEndPoint;
+            public IAsyncResult result;
+        }
     }
 }

@@ -14,13 +14,13 @@ namespace StockApp.ViewModels
     {
         #region Fields
 
-        private readonly Tournament tournament;
+        private readonly TeamBewerb tournament;
 
         #endregion
 
         #region Constructor
 
-        public GamesViewModel(Tournament tournament)
+        public GamesViewModel(TeamBewerb tournament)
         {
             this.tournament = tournament;
             ConcatRoundsOnOutput = false;
@@ -85,9 +85,7 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return tournament.NumberOfGameRounds > 1
-                        ? tournament.StartingTeamChange
-                        : false;
+                return tournament.NumberOfGameRounds > 1 && tournament.StartingTeamChange;
             }
             set
             {
@@ -142,9 +140,7 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return NumberOfGameRounds > 1
-                        ? concatRoundsOnOutput
-                        : false;
+                return NumberOfGameRounds > 1 && concatRoundsOnOutput;
             }
             set
             {
@@ -195,13 +191,13 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return _createGamesCommand ?? (_createGamesCommand = new RelayCommand(
+                return _createGamesCommand ??= new RelayCommand(
                     (p) =>
                     {
                         tournament.ReCreateGames();
                         RaisePropertyChanged(nameof(Teams));
                     }
-                    ));
+                    );
 
             }
         }
@@ -260,7 +256,7 @@ namespace StockApp.ViewModels
 
     public class GamesDesignViewModel : IGamesViewModel
     {
-        private readonly Tournament t = new Tournament();
+        private readonly TeamBewerb t = new TeamBewerb();
 
         public GamesDesignViewModel()
         {

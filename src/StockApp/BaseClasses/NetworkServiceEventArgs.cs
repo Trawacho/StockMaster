@@ -8,7 +8,7 @@ namespace StockApp.BaseClasses
 {
     public class NetworkServiceEventArgs : EventArgs
     {
-        bool IsNetworkServiceOnline { get; set; }
+        public bool IsNetworkServiceOnline { get; set; }
         public NetworkServiceEventArgs(bool state)
         {
             this.IsNetworkServiceOnline = state;

@@ -12,18 +12,20 @@ namespace StockApp.ViewModels
 {
     public class ResultsViewModel : BaseViewModel, IResultsViewModel
     {
-        private readonly Tournament tournament;
+        private readonly TeamBewerb teamBewerb;
+        private readonly Turnier turnier;
 
-        public ResultsViewModel(Tournament tournament)
+        public ResultsViewModel(Turnier turnier)
         {
-            this.tournament = tournament;
+            this.teamBewerb = turnier.Wettbewerb as TeamBewerb;
+            this.turnier = turnier;
         }
 
         public ObservableCollection<Team> Teams
         {
             get
             {
-                return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
+                return new ObservableCollection<Team>(teamBewerb.Teams.Where(t => !t.IsVirtual));
             }
         }
 
@@ -31,7 +33,7 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return new ObservableCollection<Game>(tournament.GetAllGames()
+                return new ObservableCollection<Game>(teamBewerb.GetAllGames()
                                                                 .Where(g => g.IsNotPauseGame)
                                                                 .OrderBy(o => o.GameNumberOverAll)
                                                                 .GroupBy(x => x.GameNumberOverAll)
@@ -80,7 +82,7 @@ namespace StockApp.ViewModels
         {
 
             this.PointsPerGameList = new List<PointsPerGame>();
-            foreach (var game in tournament.GetAllGames()
+            foreach (var game in teamBewerb.GetAllGames()
                                         .Where(g => g.RoundOfGame == SelectedGame.RoundOfGame
                                                  && g.GameNumber == SelectedGame.GameNumber
                                                  && g.IsNotPauseGame)
@@ -111,13 +113,13 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return tournament.NumberOfTeamsWithNamedPlayerOnResult;
+                return teamBewerb.NumberOfTeamsWithNamedPlayerOnResult;
             }
             set
             {
-                if (tournament.NumberOfTeamsWithNamedPlayerOnResult == value) return;
+                if (teamBewerb.NumberOfTeamsWithNamedPlayerOnResult == value) return;
 
-                tournament.NumberOfTeamsWithNamedPlayerOnResult = value;
+                teamBewerb.NumberOfTeamsWithNamedPlayerOnResult = value;
                 RaisePropertyChanged();
             }
         }
@@ -130,7 +132,7 @@ namespace StockApp.ViewModels
                 return _printErgebnislisteCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        var x = new Output.Results.Result(tournament);
+                        var x = new Output.Results.Result(turnier);
                         var printPreview = new PrintPreview();
                         var A4Size = new System.Windows.Size(8 * 96, 11.5 * 96);
                         printPreview.Document = x.CreateResult(A4Size);
@@ -144,11 +146,11 @@ namespace StockApp.ViewModels
 
     public class ResultsDesignViewModel : IResultsViewModel
     {
-        private readonly Tournament tournament;
+        private readonly TeamBewerb tournament;
 
         public ResultsDesignViewModel()
         {
-            this.tournament = new Tournament();
+            this.tournament = new TeamBewerb();
             this.SelectedGame = tournament.GetAllGames().First(g => g.GameNumberOverAll == 1);
         }
 
@@ -181,8 +183,5 @@ namespace StockApp.ViewModels
         public ICommand PrintErgebnislisteCommand { get; }
         public int NumberOfTeamsWithNamedPlayers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     } //ResultsDesignViewModel
-
-    
-
-    
 }
+

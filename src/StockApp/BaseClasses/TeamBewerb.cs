@@ -1,5 +1,4 @@
 ﻿using StockApp.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace StockApp.BaseClasses
 {
-    public class Tournament : TBaseClass, ITournament
+    public class TeamBewerb : TBaseBewerb, ITeamBewerb
     {
         #region Fields
 
         private readonly List<Team> _teams;
-        private bool twoPauseGames;
-        private int numberOfGameRounds;
+        private bool _twoPauseGames;
+        private int _numberOfGameRounds;
 
         #endregion
 
@@ -23,31 +22,6 @@ namespace StockApp.BaseClasses
         /// Liste aller Teams
         /// </summary>
         public ReadOnlyCollection<Team> Teams { get; }
-
-        /// <summary>
-        /// Veranstaltungsort
-        /// </summary>
-        public string Venue { get; set; }
-
-        /// <summary>
-        /// Organisator / Veranstalter
-        /// </summary>
-        public string Organizer { get; set; }
-
-        /// <summary>
-        /// Datum / Zeit des Turniers
-        /// </summary>
-        public DateTime DateOfTournament { get; set; }
-
-        /// <summary>
-        /// Durchführer
-        /// </summary>
-        public string Operator { get; set; }
-
-        /// <summary>
-        /// Turniername
-        /// </summary>
-        public string TournamentName { get; set; }
 
         /// <summary>
         /// Anzahl der Stockbahnen / Spielfächen
@@ -67,14 +41,14 @@ namespace StockApp.BaseClasses
         {
             get
             {
-                return numberOfGameRounds;
+                return _numberOfGameRounds;
             }
             set
             {
-                if (numberOfGameRounds == value) return;
+                if (_numberOfGameRounds == value) return;
                 if (value < 1 || value > 3) return;
 
-                numberOfGameRounds = value;
+                _numberOfGameRounds = value;
                 RaisePropertyChanged();
             }
         }
@@ -91,14 +65,14 @@ namespace StockApp.BaseClasses
         {
             get
             {
-                return Teams.Count(t => !t.IsVirtual) % 2 == 0 
-                                        ? twoPauseGames 
+                return Teams.Count(t => !t.IsVirtual) % 2 == 0
+                                        ? _twoPauseGames
                                         : false;
             }
             set
             {
-                if (value == twoPauseGames) return;
-                twoPauseGames = value;
+                if (value == _twoPauseGames) return;
+                _twoPauseGames = value;
                 RaisePropertyChanged();
             }
         }
@@ -114,42 +88,29 @@ namespace StockApp.BaseClasses
         public bool StartingTeamChange { get; set; }
 
         /// <summary>
-        /// Startgebühr pro Mannschaft
-        /// </summary>
-        public EntryFee EntryFee { get; set; }
-
-        /// <summary>
         /// Bei wieviel Mannschaften werden die Spielernamen auf der Ergebnisliste mit angedruckt
         /// </summary>
         public int NumberOfTeamsWithNamedPlayerOnResult { get; set; }
-
-        public Referee Referee { get; set; }
-        public CompetitionManager CompetitionManager { get; set; }
-        public ComputingOfficer ComputingOfficer { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public Tournament()
+        public TeamBewerb()
         {
             this.IsDirectionOfCourtsFromRightToLeft = true;
             this.NumberOfGameRounds = 1;
             this.TwoPauseGames = false;
             this.Is8TurnsGame = false;
-            this.EntryFee = new EntryFee();
-            StartingTeamChange = false;
-            DateOfTournament = DateTime.Now;
+
+            this.StartingTeamChange = false;
 
             this._teams = new List<Team>();
             this.Teams = _teams.AsReadOnly();
 
             this.NumberOfTeamsWithNamedPlayerOnResult = 3;
-            this.Referee = new Referee();
-            this.CompetitionManager = new CompetitionManager();
-            this.ComputingOfficer = new ComputingOfficer();
-        }
 
+        }
 
         #endregion
 
@@ -164,11 +125,20 @@ namespace StockApp.BaseClasses
             return Teams.SelectMany(g => g.Games).Distinct();
         }
 
+        /// <summary>
+        /// Anzahl aller Spiele aller Mannschaften
+        /// </summary>
+        /// <returns></returns>
         internal int CountOfGames()
         {
             return GetAllGames().ToList().Count();
         }
 
+        /// <summary>
+        /// Alle Spiele auf der Bahn x
+        /// </summary>
+        /// <param name="courtNumber"></param>
+        /// <returns></returns>
         public IEnumerable<Game> GetGamesOfCourt(int courtNumber)
         {
             return Teams.SelectMany(g => g.Games)
@@ -178,19 +148,24 @@ namespace StockApp.BaseClasses
                 .ThenBy(s => s.GameNumber);
         }
 
+        /// <summary>
+        /// Platzierungs Liste der Mannschaften 
+        /// </summary>
+        /// <param name="live"></param>
+        /// <returns></returns>
         public IEnumerable<Team> GetTeamsRanked(bool live = false)
         {
-                return live 
-                            ? Teams
-                                .Where(v => !v.IsVirtual)
-                                .OrderByDescending(t => t.SpielPunkte_LIVE.positiv)
-                                .ThenByDescending(p => p.StockNote_LIVE)
-                                .ThenByDescending(d => d.StockPunkteDifferenz_LIVE)
-                            : Teams
-                                .Where(v => !v.IsVirtual)
-                                .OrderByDescending(t => t.SpielPunkte.positiv)
-                                .ThenByDescending(p => p.StockNote)
-                                .ThenByDescending(d => d.StockPunkteDifferenz);
+            return live
+                        ? Teams
+                            .Where(v => !v.IsVirtual)
+                            .OrderByDescending(t => t.SpielPunkte_LIVE.positiv)
+                            .ThenByDescending(p => p.StockNote_LIVE)
+                            .ThenByDescending(d => d.StockPunkteDifferenz_LIVE)
+                        : Teams
+                            .Where(v => !v.IsVirtual)
+                            .OrderByDescending(t => t.SpielPunkte.positiv)
+                            .ThenByDescending(p => p.StockNote)
+                            .ThenByDescending(d => d.StockPunkteDifferenz);
         }
 
         /// <summary>
@@ -309,6 +284,9 @@ namespace StockApp.BaseClasses
             RemoveAllVirtualTeams();
         }
 
+        /// <summary>
+        /// Funktion zur Erzeugung des Spielplans
+        /// </summary>
         internal void CreateGames()
         {
             /*
@@ -378,12 +356,12 @@ namespace StockApp.BaseClasses
 
                     game.IsTeamA_Starting = !(i % 2 == 0);
 
-                    if(spielRunde == 2 && StartingTeamChange)
+                    if (spielRunde == 2 && StartingTeamChange)
                     {
                         game.IsTeamA_Starting = !game.IsTeamA_Starting;
                     }
 
-                       
+
 
                     #endregion
 
@@ -461,7 +439,7 @@ namespace StockApp.BaseClasses
                         #region Anspiel berechnen  
 
                         game.IsTeamA_Starting = !(k % 2 == 0);
-                        
+
                         if (spielRunde == 2 && StartingTeamChange)
                         {
                             game.IsTeamA_Starting = !game.IsTeamA_Starting;

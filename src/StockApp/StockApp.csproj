@@ -80,15 +80,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BaseClasses\EntryFee.cs" />
+    <Compile Include="BaseClasses\EnumUtil.cs" />
     <Compile Include="BaseClasses\Executive.cs" />
     <Compile Include="BaseClasses\NetworkServiceEventArgs.cs" />
+    <Compile Include="BaseClasses\OrgaDaten.cs" />
+    <Compile Include="BaseClasses\Startgebuehr.cs" />
+    <Compile Include="BaseClasses\TBaseBewerb.cs" />
     <Compile Include="BaseClasses\TExecutiveClass.cs" />
+    <Compile Include="BaseClasses\Turnier.cs" />
+    <Compile Include="BaseClasses\Wettbewerbsart.cs" />
+    <Compile Include="BaseClasses\Zielschiessen\Disziplin.cs" />
+    <Compile Include="BaseClasses\Zielschiessen\Teilnehmer.cs" />
+    <Compile Include="BaseClasses\Zielschiessen\Wertung.cs" />
+    <Compile Include="BaseClasses\Zielschiessen\Zielbewerb.cs" />
+    <Compile Include="BaseClasses\Zielschiessen\ZielBewerbExtension.cs" />
+    <Compile Include="Converters\NumberGE0ToTextConverter.cs" />
     <Compile Include="Interfaces\IGamesViewModel.cs" />
     <Compile Include="Interfaces\ILiveResultViewModel.cs" />
     <Compile Include="Interfaces\IResultsViewModel.cs" />
     <Compile Include="Interfaces\ITeamsViewModel.cs" />
-    <Compile Include="Interfaces\ITournament.cs" />
+    <Compile Include="Interfaces\ITeamBewerb.cs" />
     <Compile Include="BaseClasses\PointsPerTeamAndGame.cs" />
     <Compile Include="BaseClasses\PointsPerGame.cs" />
     <Compile Include="BaseClasses\SerializableTournamentSet.cs" />
@@ -98,7 +109,7 @@
     <Compile Include="BaseClasses\Player.cs" />
     <Compile Include="BaseClasses\Settings.cs" />
     <Compile Include="BaseClasses\Team.cs" />
-    <Compile Include="BaseClasses\TournamentExtension.cs" />
+    <Compile Include="BaseClasses\TeamBewerbExtension.cs" />
     <Compile Include="Behaviours\SelectAllFocusBehavior.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\GamesSortingConverter.cs" />
@@ -112,7 +123,8 @@
     <Compile Include="Dialogs\IDialogRequestClose.cs" />
     <Compile Include="Dialogs\IDialogService.cs" />
     <Compile Include="Interfaces\IExecutive.cs" />
-    <Compile Include="Interfaces\ITournamentViewModel.cs" />
+    <Compile Include="Interfaces\ITurnierViewModel.cs" />
+    <Compile Include="Interfaces\IZielSpielerViewModel.cs" />
     <Compile Include="Output\Bahnblock\BahnBlock.cs" />
     <Compile Include="Output\Bahnblock\ucBahnBlock8.xaml.cs">
       <DependentUpon>ucBahnBlock8.xaml</DependentUpon>
@@ -142,12 +154,15 @@
     <Compile Include="Output\WertungskarteStockTV\SpiegelHeaderGrid.cs" />
     <Compile Include="Output\WertungskarteStockTV\WertungskarteStockTV.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
+    <Compile Include="ValidationRules\ZielbewerbValueValidationRule.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ResultsViewModel.cs" />
     <Compile Include="ViewModels\TeamsViewModel.cs" />
+    <Compile Include="ViewModels\TurnierViewModel.cs" />
+    <Compile Include="ViewModels\ZielSpielerViewModel.cs" />
     <Compile Include="Views\GamesView.xaml.cs">
       <DependentUpon>GamesView.xaml</DependentUpon>
     </Compile>
@@ -160,8 +175,11 @@
     <Compile Include="Views\TemsView.xaml.cs">
       <DependentUpon>TemsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TournamentView.xaml.cs">
-      <DependentUpon>TournamentView.xaml</DependentUpon>
+    <Compile Include="Views\TurnierView.xaml.cs">
+      <DependentUpon>TurnierView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ZielSpielerView.xaml.cs">
+      <DependentUpon>ZielSpielerView.xaml</DependentUpon>
     </Compile>
     <Page Include="Output\Bahnblock\ucBahnBlock8.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -195,7 +213,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaseClasses\Tournament.cs" />
+    <Compile Include="BaseClasses\TeamBewerb.cs" />
     <Compile Include="BaseClasses\Turn.cs" />
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
@@ -220,13 +238,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TournamentView.xaml">
+    <Page Include="Views\TurnierView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ZielSpielerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModels\TournamentViewModel.cs" />
     <Compile Include="Output\WertungsKarteBase\SpiegelFeld.cs" />
     <Compile Include="Output\Wertungskarte\GameGrid.cs" />
     <Compile Include="Output\Wertungskarte\GameSummaryGrid.cs" />
@@ -254,7 +275,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
