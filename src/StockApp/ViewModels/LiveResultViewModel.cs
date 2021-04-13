@@ -46,19 +46,11 @@ namespace StockApp.ViewModels
         /// </summary>
         public bool IsLive
         {
-            get
-            {
-                return isLive;
-            }
+            get => isLive;
             set
             {
-                if (isLive == value)
-                {
-                    return;
-                }
-                isLive = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(nameof(Ergebnisliste));
+                if (SetProperty(ref isLive, value))
+                    RaisePropertyChanged(nameof(Ergebnisliste));
             }
         }
 
@@ -68,14 +60,8 @@ namespace StockApp.ViewModels
         /// </summary>
         public bool ShowStockPunkte
         {
-            get { return showStockPunkte; }
-            set
-            {
-                if (showStockPunkte == value) return;
-
-                showStockPunkte = value;
-                RaisePropertyChanged();
-            }
+            get => showStockPunkte;
+            set => SetProperty(ref showStockPunkte, value);
         }
 
         private bool showDifferenz;
@@ -84,15 +70,8 @@ namespace StockApp.ViewModels
         /// </summary>
         public bool ShowDifferenz
         {
-            get { return showDifferenz; }
-            set
-            {
-                if (ShowDifferenz == value) return;
-
-                showDifferenz = value;
-                RaisePropertyChanged();
-
-            }
+            get => showDifferenz;
+            set => SetProperty(ref showDifferenz, value);
         }
 
         /// <summary>
@@ -100,10 +79,7 @@ namespace StockApp.ViewModels
         /// </summary>
         public bool IsListenerOnline
         {
-            get
-            {
-                return this.networkService?.IsRunning() ?? false;
-            }
+            get => this.networkService.IsRunning();
             set
             {
                 if (this.networkService.IsRunning())

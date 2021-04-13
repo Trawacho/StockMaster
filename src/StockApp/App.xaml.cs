@@ -11,6 +11,7 @@ namespace StockApp
     /// </summary>
     public partial class App : Application
     {
+        MainViewModel viewModel;
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -18,18 +19,27 @@ namespace StockApp
             IDialogService dialogService = new DialogService(MainWindow);
             dialogService.Register<LiveResultViewModel, LiveResultView>();
 
-            var viewModel = new MainViewModel(dialogService);
+            viewModel = new MainViewModel(dialogService);
             var view = new MainWindow()
             {
                 DataContext = viewModel
             };
             viewModel.ExitApplicationAction = new Action(view.Close);
 
+
             view.ShowDialog();
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            base.OnExit(e);
+            try
+            {
+                viewModel.StopNetMq();
+                NetMQ.NetMQConfig.Cleanup(block: false);
+            }
+            finally
+            {
+                base.OnExit(e);
+            }
             Application.Current.Shutdown(0);
         }
     }

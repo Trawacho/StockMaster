@@ -35,13 +35,7 @@ namespace StockApp.ViewModels
         /// <summary>
         /// Anzahl der Spielbahnen
         /// </summary>
-        public int NumberOfCourts
-        {
-            get
-            {
-                return tournament.NumberOfCourts;
-            }
-        }
+        public int NumberOfCourts => tournament.NumberOfCourts;
 
 
         /// <summary>
@@ -49,10 +43,7 @@ namespace StockApp.ViewModels
         /// </summary>
         public int NumberOfGameRounds
         {
-            get
-            {
-                return tournament.NumberOfGameRounds;
-            }
+            get => tournament.NumberOfGameRounds;
             set
             {
                 if (tournament.NumberOfGameRounds == value) return;
@@ -69,7 +60,7 @@ namespace StockApp.ViewModels
         /// </summary>
         public bool TwoPauseGames
         {
-            get { return tournament.TwoPauseGames; }
+            get => tournament.TwoPauseGames; 
             set
             {
                 if (tournament.TwoPauseGames == value) return;
@@ -83,13 +74,11 @@ namespace StockApp.ViewModels
 
         public bool IsStartOfGameChanged
         {
-            get
-            {
-                return tournament.NumberOfGameRounds > 1 && tournament.StartingTeamChange;
-            }
+            get => tournament.NumberOfGameRounds > 1 && tournament.StartingTeamChange;
             set
             {
                 if (tournament.StartingTeamChange == value) return;
+
                 tournament.StartingTeamChange = value;
                 tournament.RemoveAllGames();
                 RaisePropertyChanged();
@@ -99,21 +88,12 @@ namespace StockApp.ViewModels
         /// <summary>
         /// Liste der Reellen Teams
         /// </summary>
-        public ObservableCollection<Team> Teams
-        {
-            get
-            {
-                return new ObservableCollection<Team>(tournament.Teams.Where(t => !t.IsVirtual));
-            }
-        }
+        public ObservableCollection<Team> Teams=>new(tournament.Teams.Where(t => !t.IsVirtual));
 
 
         public bool IsDirectionOfCourtsFromRightToLeft
         {
-            get
-            {
-                return tournament.IsDirectionOfCourtsFromRightToLeft;
-            }
+            get => tournament.IsDirectionOfCourtsFromRightToLeft;
             set
             {
                 if (tournament.IsDirectionOfCourtsFromRightToLeft == value) return;
@@ -124,43 +104,26 @@ namespace StockApp.ViewModels
             }
         }
 
-        public string DirectionOfCourtsDescription
-        {
-            get
-            {
-                return IsDirectionOfCourtsFromRightToLeft
-                    ? "1. Bahn rechts, weitere folgen links"
-                    : "1. Bahn links, weitere folgen rechts";
-            }
-        }
+        public string DirectionOfCourtsDescription => IsDirectionOfCourtsFromRightToLeft
+                                                        ? "1. Bahn rechts, weitere folgen links"
+                                                        : "1. Bahn links, weitere folgen rechts";
 
 
         private bool concatRoundsOnOutput;
         public bool ConcatRoundsOnOutput
         {
-            get
-            {
-                return NumberOfGameRounds > 1 && concatRoundsOnOutput;
-            }
-            set
-            {
-                if (concatRoundsOnOutput == value) return;
-
-                concatRoundsOnOutput = value;
-                RaisePropertyChanged();
-            }
+            get => NumberOfGameRounds > 1 && concatRoundsOnOutput;
+            set => SetProperty(ref concatRoundsOnOutput, value);
         }
 
         public bool TeamNameOnTurnCards { get; set; }
 
         public bool Is8KehrenSpiel
         {
-            get
-            {
-                return tournament.Is8TurnsGame;
-            }
+            get => tournament.Is8TurnsGame;
             set
             {
+                if (tournament.Is8TurnsGame == value) return;
                 tournament.Is8TurnsGame = value;
                 RaisePropertyChanged();
             }
@@ -169,17 +132,8 @@ namespace StockApp.ViewModels
         private bool isTurnCardForStockTv;
         public bool IsTurnCardForStockTV
         {
-            get
-            {
-                return isTurnCardForStockTv;
-            }
-            set
-            {
-                if (isTurnCardForStockTv == value)
-                    return;
-                isTurnCardForStockTv = value;
-                RaisePropertyChanged();
-            }
+            get => isTurnCardForStockTv;
+            set => SetProperty(ref isTurnCardForStockTv, value);
         }
 
         #endregion

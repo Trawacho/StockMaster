@@ -58,10 +58,60 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AsyncIO, Version=0.1.69.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncIO.0.1.69\lib\net40\AsyncIO.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Makaretu.Dns, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Makaretu.Dns.2.0.1\lib\net472\Makaretu.Dns.dll</HintPath>
+    </Reference>
+    <Reference Include="Makaretu.Dns.Multicast, Version=0.27.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Makaretu.Dns.Multicast.0.27.0\lib\net461\Makaretu.Dns.Multicast.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="NaCl, Version=0.1.13.0, Culture=neutral, PublicKeyToken=827c20e50a9775fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\NaCl.Net.0.1.13\lib\net472\NaCl.dll</HintPath>
+    </Reference>
+    <Reference Include="NetMQ, Version=4.0.1.6, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetMQ.4.0.1.6\lib\net47\NetMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleBase, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleBase.1.3.1\lib\net45\SimpleBase.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.IPNetwork, Version=2.1.2.0, Culture=neutral, PublicKeyToken=717343cc2c25edcf, processorArchitecture=MSIL">
+      <HintPath>..\packages\IPNetwork2.2.1.2\lib\net46\System.Net.IPNetwork.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -83,6 +133,19 @@
     </ApplicationDefinition>
     <Compile Include="BaseClasses\EnumUtil.cs" />
     <Compile Include="BaseClasses\Executive.cs" />
+    <Compile Include="BaseClasses\Networking\StockAppClient.cs" />
+    <Compile Include="BaseClasses\Networking\StockTV.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVCollectionChangedEventArgs.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVs.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVService.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVServiceChangedEventArgs.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVCommand.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVSettings.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVSettingsMessage.cs" />
+    <Compile Include="BaseClasses\Networking\XServiceInfo.cs" />
+    <Compile Include="BaseClasses\Networking\SubscriberClient.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVResultMessage.cs" />
+    <Compile Include="BaseClasses\Networking\XDiscover.cs" />
     <Compile Include="BaseClasses\NetworkServiceEventArgs.cs" />
     <Compile Include="BaseClasses\OrgaDaten.cs" />
     <Compile Include="BaseClasses\Startgebuehr.cs" />
@@ -96,6 +159,7 @@
     <Compile Include="BaseClasses\Zielschiessen\Zielbewerb.cs" />
     <Compile Include="BaseClasses\Zielschiessen\ZielBewerbExtension.cs" />
     <Compile Include="Converters\NumberGE0ToTextConverter.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Interfaces\IGamesViewModel.cs" />
     <Compile Include="Interfaces\ILiveResultViewModel.cs" />
     <Compile Include="Interfaces\IResultsViewModel.cs" />
@@ -276,6 +340,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

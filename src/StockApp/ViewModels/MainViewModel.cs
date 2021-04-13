@@ -3,13 +3,16 @@ using StockApp.BaseClasses.Zielschiessen;
 using StockApp.Commands;
 using StockApp.Dialogs;
 using System;
+using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace StockApp.ViewModels
 {
-    public class MainViewModel : BaseViewModel, IDisposable
+    public class MainViewModel : BaseViewModel
     {
 
         #region Fields
@@ -22,6 +25,8 @@ namespace StockApp.ViewModels
 
         private string tournamentFileName = string.Empty;
 
+        private readonly XDiscover discover;
+
         #endregion
 
         #region Properties
@@ -31,16 +36,9 @@ namespace StockApp.ViewModels
         /// </summary>
         public BaseViewModel ViewModel
         {
-            get
-            {
-                return _viewModel;
-            }
-            set
-            {
-                if (_viewModel == value) return;
-                _viewModel = value;
-                RaisePropertyChanged();
-            }
+            get => _viewModel;
+            set => SetProperty(ref _viewModel, value);
+
         }
 
         /// <summary>
@@ -107,6 +105,45 @@ namespace StockApp.ViewModels
             NetworkService.Instance.StartStopStateChanged += NetworkService_StartStopStateChanged;
 
             this._Turnier.PropertyChanged += Turnier_WettbewerbChanged;
+            discover = new XDiscover();
+            discover.StockTVs.StockTVCollectionAdded += StockTVs_StockTVCollectionAdded;
+            discover.StockTVs.StockTVCollectionRemoved += StockTVs_StockTVCollectionRemoved;
+            discover.StartService();
+        }
+
+        /// <summary>
+        /// Default-Constructor
+        /// </summary>
+        /// <param name="dialogService"></param>
+        public MainViewModel(IDialogService dialogService) : this()
+        {
+            this.dialogService = dialogService;
+        }
+
+        #endregion
+
+        private void StockTVs_StockTVCollectionRemoved(object sender, StockTVCollectionChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] removed");
+
+        }
+
+
+        private void StockTVs_StockTVCollectionAdded(object sender, StockTVCollectionChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] found and added");
+            e.StockTV.StockTVServiceAdded += StockTV_StockTVServiceAdded;
+            e.StockTV.StockTVServiceRemoved += StockTV_StockTVServiceRemoved;
+        }
+
+        private void StockTV_StockTVServiceRemoved(object sender, StockTVServiceChangedEventArgs e)
+        {
+            Debug.WriteLine($"StockTVService removed [{e.Service?.ServiceName}] on Port [{e.Service?.Port}]");
+        }
+
+        private void StockTV_StockTVServiceAdded(object sender, StockTVServiceChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"StockTVService found [{e.Service?.ServiceName}] on Port [{e.Service?.Port}]");
         }
 
         private void Turnier_WettbewerbChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -123,18 +160,71 @@ namespace StockApp.ViewModels
             RaisePropertyChanged(nameof(UdpButtonContent));
         }
 
-        /// <summary>
-        /// Default-Constructor
-        /// </summary>
-        /// <param name="dialogService"></param>
-        public MainViewModel(IDialogService dialogService) : this()
-        {
-            this.dialogService = dialogService;
-        }
 
-        #endregion
 
         #region Commands
+
+
+        private ICommand _testCommand;
+        public ICommand TestCommand
+        {
+            get
+            {
+                return _testCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        foreach (StockTV tv in discover.StockTVs)
+                        {
+                            for (int i = 0; i < 20; i++)
+                            {
+                                tv.zmqSend(StockTVCommand.GetSettingsCommand());
+                                tv.zmqSend(StockTVCommand.GetResultCommand());
+                                tv.zmqSend(StockTVCommand.SpielModusCommand(StockTVCommand.GameModis.Turnier));
+                                tv.zmqSend(StockTVCommand.GetResultCommand());
+                                tv.zmqSend(StockTVCommand.GetResultCommand());
+                                tv.zmqSend(StockTVCommand.GetSettingsCommand());
+                                tv.zmqSend(StockTVCommand.ColorModusCommand(StockTVCommand.ColorModis.Dark));
+                                tv.zmqSend(StockTVCommand.ResetCommand());
+                                tv.zmqSend(StockTVCommand.ResetCommand());
+                                tv.zmqSend(StockTVCommand.GetSettingsCommand());
+                            }
+                           
+                        }
+
+                        
+
+                        //foreach (StockTV tv in discover.StockTVs)
+                        //{
+                        //    Task.Factory.StartNew(() =>
+                        //    {
+                        //        tv.SetSubscriberOnline();
+                        //        tv.SetApplicationOnline();
+                        //        int OkCnt = 0;
+                        //        int NokCnt = 0;
+                        //        Debug.WriteLine($"Task startet for {tv.HostName}");
+
+                        //        _ = tv.SendCommand(StockTVCommand.ResetCommand());
+                        //        _ = tv.SendCommand(StockTVCommand.SpielModusCommand(StockTVCommand.GameModis.Turnier));
+                        //        _ = tv.SendCommand(StockTVCommand.ColorModusCommand(StockTVCommand.ColorModis.Dark));
+                        //        _ = tv.SendCommand(StockTVCommand.GetSettingsCommand());
+
+                        //        for (int i = 0; i <= 50000000; i++)
+                        //        {
+                        //            if (tv.SendCommand(StockTVCommand.GetResultCommand()))
+                        //                OkCnt++;
+                        //            else
+                        //                NokCnt++;
+
+                        //            Debug.WriteLine($"{i} -> OK:{OkCnt} | NOK:{NokCnt} | {tv.HostName} ");
+                        //        }
+                        //    });
+                        //}
+                    },
+                    (p) => true);
+            }
+        }
+
+
 
         private ICommand _showLiveResultCommand;
         public ICommand ShowLiveResultCommand
@@ -360,7 +450,7 @@ namespace StockApp.ViewModels
                 var saveFileDlg = new SaveFileDialog
                 {
                     DefaultExt = "skmr",
-                    Filter = "StockMaster File (*skmr)|*.skmr"
+                    Filter = "StockMaster File (*.skmr)|*.skmr"
                 };
                 var dlgResult = saveFileDlg.ShowDialog();
                 if (dlgResult == DialogResult.OK)
@@ -380,14 +470,14 @@ namespace StockApp.ViewModels
             }
         }
 
-
-
-
-
-        public void Dispose()
+        internal void StopNetMq()
         {
-            
+            discover?.Stop();
         }
+
+
+
+        
     }
 }
 

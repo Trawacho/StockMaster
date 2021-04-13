@@ -26,13 +26,7 @@ namespace StockApp.BaseClasses
         /// <summary>
         /// Anzahl der Stockbahnen / Spielfächen
         /// </summary>
-        public int NumberOfCourts
-        {
-            get
-            {
-                return Teams.Count(t => !t.IsVirtual) / 2; ;
-            }
-        }
+        public int NumberOfCourts=>  Teams.Count(t => !t.IsVirtual) / 2; 
 
         /// <summary>
         /// Number of rounds to play (default 1) 

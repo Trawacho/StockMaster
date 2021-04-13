@@ -18,13 +18,7 @@ namespace StockApp.ViewModels
             teamBewerb = turnier.Wettbewerb as TeamBewerb;
         }
 
-        public ObservableCollection<Team> Teams
-        {
-            get
-            {
-                return new ObservableCollection<Team>(teamBewerb.Teams.Where(t => !t.IsVirtual));
-            }
-        }
+        public ObservableCollection<Team> Teams => new(teamBewerb.Teams.Where(t => !t.IsVirtual));
 
         public ObservableCollection<Player> Players
         {
@@ -38,34 +32,19 @@ namespace StockApp.ViewModels
         private Team _selectedTeam;
         public Team SelectedTeam
         {
-            get
-            {
-                return _selectedTeam ?? (SelectedTeam = Teams.FirstOrDefault());
-            }
+            get => _selectedTeam ??= Teams.FirstOrDefault();
             set
             {
-                if (_selectedTeam == value) return;
-
-                _selectedTeam = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(nameof(Players));
+                if (SetProperty(ref _selectedTeam, value))
+                    RaisePropertyChanged(nameof(Players));
             }
         }
 
         private Player _selectedPlayer;
         public Player SelectedPlayer
         {
-            get
-            {
-                return _selectedPlayer ?? (SelectedPlayer = SelectedTeam?.Players.FirstOrDefault());
-            }
-            set
-            {
-                if (_selectedPlayer == value) return;
-
-                _selectedPlayer = value;
-                RaisePropertyChanged();
-            }
+            get => _selectedPlayer ??= SelectedTeam?.Players.FirstOrDefault();
+            set => SetProperty(ref _selectedPlayer, value);
         }
 
         private ICommand _removeTeamCommand;

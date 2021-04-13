@@ -50,6 +50,10 @@
                 <MenuItem Header="Live Ergebnisse...">
                     <MenuItem Header="{Binding Path=UdpButtonContent, Mode=OneWay}" 
                               Command="{Binding Path=StartStopUdpReceiverCommand}"/>
+
+                    <MenuItem Header="Testcommand"
+                              Command="{Binding Path=TestCommand}"/>
+
                 </MenuItem>
             </MenuItem>
         </Menu>

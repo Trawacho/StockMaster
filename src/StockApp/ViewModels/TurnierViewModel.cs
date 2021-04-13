@@ -23,7 +23,7 @@ namespace StockApp.ViewModels
         /// </summary>
         public string TurnierOrt
         {
-            get { return Turnier.OrgaDaten.Venue; }
+            get => Turnier.OrgaDaten.Venue;
             set
             {
                 if (Turnier.OrgaDaten.Venue == value)
@@ -66,6 +66,7 @@ namespace StockApp.ViewModels
             {
                 if (Turnier.OrgaDaten.Operator == value)
                     return;
+
                 Turnier.OrgaDaten.Operator = value;
                 RaisePropertyChanged();
             }
@@ -103,6 +104,7 @@ namespace StockApp.ViewModels
             {
                 if (Turnier.OrgaDaten.DateOfTournament == value)
                     return;
+
                 Turnier.OrgaDaten.DateOfTournament = value;
                 RaisePropertyChanged();
             }

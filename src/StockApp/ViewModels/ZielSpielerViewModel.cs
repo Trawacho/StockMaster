@@ -29,52 +29,22 @@ namespace StockApp.ViewModels
 
         public Teilnehmer SelectedPlayer
         {
-            get
-            {
-                return _selectedPlayer ??= Players.First();
-            }
-            set
-            {
-                if (_selectedPlayer == value)
-                    return;
-
-                _selectedPlayer = value;
-                RaisePropertyChanged();
-            }
+            get => _selectedPlayer ??= Players.First();
+            set => SetProperty(ref _selectedPlayer, value);
         }
 
         public Wertung SelectedWertung
         {
-            get
-            {
-                return _selectedWertung ??= SelectedPlayer.Wertungen.First();
-            }
-            set
-            {
-                if (_selectedWertung == value)
-                    return;
-
-                _selectedWertung = value;
-                RaisePropertyChanged();
-            }
+            get => _selectedWertung ??= SelectedPlayer.Wertungen.First();
+            set => SetProperty(ref _selectedWertung, value);
         }
 
 
         private int _selectedZielBahn;
         public int SelectedZielBahn
         {
-            get
-            {
-                return _selectedZielBahn;
-            }
-            set
-            {
-                if (_selectedZielBahn == value)
-                    return;
-
-                _selectedZielBahn = value;
-                RaisePropertyChanged();
-            }
+            get => _selectedZielBahn;
+            set => SetProperty(ref _selectedZielBahn, value);
         }
 
 
