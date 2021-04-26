@@ -3,6 +3,7 @@ using StockApp.BaseClasses.Zielschiessen;
 using StockApp.Commands;
 using StockApp.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace StockApp.ViewModels
 
         private string tournamentFileName = string.Empty;
 
-        private readonly XDiscover discover;
+        private readonly StockTVs _stockTVs;
 
         #endregion
 
@@ -105,10 +106,11 @@ namespace StockApp.ViewModels
             NetworkService.Instance.StartStopStateChanged += NetworkService_StartStopStateChanged;
 
             this._Turnier.PropertyChanged += Turnier_WettbewerbChanged;
-            discover = new XDiscover();
-            discover.StockTVs.StockTVCollectionAdded += StockTVs_StockTVCollectionAdded;
-            discover.StockTVs.StockTVCollectionRemoved += StockTVs_StockTVCollectionRemoved;
-            discover.StartService();
+
+            _stockTVs = new StockTVs();
+            _stockTVs.StockTVCollectionAdded += StockTVs_StockTVCollectionAdded;
+            _stockTVs.StockTVCollectionRemoved += StockTVs_StockTVCollectionRemoved;
+            _stockTVs.StartDiscovery();
         }
 
         /// <summary>
@@ -124,26 +126,24 @@ namespace StockApp.ViewModels
 
         private void StockTVs_StockTVCollectionRemoved(object sender, StockTVCollectionChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] removed");
-
+            Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] removed");
         }
-
 
         private void StockTVs_StockTVCollectionAdded(object sender, StockTVCollectionChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] found and added");
-            e.StockTV.StockTVServiceAdded += StockTV_StockTVServiceAdded;
-            e.StockTV.StockTVServiceRemoved += StockTV_StockTVServiceRemoved;
+            Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] found and added");
+            e.StockTV.StockTVResultChanged += StockTV_StockTVResultChanged;
+            e.StockTV.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
         }
 
-        private void StockTV_StockTVServiceRemoved(object sender, StockTVServiceChangedEventArgs e)
+        private void StockTV_StockTVSettingsChanged(object sender, StockTVSettingsChangedEventArgs e)
         {
-            Debug.WriteLine($"StockTVService removed [{e.Service?.ServiceName}] on Port [{e.Service?.Port}]");
+            Debug.WriteLine($"StockTV: [{(sender as StockTV).HostName}] Settings: [{e.TVSettings}] changed");
         }
 
-        private void StockTV_StockTVServiceAdded(object sender, StockTVServiceChangedEventArgs e)
+        private void StockTV_StockTVResultChanged(object sender, StockTVResultChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"StockTVService found [{e.Service?.ServiceName}] on Port [{e.Service?.Port}]");
+            Debug.WriteLine($"StockTV: [{(sender as StockTV).HostName}] Result: [{e.TVResult}] changed");
         }
 
         private void Turnier_WettbewerbChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -173,52 +173,27 @@ namespace StockApp.ViewModels
                 return _testCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        foreach (StockTV tv in discover.StockTVs)
+                        foreach (StockTV tv in _stockTVs)
                         {
-                            for (int i = 0; i < 20; i++)
+                            // for (int i = 0; i < 2; i++)
                             {
-                                tv.zmqSend(StockTVCommand.GetSettingsCommand());
-                                tv.zmqSend(StockTVCommand.GetResultCommand());
-                                tv.zmqSend(StockTVCommand.SpielModusCommand(StockTVCommand.GameModis.Turnier));
-                                tv.zmqSend(StockTVCommand.GetResultCommand());
-                                tv.zmqSend(StockTVCommand.GetResultCommand());
-                                tv.zmqSend(StockTVCommand.GetSettingsCommand());
-                                tv.zmqSend(StockTVCommand.ColorModusCommand(StockTVCommand.ColorModis.Dark));
-                                tv.zmqSend(StockTVCommand.ResetCommand());
-                                tv.zmqSend(StockTVCommand.ResetCommand());
-                                tv.zmqSend(StockTVCommand.GetSettingsCommand());
+                                tv.TVSettingsGet();
+                                tv.TVSettings.GameModus = StockTVCommand.GameModis.Turnier;
+                                tv.TVSettings.PointsPerTurn = 15;
+                                tv.TVSettings.TurnsPerGame = 8;
+                                tv.TVSettingsSend();
+                                tv.TVResultReset();
+
+                                tv.SendTeamNames(new List<StockTVBegegnung>()
+                                {
+                                    new StockTVBegegnung(1, "ESF Hankofen", "EC EBRA Aiterhofen"),
+                                    new StockTVBegegnung(1, "TV Geiselhöring","SV Pilgramsberg"),
+                                    new StockTVBegegnung(3, "DJK Leiblfing", "SV Salching"),
+                                    new StockTVBegegnung(4, "Bavaria mitterharthausen", "EC Obermiethnach")
+                                });
                             }
-                           
+
                         }
-
-                        
-
-                        //foreach (StockTV tv in discover.StockTVs)
-                        //{
-                        //    Task.Factory.StartNew(() =>
-                        //    {
-                        //        tv.SetSubscriberOnline();
-                        //        tv.SetApplicationOnline();
-                        //        int OkCnt = 0;
-                        //        int NokCnt = 0;
-                        //        Debug.WriteLine($"Task startet for {tv.HostName}");
-
-                        //        _ = tv.SendCommand(StockTVCommand.ResetCommand());
-                        //        _ = tv.SendCommand(StockTVCommand.SpielModusCommand(StockTVCommand.GameModis.Turnier));
-                        //        _ = tv.SendCommand(StockTVCommand.ColorModusCommand(StockTVCommand.ColorModis.Dark));
-                        //        _ = tv.SendCommand(StockTVCommand.GetSettingsCommand());
-
-                        //        for (int i = 0; i <= 50000000; i++)
-                        //        {
-                        //            if (tv.SendCommand(StockTVCommand.GetResultCommand()))
-                        //                OkCnt++;
-                        //            else
-                        //                NokCnt++;
-
-                        //            Debug.WriteLine($"{i} -> OK:{OkCnt} | NOK:{NokCnt} | {tv.HostName} ");
-                        //        }
-                        //    });
-                        //}
                     },
                     (p) => true);
             }
@@ -472,12 +447,12 @@ namespace StockApp.ViewModels
 
         internal void StopNetMq()
         {
-            discover?.Stop();
+            _stockTVs.StopAllServices();
         }
 
 
 
-        
+
     }
 }
 

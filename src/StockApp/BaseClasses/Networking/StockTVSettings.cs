@@ -1,16 +1,55 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using static StockApp.BaseClasses.StockTVCommand;
 
 namespace StockApp.BaseClasses
 {
-    public class StockTVSettings
+    public class StockTVSettings: IEquatable<StockTVSettings>
     {
-        public StockTVSettings()
+        public static StockTVSettings GetDefault(GameModis modus)
+        {
+            var s = new StockTVSettings()
+            {
+                Bahn = -1,
+                NextLeft = true,
+                ColorScheme = ColorModis.Normal,
+                GameModus = modus
+            };
+            switch (modus)
+            {
+                case GameModis.Training:
+                    s.PointsPerTurn = 30;
+                    s.TurnsPerGame = 30;
+                    break;
+                case GameModis.Turnier:
+                case GameModis.BestOf:
+                    s.PointsPerTurn = 15;
+                    s.TurnsPerGame = 6;
+                    break;
+                case GameModis.Ziel:
+                    break;
+                default:
+                    break;
+            }
+
+            return s;
+        }
+   
+        private StockTVSettings()
         {
 
         }
+
+        public StockTVSettings(byte[] array) : this()
+        {
+            SetValues(array);
+        }
+       
+        public StockTVSettings(string valueString) : this()
+        {
+            SetValues(valueString);
+        }
+
         public int Bahn { get; set; }
         public int PointsPerTurn { get; set; }
         public int TurnsPerGame { get; set; }
@@ -18,9 +57,20 @@ namespace StockApp.BaseClasses
         public GameModis GameModus { get; set; }
         public ColorModis ColorScheme { get; set; }
 
-        public void SetValues(byte[] array)
+        public bool Equals(StockTVSettings other)
         {
-            var parts = Encoding.UTF8.GetString(array).TrimEnd(';').Split(';');
+            return Bahn == other.Bahn
+                && PointsPerTurn == other.PointsPerTurn
+                && TurnsPerGame == other.TurnsPerGame
+                && NextLeft == other.NextLeft
+                && GameModus == other.GameModus
+                && ColorScheme == other.ColorScheme;
+        }
+       
+        private void SetValues(string valueString)
+        {
+            var parts = valueString.TrimEnd(';').Split(';');
+
             foreach (var part in parts)
             {
                 var x = part.Split('=');
@@ -50,6 +100,16 @@ namespace StockApp.BaseClasses
                         break;
                 }
             }
+        }
+
+        private void SetValues(byte[] array)
+        {
+            SetValues(Encoding.UTF8.GetString(array));
+        }
+
+        public override string ToString()
+        {
+            return $"Bahn:{Bahn} | GameModus:{GameModus} | ColorScheme:{ColorScheme} | PointsPerTurn:{PointsPerTurn} | TurnsPerGame:{TurnsPerGame} | NextLeft:{NextLeft}  ";
         }
     }
 }

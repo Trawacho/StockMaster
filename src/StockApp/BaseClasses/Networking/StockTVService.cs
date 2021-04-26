@@ -4,7 +4,7 @@ namespace StockApp.BaseClasses
 {
     public class StockTVService : IEquatable<StockTVService>
     {
-        public StockTVService(XServiceInfo mDnsInfo)
+        public StockTVService(MDnsServiceInfo mDnsInfo)
         {
             ServiceName = mDnsInfo.DomainName.Labels[1];
             Port = mDnsInfo.Port;

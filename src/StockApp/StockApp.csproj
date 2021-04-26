@@ -73,9 +73,6 @@
     <Reference Include="Makaretu.Dns.Multicast, Version=0.27.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Makaretu.Dns.Multicast.0.27.0\lib\net461\Makaretu.Dns.Multicast.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
-    </Reference>
     <Reference Include="NaCl, Version=0.1.13.0, Culture=neutral, PublicKeyToken=827c20e50a9775fa, processorArchitecture=MSIL">
       <HintPath>..\packages\NaCl.Net.0.1.13\lib\net472\NaCl.dll</HintPath>
     </Reference>
@@ -133,19 +130,22 @@
     </ApplicationDefinition>
     <Compile Include="BaseClasses\EnumUtil.cs" />
     <Compile Include="BaseClasses\Executive.cs" />
-    <Compile Include="BaseClasses\Networking\StockAppClient.cs" />
     <Compile Include="BaseClasses\Networking\StockTV.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVBegegnung.cs" />
     <Compile Include="BaseClasses\Networking\StockTVCollectionChangedEventArgs.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVAppClient.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVGameResult.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVResult.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVResultChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVService.cs" />
     <Compile Include="BaseClasses\Networking\StockTVServiceChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVCommand.cs" />
     <Compile Include="BaseClasses\Networking\StockTVSettings.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVSettingsChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVSettingsMessage.cs" />
-    <Compile Include="BaseClasses\Networking\XServiceInfo.cs" />
-    <Compile Include="BaseClasses\Networking\SubscriberClient.cs" />
-    <Compile Include="BaseClasses\Networking\StockTVResultMessage.cs" />
-    <Compile Include="BaseClasses\Networking\XDiscover.cs" />
+    <Compile Include="BaseClasses\Networking\MDnsServiceInfo.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVSubscriberClient.cs" />
     <Compile Include="BaseClasses\NetworkServiceEventArgs.cs" />
     <Compile Include="BaseClasses\OrgaDaten.cs" />
     <Compile Include="BaseClasses\Startgebuehr.cs" />
@@ -219,6 +219,9 @@
     <Compile Include="Output\WertungskarteStockTV\SpiegelHeaderGrid.cs" />
     <Compile Include="Output\WertungskarteStockTV\WertungskarteStockTV.cs" />
     <Compile Include="Output\Wertungskarte\SpiegelHeader.cs" />
+    <Compile Include="UserControls\StockTV\UserControlStockTV.xaml.cs">
+      <DependentUpon>UserControlStockTV.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValidationRules\ZielbewerbValueValidationRule.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamesViewModel.cs" />
@@ -263,6 +266,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Output\Results\ucStackPanelTeam.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\StockTV\UserControlStockTV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

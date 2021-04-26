@@ -1,0 +1,131 @@
+﻿using NetMQ;
+using NetMQ.Monitoring;
+using NetMQ.Sockets;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+
+namespace StockApp.BaseClasses
+{
+    public class StockTVAppClient
+    {
+        private NetMQPoller Poller;
+        private RequestSocket Socket;
+        private NetMQMonitor Monitor;
+        private readonly string IPAddress;
+        private readonly int Port;
+        private readonly string Identifier;
+        private readonly NetMQQueue<StockTVCommand> sendQueue;
+
+        #region Konstruktor
+
+        public StockTVAppClient(string ip, int port, string identifier)
+        {
+            Debug.WriteLine($"Create ZMQ client for {identifier}");
+            this.IPAddress = ip;
+            this.Port = port;
+            this.Identifier = identifier;
+
+            sendQueue = new NetMQQueue<StockTVCommand>();
+        }
+
+        #endregion
+
+        #region Functions
+
+        public string GetConnectionString()
+        {
+            return $"tcp://{IPAddress}:{Port}";
+        }
+
+        public void Start()
+        {
+            if (Socket != null) return;
+
+            Socket = new RequestSocket(GetConnectionString());
+            Socket.Options.Identity = Encoding.UTF8.GetBytes(this.Identifier);
+            Socket.SendReady += Socket_SendReady;
+
+            Poller = new NetMQPoller() { Socket };
+
+            Monitor = new NetMQMonitor(Socket, $"inproc://{Identifier}.inproc", SocketEvents.All);
+            Monitor.EventReceived += Monitor_EventReceived;
+            Monitor.StartAsync();
+
+            Poller.RunAsync(Identifier);
+        }
+
+        public void Stop()
+        {
+            Socket.SendReady -= Socket_SendReady; Debug.WriteLine("socket unsubscribe event");
+            Socket.Disconnect(GetConnectionString()); Debug.WriteLine("socket disconntet");
+
+            Poller.Stop(); Debug.WriteLine("Poller stopped");
+            Poller.Remove(Socket); Debug.WriteLine("Poller removes socket");
+
+            Poller.Dispose(); Debug.WriteLine("Poller dispose");
+            Socket.Dispose(); Debug.WriteLine("Socket dispose");
+            Monitor.Dispose(); Debug.WriteLine("Monitor dispose");
+
+            Poller = null;
+            Socket = null;
+            Monitor = null;
+        }
+
+        public void AddCommand(StockTVCommand command)
+        {
+            sendQueue.Enqueue(command);
+        }
+
+        #endregion
+
+       
+
+        private void Monitor_EventReceived(object sender, NetMQMonitorEventArgs e)
+        {
+            Debug.WriteLine($"MONITOR: {e.Address} ..  {e.SocketEvent}");
+        }
+
+        private void Socket_SendReady(object sender, NetMQSocketEventArgs e)
+        {
+            if (sendQueue.Count > 0)
+            {
+                e.Socket.SendReady -= Socket_SendReady;
+
+                if (sendQueue.TryDequeue(out StockTVCommand command, TimeSpan.FromSeconds(50)))
+                {
+                    e.Socket.SendFrame(command.CommandString(), false);
+                    //Debug.WriteLine($"{Encoding.UTF8.GetString(e.Socket.Options.Identity)} sent successfully {sendQueue.Count}");
+
+                    var msg = e.Socket.ReceiveMultipartMessage();
+                    if (msg.FrameCount == 2)
+                    {
+                        string topic = msg.First().ConvertToString();
+                        if (topic.Equals("Settings") || topic.Equals("Result"))
+                        {
+                            //Debug.WriteLine($"Received from { Encoding.UTF8.GetString(e.Socket.Options.Identity) }: {msg.First().ConvertToString()} --> {string.Join(" ", msg.Last().ToByteArray().Select(x => x.ToString()))}");
+                            if(command.BackAction != null)
+                            command.BackAction(msg.Last().ToByteArray());
+                        }
+                    }
+                    else
+                    {
+                        //Debug.WriteLine($"Received from { Encoding.UTF8.GetString(e.Socket.Options.Identity) }: {string.Join(" ", msg.First().ToByteArray().Select(x => x.ToString()))}");
+                    }
+                }
+
+
+                e.Socket.SendReady += Socket_SendReady;
+            }
+        }
+
+       
+
+
+
+
+    }
+
+
+}

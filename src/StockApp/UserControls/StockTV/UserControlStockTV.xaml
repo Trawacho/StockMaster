@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="StockApp.UserControls.StockTV.UserControlStockTV"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StockApp.UserControls.StockTV" 
+             xmlns:bc="clr-namespace:StockApp.BaseClasses" 
+             x:Name="ucStockTV"
+             mc:Ignorable="d" Height="275" Width="300" >
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </d:DesignerProperties.DesignStyle>
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="5,10"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+    </UserControl.Resources>
+    <Border BorderThickness="4" BorderBrush="Green">
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="10" >
+                <Grid.Resources>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Margin" Value="10,0,5,0"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="MinWidth" Value="30"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Margin" Value="5"/>
+                    </Style>
+                    
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Bahnnummer:"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ElementName=ucStockTV, Path=StockTV.TVSettings.Bahn}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="nächte Bahn links:" />
+                <TextBox Grid.Row="1" Grid.Column="1" />
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Farbmodus:" />
+                <ComboBox Grid.Row="2" Grid.Column="1"  />
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Spielmodus:" />
+                <ComboBox Grid.Row="3" Grid.Column="1" />
+
+                <Label Grid.Row="4" Grid.Column="0" Content="max Punkte pro Kehre:"  />
+                <TextBox Grid.Row="4" Grid.Column="1"   />
+
+                <Label Grid.Row="5" Grid.Column="0" Content="Kehren pro Spiel:"/>
+                <TextBox Grid.Row="5" Grid.Column="1"  />
+            </Grid>
+            <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                <Button Grid.Row="6" Grid.Column="0" Content="Settings senden" />
+                <Button Grid.Row="6" Grid.Column="1" Content="Settings holen"/>
+            </StackPanel>
+            <Label Content="{Binding ElementName=ucStockTV, Path=StockTV.IPAddress}" ContentStringFormat="IP: {0}"/>
+        </StackPanel>
+    </Border>
+
+</UserControl>

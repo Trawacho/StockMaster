@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace StockApp.BaseClasses
 {
-    public class XServiceInfo
+    public class MDnsServiceInfo
     {
-        public XServiceInfo(DomainName domainName, string ipAddress, int port)
+        public MDnsServiceInfo(DomainName domainName, string ipAddress, int port)
         {
             this.DomainName = domainName;
             this.IPAddress = ipAddress;
