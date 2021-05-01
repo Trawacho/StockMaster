@@ -127,7 +127,7 @@ namespace StockApp.BaseClasses
         #endregion
 
         #region Discovery-events
-        
+
         private void Discovery_ServiceInstanceShutdown(object sender, ServiceInstanceShutdownEventArgs args)
         {
             var dnsInfo = new MDnsServiceInfo(args.ServiceInstanceName,
@@ -221,15 +221,7 @@ namespace StockApp.BaseClasses
         {
             lock (_lock)
             {
-                var stockTV = this.FirstOrDefault(s => s.IPAddress == dnsInfo.IPAddress);
-                if (stockTV == null) return;
-
-                stockTV.RemoveStockTVService(dnsInfo);
-
-                //if (!stockTV.ServicesAvailable())
-                //{
-                //    this.Remove(stockTV);
-                //}
+                this.FirstOrDefault(s => s.IPAddress == dnsInfo.IPAddress)?.RemoveStockTVService(dnsInfo);
             };
         }
     }

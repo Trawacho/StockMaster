@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="StockApp.Views.StockTVCollectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:StockApp.ViewModels"
+             xmlns:usercontrols = "clr-namespace:StockApp.UserControls.StockTV"
+             xmlns:local="clr-namespace:StockApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1024"
+             d:DataContext="{d:DesignInstance 
+                            Type=viewmodels:StockTVCollectionDesignViewModel, 
+                            IsDesignTimeCreatable=True}"
+             >
+    <Grid >
+        <ListView ItemsSource="{Binding Path=StockTVCollection}" Margin="10" >
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <!--<WrapPanel Orientation="Horizontal"/>-->
+                    <WrapPanel Width="{Binding (FrameworkElement.ActualWidth), RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"
+                               ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+                               ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}" 
+                               />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <usercontrols:UserControlStockTV StockTV="{Binding}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView> 
+    </Grid>
+</UserControl>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,13 +8,7 @@ namespace StockApp.BaseClasses
     public class StockTVCommand
     {
         readonly List<KeyValuePair<CommandTopics, string>> commandList;
-        //readonly CommandTopics topic;
-        //readonly string value;
         public readonly Action<byte[]> BackAction;
-
-        //public bool IsGetCommand => IsGetSettingsCommand || IsGetResultsCommand;
-        //public bool IsGetSettingsCommand => topic == CommandTopics.Get && value == GetCommandValues.Settings.ToString();
-        //public bool IsGetResultsCommand => topic == CommandTopics.Get && value == GetCommandValues.Result.ToString();
 
         public string CommandString()
         {
@@ -63,11 +56,12 @@ namespace StockApp.BaseClasses
         public static StockTVCommand AnzahlPunkteProKehreCommand(int anzahl) { return new StockTVCommand(CommandTopics.PointsPerTurn, anzahl.ToString()); }
         public static StockTVCommand NextBahnLeftCommand(bool isLeft) { return new StockTVCommand(CommandTopics.NextLeft, isLeft.ToString()); }
 
+
         public static StockTVCommand ResetCommand() { return new StockTVCommand(CommandTopics.Reset, "true"); }
         public static StockTVCommand GetSettingsCommand(Action<byte[]> action) { return new StockTVCommand(CommandTopics.Get, GetCommandValues.Settings.ToString(), action); }
         public static StockTVCommand GetResultCommand(Action<byte[]> action) { return new StockTVCommand(CommandTopics.Get, GetCommandValues.Result.ToString(), action); }
-        
-        
+
+
         public static StockTVCommand SendBegegnungenCommand(IEnumerable<StockTVBegegnung> begegnungen)
         {
             string s = string.Empty;
@@ -77,11 +71,14 @@ namespace StockApp.BaseClasses
             }
             return new StockTVCommand(CommandTopics.SetBegegnungen, s);
         }
-        
-        public enum GameModis { Training, Turnier, BestOf, Ziel }
-        public enum ColorModis { Normal, Dark }
-        public enum CommandTopics { Bahn, ColorScheme, GameModus, PointsPerTurn, TurnsPerGame, NextLeft, Reset, Get, SetBegegnungen }
-        public enum GetCommandValues { Settings, Result }
+
+
 
     }
+
+    public enum GameModis { Training, Turnier, BestOf, Ziel }
+    public enum ColorModis { Normal, Dark }
+    public enum NextBahnModis { Links, Rechts }
+    public enum CommandTopics { Bahn, ColorScheme, GameModus, PointsPerTurn, TurnsPerGame, NextLeft, Reset, Get, SetBegegnungen }
+    public enum GetCommandValues { Settings, Result }
 }

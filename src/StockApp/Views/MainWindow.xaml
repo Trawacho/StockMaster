@@ -60,6 +60,8 @@
 
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock Text="{Binding Path=VersionNumber}"/>
+            <Separator/>
+            <TextBlock Text="{Binding Path=StockTVCount}"/>
         </StatusBar>
 
         <StackPanel DockPanel.Dock="Left" Margin="5" Background="#FF0E3A59">
@@ -94,9 +96,13 @@
                     Command="{Binding Path=ShowZielSpielerViewCommand}"
                     Visibility="{Binding Path=IsZielBewerb, Converter={StaticResource BoolToVisibilityConverter}}"
                     Margin="10,5"/>
+            
+            <Button Content="StockTV"
+                    Command="{Binding Path=ShowStockTVCollectionCommand}"
+                    Margin="10,5"/>
 
         </StackPanel>
-
+        
         <ScrollViewer DockPanel.Dock="Left"
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">

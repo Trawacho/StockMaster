@@ -8,8 +8,17 @@ using System.Text;
 
 namespace StockApp.BaseClasses
 {
+    public delegate void StockTVOnlineChangedEventHandler(object sender, bool IsOnline);
+
     public class StockTVAppClient
     {
+        public event StockTVOnlineChangedEventHandler StockTVOnlineChanged;
+        protected void RaisStockTVOnlineChanged()
+        {
+            var handler = StockTVOnlineChanged;
+            handler?.Invoke(this, this.IsOnline);
+        }
+
         private NetMQPoller Poller;
         private RequestSocket Socket;
         private NetMQMonitor Monitor;
@@ -22,7 +31,8 @@ namespace StockApp.BaseClasses
 
         public StockTVAppClient(string ip, int port, string identifier)
         {
-            Debug.WriteLine($"Create ZMQ client for {identifier}");
+            //Debug.WriteLine($"Create ZMQ client for {identifier}");
+            this.IsOnline = false;
             this.IPAddress = ip;
             this.Port = port;
             this.Identifier = identifier;
@@ -31,6 +41,18 @@ namespace StockApp.BaseClasses
         }
 
         #endregion
+        private bool _isOnline;
+        public bool IsOnline
+        {
+            get => _isOnline;
+            set
+            {
+                if (_isOnline == value) return;
+                _isOnline = value;
+                RaisStockTVOnlineChanged();
+            }
+        }
+
 
         #region Functions
 
@@ -80,12 +102,14 @@ namespace StockApp.BaseClasses
 
         #endregion
 
-       
+
 
         private void Monitor_EventReceived(object sender, NetMQMonitorEventArgs e)
         {
             Debug.WriteLine($"MONITOR: {e.Address} ..  {e.SocketEvent}");
+            this.IsOnline = e.SocketEvent == SocketEvents.Connected;
         }
+
 
         private void Socket_SendReady(object sender, NetMQSocketEventArgs e)
         {
@@ -96,17 +120,17 @@ namespace StockApp.BaseClasses
                 if (sendQueue.TryDequeue(out StockTVCommand command, TimeSpan.FromSeconds(50)))
                 {
                     e.Socket.SendFrame(command.CommandString(), false);
-                    //Debug.WriteLine($"{Encoding.UTF8.GetString(e.Socket.Options.Identity)} sent successfully {sendQueue.Count}");
+                    //Debug.WriteLine($"{Encoding.UTF8.GetString(e.Socket.Options.Identity)} sent [{command.CommandString()}] successfully {sendQueue.Count}");
 
                     var msg = e.Socket.ReceiveMultipartMessage();
+                    //Debug.WriteLine($"Message received");
                     if (msg.FrameCount == 2)
                     {
                         string topic = msg.First().ConvertToString();
                         if (topic.Equals("Settings") || topic.Equals("Result"))
                         {
                             //Debug.WriteLine($"Received from { Encoding.UTF8.GetString(e.Socket.Options.Identity) }: {msg.First().ConvertToString()} --> {string.Join(" ", msg.Last().ToByteArray().Select(x => x.ToString()))}");
-                            if(command.BackAction != null)
-                            command.BackAction(msg.Last().ToByteArray());
+                            command.BackAction?.Invoke(msg.Last().ToByteArray());
                         }
                     }
                     else
@@ -120,7 +144,7 @@ namespace StockApp.BaseClasses
             }
         }
 
-       
+
 
 
 

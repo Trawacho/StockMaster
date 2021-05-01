@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -22,11 +20,11 @@ namespace StockApp.ViewModels
 
         private BaseViewModel _viewModel;
 
-        private Turnier _Turnier;
+        private Turnier _turnier;
 
         private string tournamentFileName = string.Empty;
 
-        private readonly StockTVs _stockTVs;
+        private StockTVs _stockTVs;
 
         #endregion
 
@@ -75,7 +73,7 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return _Turnier.Wettbewerb is TeamBewerb;
+                return _turnier.Wettbewerb is TeamBewerb;
             }
         }
 
@@ -83,7 +81,15 @@ namespace StockApp.ViewModels
         {
             get
             {
-                return _Turnier.Wettbewerb is Zielbewerb;
+                return _turnier.Wettbewerb is Zielbewerb;
+            }
+        }
+
+        public string StockTVCount
+        {
+            get
+            {
+                return $"StockTV: {_stockTVs?.Count ?? 0}x";
             }
         }
 
@@ -96,16 +102,16 @@ namespace StockApp.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            this._Turnier = new Turnier
+            this._turnier = new Turnier
             {
                 Wettbewerb = new TeamBewerb()
             };
 
-            ViewModel = new TurnierViewModel(_Turnier);
+            ViewModel = new TurnierViewModel(_turnier);
 
             NetworkService.Instance.StartStopStateChanged += NetworkService_StartStopStateChanged;
 
-            this._Turnier.PropertyChanged += Turnier_WettbewerbChanged;
+            this._turnier.PropertyChanged += Turnier_WettbewerbChanged;
 
             _stockTVs = new StockTVs();
             _stockTVs.StockTVCollectionAdded += StockTVs_StockTVCollectionAdded;
@@ -127,6 +133,7 @@ namespace StockApp.ViewModels
         private void StockTVs_StockTVCollectionRemoved(object sender, StockTVCollectionChangedEventArgs e)
         {
             Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] removed");
+            RaisePropertyChanged(nameof(StockTVCount));
         }
 
         private void StockTVs_StockTVCollectionAdded(object sender, StockTVCollectionChangedEventArgs e)
@@ -134,6 +141,8 @@ namespace StockApp.ViewModels
             Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] found and added");
             e.StockTV.StockTVResultChanged += StockTV_StockTVResultChanged;
             e.StockTV.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
+
+            RaisePropertyChanged(nameof(StockTVCount));
         }
 
         private void StockTV_StockTVSettingsChanged(object sender, StockTVSettingsChangedEventArgs e)
@@ -178,7 +187,7 @@ namespace StockApp.ViewModels
                             // for (int i = 0; i < 2; i++)
                             {
                                 tv.TVSettingsGet();
-                                tv.TVSettings.GameModus = StockTVCommand.GameModis.Turnier;
+                                tv.TVSettings.GameModus = GameModis.Turnier;
                                 tv.TVSettings.PointsPerTurn = 15;
                                 tv.TVSettings.TurnsPerGame = 8;
                                 tv.TVSettingsSend();
@@ -211,7 +220,7 @@ namespace StockApp.ViewModels
                     {
                         dialogService.SetOwner(App.Current.MainWindow);
                         dialogService.Show(
-                              new LiveResultViewModel(_Turnier.Wettbewerb as TeamBewerb));
+                              new LiveResultViewModel(_turnier.Wettbewerb as TeamBewerb));
                     },
                     (p) =>
                     {
@@ -234,7 +243,7 @@ namespace StockApp.ViewModels
                                 if (NetworkService.Instance.IsRunning())
                                     NetworkService.Instance.Stop();
                                 else
-                                    NetworkService.Instance.Start(this._Turnier.Wettbewerb);
+                                    NetworkService.Instance.Start(this._turnier.Wettbewerb);
 
                                 RaisePropertyChanged(nameof(UdpButtonContent));
                             },
@@ -251,7 +260,7 @@ namespace StockApp.ViewModels
                 return _showTournamentViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        ViewModel = new TurnierViewModel(_Turnier);
+                        ViewModel = new TurnierViewModel(_turnier);
                     },
                     (p) => true
                     );
@@ -266,7 +275,7 @@ namespace StockApp.ViewModels
                 return _showTeamsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new TeamsViewModel(_Turnier);
+                        this.ViewModel = new TeamsViewModel(_turnier);
                     },
                     (p) =>
                     {
@@ -284,11 +293,11 @@ namespace StockApp.ViewModels
                 return _showGamesViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new GamesViewModel(_Turnier.Wettbewerb as TeamBewerb);
+                        this.ViewModel = new GamesViewModel(_turnier.Wettbewerb as TeamBewerb);
                     },
                     (p) =>
                     {
-                        return (_Turnier.Wettbewerb as TeamBewerb)?.Teams.Count > 0;
+                        return (_turnier.Wettbewerb as TeamBewerb)?.Teams.Count > 0;
                     });
             }
         }
@@ -301,11 +310,11 @@ namespace StockApp.ViewModels
                 return _showResultsViewCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this.ViewModel = new ResultsViewModel(_Turnier);
+                        this.ViewModel = new ResultsViewModel(_turnier);
                     },
                     (p) =>
                     {
-                        return (_Turnier.Wettbewerb as TeamBewerb)?.CountOfGames() > 0;
+                        return (_turnier.Wettbewerb as TeamBewerb)?.CountOfGames() > 0;
                     });
             }
         }
@@ -331,8 +340,8 @@ namespace StockApp.ViewModels
                 return _newTournamentCommand ??= new RelayCommand(
                     (p) =>
                     {
-                        this._Turnier = new Turnier();
-                        ViewModel = new TurnierViewModel(this._Turnier);
+                        this._turnier = new Turnier();
+                        ViewModel = new TurnierViewModel(this._turnier);
                     });
             }
         }
@@ -384,8 +393,8 @@ namespace StockApp.ViewModels
                                 var filePath = ofd.FileName;
 
                                 //this._Tournament = TeamBewerbExtension.Load(filePath);
-                                this._Turnier = TeamBewerbExtension.Load(filePath);
-                                ViewModel = new TurnierViewModel(this._Turnier);
+                                this._turnier = TeamBewerbExtension.Load(filePath);
+                                ViewModel = new TurnierViewModel(this._turnier);
                                 this.tournamentFileName = filePath;
                             }
                         }
@@ -407,15 +416,33 @@ namespace StockApp.ViewModels
                    _showZielSpielerViewCommand ??= new RelayCommand(
                        (p) =>
                        {
-                           this.ViewModel = new ZielSpielerViewModel(_Turnier);
+                           this.ViewModel = new ZielSpielerViewModel(_turnier);
                        },
                        (p) =>
                        {
-                           return (_Turnier.Wettbewerb is Zielbewerb);
+                           return (_turnier.Wettbewerb is Zielbewerb);
                        });
             }
         }
 
+
+        private ICommand _showStockTVCollectionCommand;
+        public ICommand ShowStockTVCollectionCommand
+        {
+            get
+            {
+                return
+                    _showStockTVCollectionCommand ??= new RelayCommand(
+                        (p) =>
+                        {
+                            this.ViewModel = new StockTVCollectionViewModel(ref _stockTVs);
+                        },
+                        (p) =>
+                        {
+                            return true;
+                        });
+            }
+        }
         #endregion
 
         private void Save(string fileName)
@@ -436,7 +463,7 @@ namespace StockApp.ViewModels
 
             try
             {
-                TeamBewerbExtension.Save(_Turnier, fileName);
+                TeamBewerbExtension.Save(_turnier, fileName);
                 this.tournamentFileName = fileName;
             }
             catch (Exception ex)

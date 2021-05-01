@@ -159,6 +159,7 @@
     <Compile Include="BaseClasses\Zielschiessen\Zielbewerb.cs" />
     <Compile Include="BaseClasses\Zielschiessen\ZielBewerbExtension.cs" />
     <Compile Include="Converters\NumberGE0ToTextConverter.cs" />
+    <Compile Include="Converters\OnlineToBrushConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Interfaces\IGamesViewModel.cs" />
     <Compile Include="Interfaces\ILiveResultViewModel.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="ViewModels\LiveResultViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ResultsViewModel.cs" />
+    <Compile Include="ViewModels\StockTVCollectionViewModel.cs" />
     <Compile Include="ViewModels\TeamsViewModel.cs" />
     <Compile Include="ViewModels\TurnierViewModel.cs" />
     <Compile Include="ViewModels\ZielSpielerViewModel.cs" />
@@ -239,6 +241,9 @@
     </Compile>
     <Compile Include="Views\ResultsView.xaml.cs">
       <DependentUpon>ResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StockTVCollectionView.xaml.cs">
+      <DependentUpon>StockTVCollectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TemsView.xaml.cs">
       <DependentUpon>TemsView.xaml</DependentUpon>
@@ -303,6 +308,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ResultsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StockTVCollectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

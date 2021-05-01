@@ -26,5 +26,9 @@
             <views:ZielSpielerView />
         </DataTemplate>
 
+        <DataTemplate x:Name="stockTVCollectionViewTemplate" DataType="{x:Type viewmodels:StockTVCollectionViewModel}">
+            <views:StockTVCollectionView />
+        </DataTemplate>
+
     </Application.Resources>
 </Application>

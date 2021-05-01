@@ -9,7 +9,7 @@ namespace StockApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool b)
+            if (value is bool b)
             {
                 return b ? Visibility.Visible : Visibility.Collapsed;
             }

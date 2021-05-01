@@ -1,6 +1,7 @@
 ﻿using Makaretu.Dns;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace StockApp.BaseClasses
@@ -9,35 +10,42 @@ namespace StockApp.BaseClasses
     {
         #region EventHandler
 
-        private  event StockTVServiceChangedEventHandler StockTVServiceAdded;
-        private event StockTVServiceChangedEventHandler StockTVServiceRemoved;
-
-        public event StockTVResultChangedHandler StockTVResultChanged;
-        public event StockTVSettingsChangedHandler StockTVSettingsChanged;
-
-
+        private event StockTVServiceChangedEventHandler StockTVServiceAdded;
         protected void RaiseStockTVServiceAdded(StockTVService service)
         {
             var handler = StockTVServiceAdded;
             handler?.Invoke(this, new StockTVServiceChangedEventArgs(service));
         }
 
+        private event StockTVServiceChangedEventHandler StockTVServiceRemoved;
         protected void RaiseStockTVServiceRemove(StockTVService service)
         {
             var handler = StockTVServiceRemoved;
             handler?.Invoke(this, new StockTVServiceChangedEventArgs(service));
         }
 
+
+        public event StockTVResultChangedHandler StockTVResultChanged;
         protected void RaiseStockTVResultChanged()
         {
             var handler = StockTVResultChanged;
             handler?.Invoke(this, new StockTVResultChangedEventArgs(TVResult));
         }
 
+
+        public event StockTVSettingsChangedHandler StockTVSettingsChanged;
         protected void RaiseStockTVSettingsChanged()
         {
             var handler = StockTVSettingsChanged;
             handler?.Invoke(this, new StockTVSettingsChangedEventArgs(TVSettings));
+        }
+
+
+        public event StockTVOnlineChangedEventHandler StockTVOnlineChanged;
+        protected void RaiseStockTVOnlineChanged()
+        {
+            var handler = StockTVOnlineChanged;
+            handler?.Invoke(this, this.IsOnline);
         }
 
         #endregion
@@ -76,20 +84,44 @@ namespace StockApp.BaseClasses
 
         public DateTime LastMDnsUpdate { get; private set; }
 
+        private bool _isOnline;
+        public bool IsOnline
+        {
+            get => _isOnline;
+            private set
+            {
+                if (_isOnline == value) return;
+
+                _isOnline = value;
+                RaiseStockTVOnlineChanged();
+            }
+        }
+
         #endregion
 
         #region Konstruktor
         public StockTV()
         {
             _infos = new List<string>();
-            TVSettings = StockTVSettings.GetDefault(StockTVCommand.GameModis.Training);
-
+            tvSettings = StockTVSettings.GetDefault(GameModis.Training);
         }
+
+        /// <summary>
+        /// for design only
+        /// </summary>
+        /// <param name="hostname"></param>
+        /// <param name="ipaddress"></param>
+        public StockTV(string hostname, string ipaddress) : this()
+        {
+            this.HostName = hostname;
+            this.IPAddress = ipaddress;
+        }
+
         /// <summary>
         /// Default-Konstruktor
         /// </summary>
         /// <param name="mDnsInfo"></param>
-        public StockTV(MDnsServiceInfo mDnsInfo):this()
+        public StockTV(MDnsServiceInfo mDnsInfo) : this()
         {
             IPAddress = mDnsInfo.IPAddress;
             HostName = mDnsInfo.DomainName.Labels.First();
@@ -132,6 +164,7 @@ namespace StockApp.BaseClasses
                         if (appClient == null)
                         {
                             appClient = new StockTVAppClient(IPAddress, service.Port, HostName);
+                            appClient.StockTVOnlineChanged += AppClient_StockTVOnlineChanged;
                             appClient.Start();
                         }
                     }
@@ -153,6 +186,8 @@ namespace StockApp.BaseClasses
                 }
             }
         }
+
+       
 
         public void RemoveStockTVService(MDnsServiceInfo mDnsInfo)
         {
@@ -222,24 +257,33 @@ namespace StockApp.BaseClasses
 
         #region StockTVSettings
 
-        private StockTVSettings tvSettings;
+        private readonly StockTVSettings tvSettings;
 
         public StockTVSettings TVSettings
         {
             get => tvSettings;
-            set
-            {
-                if (tvSettings == value) return;
+            //private set
+            //{
+            //    Debug.WriteLine($"Try to SET TVSettings {this.IPAddress}");
+            //    if (tvSettings == value) return;
 
-                tvSettings = value;
-                RaiseStockTVSettingsChanged();
-            }
+            //    tvSettings = value;
+
+            //    Debug.WriteLine($"SET TVSettings {this.IPAddress}");
+
+            //    RaiseStockTVSettingsChanged();
+            //}
         }
 
 
         public void TVSettingsGet()
         {
-            appClient?.AddCommand(StockTVCommand.GetSettingsCommand((byteArray) => TVSettings = new StockTVSettings(byteArray)));
+            appClient?.AddCommand(StockTVCommand.GetSettingsCommand((byteArray) =>
+            {
+                TVSettings.SetValues(byteArray);
+                Debug.WriteLine($"Update TVSettings {this.IPAddress}");
+                RaiseStockTVSettingsChanged();
+            }));
         }
 
         public void TVSettingsSend()
@@ -247,9 +291,16 @@ namespace StockApp.BaseClasses
             appClient?.AddCommand(StockTVCommand.SendSettingsCommand(TVSettings));
         }
 
-       
+
 
         #endregion
+
+        private void AppClient_StockTVOnlineChanged(object sender, bool IsOnline)
+        {
+            this.IsOnline = IsOnline;
+            if (this.IsOnline)
+                TVSettingsGet();
+        }
 
 
         public void SendTeamNames(IEnumerable<StockTVBegegnung> begegnungen)
@@ -275,8 +326,10 @@ namespace StockApp.BaseClasses
         /// </summary>
         private void StopAppClient()
         {
+            appClient.StockTVOnlineChanged -= AppClient_StockTVOnlineChanged;
             appClient?.Stop();
             appClient = null;
+            IsOnline = false;
         }
 
         /// <summary>

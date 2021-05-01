@@ -4,14 +4,14 @@ using static StockApp.BaseClasses.StockTVCommand;
 
 namespace StockApp.BaseClasses
 {
-    public class StockTVSettings: IEquatable<StockTVSettings>
+    public class StockTVSettings : IEquatable<StockTVSettings>
     {
         public static StockTVSettings GetDefault(GameModis modus)
         {
             var s = new StockTVSettings()
             {
                 Bahn = -1,
-                NextLeft = true,
+                NextBahnModus = NextBahnModis.Links,
                 ColorScheme = ColorModis.Normal,
                 GameModus = modus
             };
@@ -34,7 +34,7 @@ namespace StockApp.BaseClasses
 
             return s;
         }
-   
+
         private StockTVSettings()
         {
 
@@ -44,7 +44,7 @@ namespace StockApp.BaseClasses
         {
             SetValues(array);
         }
-       
+
         public StockTVSettings(string valueString) : this()
         {
             SetValues(valueString);
@@ -53,7 +53,18 @@ namespace StockApp.BaseClasses
         public int Bahn { get; set; }
         public int PointsPerTurn { get; set; }
         public int TurnsPerGame { get; set; }
-        public bool NextLeft { get; set; }
+
+        /// <summary>
+        /// TRUE if <see cref="NextBahnModus"/> is <see cref="NextBahnModis.Links"/>
+        /// </summary>
+        public bool NextLeft
+        {
+            get => (NextBahnModus == NextBahnModis.Links);
+           // set => NextBahn = value ? NextBahn.Links : NextBahn.Rechts;
+        }
+
+        public NextBahnModis NextBahnModus { get; set; }
+
         public GameModis GameModus { get; set; }
         public ColorModis ColorScheme { get; set; }
 
@@ -62,12 +73,12 @@ namespace StockApp.BaseClasses
             return Bahn == other.Bahn
                 && PointsPerTurn == other.PointsPerTurn
                 && TurnsPerGame == other.TurnsPerGame
-                && NextLeft == other.NextLeft
+                && NextBahnModus == other.NextBahnModus
                 && GameModus == other.GameModus
                 && ColorScheme == other.ColorScheme;
         }
-       
-        private void SetValues(string valueString)
+
+        public void SetValues(string valueString)
         {
             var parts = valueString.TrimEnd(';').Split(';');
 
@@ -88,7 +99,7 @@ namespace StockApp.BaseClasses
                         TurnsPerGame = int.Parse(value);
                         break;
                     case nameof(NextLeft):
-                        NextLeft = bool.Parse(value);
+                        NextBahnModus = bool.Parse(value) ? NextBahnModis.Links : NextBahnModis.Rechts;
                         break;
                     case nameof(GameModus):
                         GameModus = (GameModis)Enum.Parse(typeof(GameModis), value);
@@ -102,14 +113,14 @@ namespace StockApp.BaseClasses
             }
         }
 
-        private void SetValues(byte[] array)
+        public void SetValues(byte[] array)
         {
             SetValues(Encoding.UTF8.GetString(array));
         }
 
         public override string ToString()
         {
-            return $"Bahn:{Bahn} | GameModus:{GameModus} | ColorScheme:{ColorScheme} | PointsPerTurn:{PointsPerTurn} | TurnsPerGame:{TurnsPerGame} | NextLeft:{NextLeft}  ";
+            return $"Bahn:{Bahn} | GameModus:{GameModus} | ColorScheme:{ColorScheme} | PointsPerTurn:{PointsPerTurn} | TurnsPerGame:{TurnsPerGame} | NextBahn:{NextBahnModus}  ";
         }
     }
 }

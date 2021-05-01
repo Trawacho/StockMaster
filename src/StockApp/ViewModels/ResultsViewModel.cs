@@ -78,9 +78,9 @@ namespace StockApp.ViewModels
             RaisePropertyChanged(nameof(PointsOfSelectedTeam));
         }
 
-        public List<PointsPerTeamAndGame> PointsOfSelectedTeam { get; set; } = new();
+        public ObservableCollection<PointsPerTeamAndGame> PointsOfSelectedTeam { get; set; } = new();
 
-        public List<PointsPerGame> PointsPerGameList { get; set; } = new();
+        public ObservableCollection<PointsPerGame> PointsPerGameList { get; set; } = new();
 
         public int NumberOfTeamsWithNamedPlayers
         {
@@ -150,8 +150,8 @@ namespace StockApp.ViewModels
 
         public Game SelectedGame { get; set; }
 
-        public List<PointsPerTeamAndGame> PointsOfSelectedTeam { get; set; } = new();
-        public List<PointsPerGame> PointsPerGameList { get; set; } = new();
+        public ObservableCollection<PointsPerTeamAndGame> PointsOfSelectedTeam { get; set; } = new();
+        public ObservableCollection<PointsPerGame> PointsPerGameList { get; set; } = new();
 
         public ICommand PrintErgebnislisteCommand { get; }
         public int NumberOfTeamsWithNamedPlayers { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
