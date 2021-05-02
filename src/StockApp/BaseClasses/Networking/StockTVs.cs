@@ -157,7 +157,7 @@ namespace StockApp.BaseClasses
         #endregion
 
         /// <summary>
-        /// Starts discovering for StockTV
+        /// Starts discovering for StockTV and cleanup if StockTV is no longer online/avail
         /// </summary>
         internal void StartDiscovery()
         {
@@ -175,8 +175,25 @@ namespace StockApp.BaseClasses
                 var pub = string.Join(".", stockPubDNS.Labels.Take(2));
                 serviceDiscovery.QueryServiceInstances(app);
                 serviceDiscovery.QueryServiceInstances(pub);
+                CheckLastOnlineMessage();
             };
             discoveryTimer.Start();
+        }
+
+        /// <summary>
+        /// <br>For each <see cref="StockTV"/> where <see cref="StockTV.IsOutdated"/> is TRUE, </br>
+        /// <br>the <see cref="StockTV.Stop"/> is called and the object is removed from internal list</br>
+        /// <para>this function is called from <see cref="discoveryTimer"/></para>
+        /// </summary>
+        private void CheckLastOnlineMessage()
+        {
+            foreach (var item in this.Where(x => x.IsOutdated()))
+                item.Stop();
+
+            var x = this.stockTVs.RemoveAll(t => t.IsOutdated());
+
+            if (x > 0)
+                RaiseStockTVCollectionRemoved(null);
         }
 
         /// <summary>

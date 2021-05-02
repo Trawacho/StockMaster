@@ -42,19 +42,19 @@ namespace StockApp.BaseClasses
         {
             StockTVCommand x = new();
             x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.GameModus, tVSettings.GameModus.ToString()));
-            x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.ColorScheme, tVSettings.ColorScheme.ToString()));
+            x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.ColorModus, tVSettings.ColorModus.ToString()));
             x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.TurnsPerGame, tVSettings.TurnsPerGame.ToString()));
             x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.PointsPerTurn, tVSettings.PointsPerTurn.ToString()));
-            x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.NextLeft, tVSettings.NextLeft.ToString()));
+            x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.NextBahnModus, tVSettings.NextBahnModus.ToString()));
             x.commandList.Add(new KeyValuePair<CommandTopics, string>(CommandTopics.Bahn, tVSettings.Bahn.ToString()));
             return x;
         }
 
         public static StockTVCommand SpielModusCommand(GameModis modus) { return new StockTVCommand(CommandTopics.GameModus, modus.ToString()); }
-        public static StockTVCommand ColorModusCommand(ColorModis modus) { return new StockTVCommand(CommandTopics.ColorScheme, modus.ToString()); }
+        public static StockTVCommand ColorModusCommand(ColorModis modus) { return new StockTVCommand(CommandTopics.ColorModus, modus.ToString()); }
         public static StockTVCommand AnzahlKehrenProSpielCommand(int anzahl) { return new StockTVCommand(CommandTopics.TurnsPerGame, anzahl.ToString()); }
         public static StockTVCommand AnzahlPunkteProKehreCommand(int anzahl) { return new StockTVCommand(CommandTopics.PointsPerTurn, anzahl.ToString()); }
-        public static StockTVCommand NextBahnLeftCommand(bool isLeft) { return new StockTVCommand(CommandTopics.NextLeft, isLeft.ToString()); }
+        public static StockTVCommand NextBahnModusCommand(NextBahnModis modus) { return new StockTVCommand(CommandTopics.NextBahnModus, modus.ToString()); }
 
 
         public static StockTVCommand ResetCommand() { return new StockTVCommand(CommandTopics.Reset, "true"); }
@@ -76,9 +76,5 @@ namespace StockApp.BaseClasses
 
     }
 
-    public enum GameModis { Training, Turnier, BestOf, Ziel }
-    public enum ColorModis { Normal, Dark }
-    public enum NextBahnModis { Links, Rechts }
-    public enum CommandTopics { Bahn, ColorScheme, GameModus, PointsPerTurn, TurnsPerGame, NextLeft, Reset, Get, SetBegegnungen }
-    public enum GetCommandValues { Settings, Result }
+   
 }

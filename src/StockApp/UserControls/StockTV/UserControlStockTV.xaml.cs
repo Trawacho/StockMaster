@@ -51,6 +51,7 @@ namespace StockApp.UserControls.StockTV
 
         #endregion
 
+        #region Source-Lists for comboBoxes
         public List<BaseClasses.ColorModis> ColorModis
         {
             get => Enum.GetValues(typeof(BaseClasses.ColorModis)).Cast<BaseClasses.ColorModis>().ToList();
@@ -66,6 +67,7 @@ namespace StockApp.UserControls.StockTV
             get => Enum.GetValues(typeof(BaseClasses.NextBahnModis)).Cast<BaseClasses.NextBahnModis>().ToList();
         }
 
+        #endregion
 
         #region Properties
 
@@ -109,19 +111,19 @@ namespace StockApp.UserControls.StockTV
             }
         }
 
-        public BaseClasses.ColorModis ColorScheme
+        public BaseClasses.ColorModis ColorModus
         {
-            get => StockTV?.TVSettings.ColorScheme ?? BaseClasses.ColorModis.Normal;
+            get => StockTV?.TVSettings.ColorModus ?? BaseClasses.ColorModis.Normal;
             set
             {
-                StockTV.TVSettings.ColorScheme = value;
+                StockTV.TVSettings.ColorModus = value;
                 RaisePropertyChanged();
             }
         }
 
         public BaseClasses.NextBahnModis NextBahnModus
         {
-            get => StockTV?.TVSettings.NextBahnModus ?? BaseClasses.NextBahnModis.Links;
+            get => StockTV?.TVSettings.NextBahnModus ?? BaseClasses.NextBahnModis.Left;
             set
             {
                 StockTV.TVSettings.NextBahnModus = value;
@@ -129,9 +131,9 @@ namespace StockApp.UserControls.StockTV
             }
         }
 
-
         public bool IsOnline { get => StockTV?.IsOnline ?? false; }
 
+        public string Identifier { get { return $"{StockTV?.HostName} - {StockTV?.IPAddress}"; } }
         #endregion
 
         #region Events

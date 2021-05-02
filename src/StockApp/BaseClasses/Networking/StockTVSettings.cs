@@ -11,8 +11,8 @@ namespace StockApp.BaseClasses
             var s = new StockTVSettings()
             {
                 Bahn = -1,
-                NextBahnModus = NextBahnModis.Links,
-                ColorScheme = ColorModis.Normal,
+                NextBahnModus = NextBahnModis.Left,
+                ColorModus = ColorModis.Normal,
                 GameModus = modus
             };
             switch (modus)
@@ -54,19 +54,11 @@ namespace StockApp.BaseClasses
         public int PointsPerTurn { get; set; }
         public int TurnsPerGame { get; set; }
 
-        /// <summary>
-        /// TRUE if <see cref="NextBahnModus"/> is <see cref="NextBahnModis.Links"/>
-        /// </summary>
-        public bool NextLeft
-        {
-            get => (NextBahnModus == NextBahnModis.Links);
-           // set => NextBahn = value ? NextBahn.Links : NextBahn.Rechts;
-        }
-
+        
         public NextBahnModis NextBahnModus { get; set; }
 
         public GameModis GameModus { get; set; }
-        public ColorModis ColorScheme { get; set; }
+        public ColorModis ColorModus { get; set; }
 
         public bool Equals(StockTVSettings other)
         {
@@ -75,7 +67,7 @@ namespace StockApp.BaseClasses
                 && TurnsPerGame == other.TurnsPerGame
                 && NextBahnModus == other.NextBahnModus
                 && GameModus == other.GameModus
-                && ColorScheme == other.ColorScheme;
+                && ColorModus == other.ColorModus;
         }
 
         public void SetValues(string valueString)
@@ -98,14 +90,14 @@ namespace StockApp.BaseClasses
                     case nameof(TurnsPerGame):
                         TurnsPerGame = int.Parse(value);
                         break;
-                    case nameof(NextLeft):
-                        NextBahnModus = bool.Parse(value) ? NextBahnModis.Links : NextBahnModis.Rechts;
+                    case nameof(NextBahnModus):
+                        NextBahnModus = (NextBahnModis)Enum.Parse(typeof(NextBahnModis), value);
                         break;
                     case nameof(GameModus):
                         GameModus = (GameModis)Enum.Parse(typeof(GameModis), value);
                         break;
-                    case nameof(ColorScheme):
-                        ColorScheme = (ColorModis)Enum.Parse(typeof(ColorModis), value);
+                    case nameof(ColorModus):
+                        ColorModus = (ColorModis)Enum.Parse(typeof(ColorModis), value);
                         break;
                     default:
                         break;
@@ -120,7 +112,7 @@ namespace StockApp.BaseClasses
 
         public override string ToString()
         {
-            return $"Bahn:{Bahn} | GameModus:{GameModus} | ColorScheme:{ColorScheme} | PointsPerTurn:{PointsPerTurn} | TurnsPerGame:{TurnsPerGame} | NextBahn:{NextBahnModus}  ";
+            return $"Bahn:{Bahn} | GameModus:{GameModus} | ColorModus:{ColorModus} | PointsPerTurn:{PointsPerTurn} | TurnsPerGame:{TurnsPerGame} | NextBahn:{NextBahnModus}  ";
         }
     }
 }

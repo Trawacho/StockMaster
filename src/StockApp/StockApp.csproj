@@ -134,6 +134,8 @@
     <Compile Include="BaseClasses\Networking\StockTVBegegnung.cs" />
     <Compile Include="BaseClasses\Networking\StockTVCollectionChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVAppClient.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVDelegates.cs" />
+    <Compile Include="BaseClasses\Networking\StockTVEnumerations.cs" />
     <Compile Include="BaseClasses\Networking\StockTVGameResult.cs" />
     <Compile Include="BaseClasses\Networking\StockTVResult.cs" />
     <Compile Include="BaseClasses\Networking\StockTVResultChangedEventArgs.cs" />

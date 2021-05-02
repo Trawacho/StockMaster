@@ -132,13 +132,13 @@ namespace StockApp.ViewModels
 
         private void StockTVs_StockTVCollectionRemoved(object sender, StockTVCollectionChangedEventArgs e)
         {
-            Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] removed");
+           // Debug.WriteLine($"StockTV: {e?.StockTV?.HostName} with IP [{e?.StockTV?.IPAddress}] removed");
             RaisePropertyChanged(nameof(StockTVCount));
         }
 
         private void StockTVs_StockTVCollectionAdded(object sender, StockTVCollectionChangedEventArgs e)
         {
-            Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] found and added");
+          //  Debug.WriteLine($"StockTV: {e.StockTV.HostName} with IP [{e.StockTV.IPAddress}] found and added");
             e.StockTV.StockTVResultChanged += StockTV_StockTVResultChanged;
             e.StockTV.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
 
@@ -147,12 +147,12 @@ namespace StockApp.ViewModels
 
         private void StockTV_StockTVSettingsChanged(object sender, StockTVSettingsChangedEventArgs e)
         {
-            Debug.WriteLine($"StockTV: [{(sender as StockTV).HostName}] Settings: [{e.TVSettings}] changed");
+           // Debug.WriteLine($"StockTV: [{(sender as StockTV).HostName}] Settings: [{e.TVSettings}] changed");
         }
 
         private void StockTV_StockTVResultChanged(object sender, StockTVResultChangedEventArgs e)
         {
-            Debug.WriteLine($"StockTV: [{(sender as StockTV).HostName}] Result: [{e.TVResult}] changed");
+          //  Debug.WriteLine($"StockTV: [{(sender as StockTV).HostName}] Result: [{e.TVResult}] changed");
         }
 
         private void Turnier_WettbewerbChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

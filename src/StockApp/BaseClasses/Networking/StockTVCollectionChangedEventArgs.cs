@@ -2,7 +2,6 @@
 
 namespace StockApp.BaseClasses
 {
-    public delegate void StockTVCollectionChangedEventHandler(object sender, StockTVCollectionChangedEventArgs e);
 
     public class StockTVCollectionChangedEventArgs : EventArgs
     {

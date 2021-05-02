@@ -8,7 +8,6 @@ using System.Text;
 
 namespace StockApp.BaseClasses
 {
-    public delegate void StockTVOnlineChangedEventHandler(object sender, bool IsOnline);
 
     public class StockTVAppClient
     {

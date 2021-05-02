@@ -22,14 +22,19 @@ namespace StockApp.ViewModels
 
         private void StockTVs_StockTVCollectionRemoved(object sender, StockTVCollectionChangedEventArgs e)
         {
-            this.StockTVCollection.Remove(e.StockTV);
+            //this.StockTVCollection.Remove(e.StockTV);
+            StockTVCollection.Clear();
+            foreach (StockTV item in _stockTVs)
+            {
+                this.StockTVCollection.Add(item);
+            }
         }
 
         private void StockTVs_StockTVCollectionAdded(object sender, StockTVCollectionChangedEventArgs e)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                e.StockTV.TVSettingsGet();
+                //e.StockTV.TVSettingsGet();
                 this.StockTVCollection.Add(e.StockTV);
             });
         }

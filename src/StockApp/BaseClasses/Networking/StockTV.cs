@@ -91,12 +91,22 @@ namespace StockApp.BaseClasses
             private set
             {
                 if (_isOnline == value) return;
-
+                
                 _isOnline = value;
+
+                if (_isOnline) __wasOnline = true;
+                
                 RaiseStockTVOnlineChanged();
+
             }
         }
-
+        /// <summary>
+        /// Needed for <see cref="IsOutdated"/>
+        /// </summary>
+        private bool __wasOnline; 
+       
+       
+       
         #endregion
 
         #region Konstruktor
@@ -187,7 +197,7 @@ namespace StockApp.BaseClasses
             }
         }
 
-       
+
 
         public void RemoveStockTVService(MDnsServiceInfo mDnsInfo)
         {
@@ -281,13 +291,14 @@ namespace StockApp.BaseClasses
             appClient?.AddCommand(StockTVCommand.GetSettingsCommand((byteArray) =>
             {
                 TVSettings.SetValues(byteArray);
-                Debug.WriteLine($"Update TVSettings {this.IPAddress}");
+                Debug.WriteLine($"Get TVSettings {IPAddress} -> [{TVSettings}]");
                 RaiseStockTVSettingsChanged();
             }));
         }
 
         public void TVSettingsSend()
         {
+            Debug.WriteLine($"Send TVSettings {IPAddress} -> [{TVSettings}]");
             appClient?.AddCommand(StockTVCommand.SendSettingsCommand(TVSettings));
         }
 
@@ -295,6 +306,12 @@ namespace StockApp.BaseClasses
 
         #endregion
 
+        /// <summary>
+        /// Updates the <see cref="IsOnline"/> state
+        /// <br>If state is true, the <see cref="TVSettingsGet"/>-Method gets called</br>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="IsOnline"></param>
         private void AppClient_StockTVOnlineChanged(object sender, bool IsOnline)
         {
             this.IsOnline = IsOnline;
@@ -326,9 +343,13 @@ namespace StockApp.BaseClasses
         /// </summary>
         private void StopAppClient()
         {
-            appClient.StockTVOnlineChanged -= AppClient_StockTVOnlineChanged;
-            appClient?.Stop();
-            appClient = null;
+            if (appClient != null)
+            {
+                appClient.StockTVOnlineChanged -= AppClient_StockTVOnlineChanged;
+                appClient.Stop();
+                appClient = null;
+            }
+
             IsOnline = false;
         }
 
@@ -339,6 +360,22 @@ namespace StockApp.BaseClasses
         {
             StopSubscriberClient();
             StopAppClient();
+        }
+
+        /// <summary>
+        /// TRUE if <see cref="IsOnline"/> is true or <see cref="LastMDnsUpdate"/> was within the last 10s
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOutdated()
+        {
+            if (IsOnline) return false;
+            
+            if (appClient == null) return true;
+
+            bool _tooOld = (DateTime.Now - LastMDnsUpdate).TotalMilliseconds > 10000;
+            return (__wasOnline && _tooOld);
+
+            //return (DateTime.Now - LastMDnsUpdate).TotalMilliseconds > 10000;
         }
     }
 }
