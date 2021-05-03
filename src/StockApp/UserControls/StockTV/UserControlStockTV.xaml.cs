@@ -133,7 +133,14 @@ namespace StockApp.UserControls.StockTV
 
         public bool IsOnline { get => StockTV?.IsOnline ?? false; }
 
-        public string Identifier { get { return $"{StockTV?.HostName} - {StockTV?.IPAddress}"; } }
+        public string Identifier { get { return $"{StockTV?.HostName}" + Environment.NewLine + $"IP: {StockTV?.IPAddress}" + Environment.NewLine + $"{FirmwareVersion}"; } }
+        public string FirmwareVersion
+        {
+            get
+            {
+                return $"FW: {StockTV?.FW ?? ""}";
+            }
+        }
         #endregion
 
         #region Events
@@ -162,8 +169,7 @@ namespace StockApp.UserControls.StockTV
 
         #region Commands
 
-        private ICommand _sendTVSettingsCommand;
-        public ICommand SendTVSettingsCommand
+        private ICommand _sendTVSettingsCommand; public ICommand SendTVSettingsCommand
         {
             get
             {
@@ -179,8 +185,7 @@ namespace StockApp.UserControls.StockTV
             }
         }
 
-        private ICommand _getTVSettingsCommand;
-        public ICommand GetTVSettingsCommand
+        private ICommand _getTVSettingsCommand; public ICommand GetTVSettingsCommand
         {
             get
             {
@@ -195,6 +200,33 @@ namespace StockApp.UserControls.StockTV
                     });
             }
         }
+
+        private ICommand _sendResetCommand; public ICommand SendResetCommand
+        {
+            get
+            {
+                return _sendResetCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        StockTV.TVResultReset();
+                    },
+                    (p) => true);
+            }
+        }
+
+        private ICommand _sendGetResultCommand; public ICommand SendGetResultCommand
+        {
+            get
+            {
+                return _sendGetResultCommand ??= new RelayCommand(
+                    (p) =>
+                    {
+                        StockTV.TVResultGet();
+                    },
+                    (p) => true);
+            }
+        }
+
 
         #endregion
 

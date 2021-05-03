@@ -77,6 +77,7 @@ namespace StockApp.BaseClasses
         private readonly List<string> _infos;
         public IEnumerable<string> Informationen => _infos;
 
+        public string FW { get; private set; }
 
         public string IPAddress { private set; get; }
         public string HostName { private set; get; }
@@ -91,11 +92,11 @@ namespace StockApp.BaseClasses
             private set
             {
                 if (_isOnline == value) return;
-                
+
                 _isOnline = value;
 
                 if (_isOnline) __wasOnline = true;
-                
+
                 RaiseStockTVOnlineChanged();
 
             }
@@ -103,10 +104,10 @@ namespace StockApp.BaseClasses
         /// <summary>
         /// Needed for <see cref="IsOutdated"/>
         /// </summary>
-        private bool __wasOnline; 
-       
-       
-       
+        private bool __wasOnline;
+
+
+
         #endregion
 
         #region Konstruktor
@@ -151,7 +152,13 @@ namespace StockApp.BaseClasses
                 foreach (var i in infos)
                 {
                     if (!_infos.Contains(i))
+                    {
                         _infos.Add(i);
+                        if (i.StartsWith("pkg"))
+                        {
+                            FW = i.Split('=')[1];
+                        }
+                    }
                 }
             }
         }
@@ -369,10 +376,16 @@ namespace StockApp.BaseClasses
         public bool IsOutdated()
         {
             if (IsOnline) return false;
-            
+
             if (appClient == null) return true;
 
             bool _tooOld = (DateTime.Now - LastMDnsUpdate).TotalMilliseconds > 10000;
+
+            if(!IsOnline && !_tooOld)
+            {
+                IsOnline = true;
+            }
+
             return (__wasOnline && _tooOld);
 
             //return (DateTime.Now - LastMDnsUpdate).TotalMilliseconds > 10000;
