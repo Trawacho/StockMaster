@@ -13,33 +13,51 @@ namespace StockApp.ViewModels
             this._stockTVs = stockTVs;
             this._stockTVs.StockTVCollectionAdded += StockTVs_StockTVCollectionAdded;
             this._stockTVs.StockTVCollectionRemoved += StockTVs_StockTVCollectionRemoved;
-            
+
             foreach (StockTV item in _stockTVs)
             {
+                item.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
                 this.StockTVCollection.Add(item);
+                this.StockTVCollection.Sort();
             }
+        }
+
+        private void StockTV_StockTVSettingsChanged(object sender, StockTVSettingsChangedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke(() => StockTVCollection.Sort());
         }
 
         private void StockTVs_StockTVCollectionRemoved(object sender, StockTVCollectionChangedEventArgs e)
         {
-            //this.StockTVCollection.Remove(e.StockTV);
-            StockTVCollection.Clear();
-            foreach (StockTV item in _stockTVs)
+            App.Current.Dispatcher.Invoke(() =>
             {
-                this.StockTVCollection.Add(item);
-            }
+                foreach (StockTV item in _stockTVs)
+                {
+                    item.StockTVSettingsChanged -= StockTV_StockTVSettingsChanged;
+                }
+                StockTVCollection.Clear();
+                foreach (StockTV item in _stockTVs)
+                {
+                    item.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
+                    this.StockTVCollection.Add(item);
+                    this.StockTVCollection.Sort();
+                }
+            });
         }
 
         private void StockTVs_StockTVCollectionAdded(object sender, StockTVCollectionChangedEventArgs e)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                //e.StockTV.TVSettingsGet();
+                e.StockTV.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
                 this.StockTVCollection.Add(e.StockTV);
+                this.StockTVCollection.Sort();
             });
         }
 
         public ObservableCollection<StockTV> StockTVCollection { get; private set; }
+
+        public bool Sync { get; set; }
 
     }
 
@@ -54,6 +72,6 @@ namespace StockApp.ViewModels
             this.StockTVCollection.Add(new StockTV("StockTV-4", "10.10.10.4"));
         }
         public ObservableCollection<StockTV> StockTVCollection { get; private set; }
-
+        public bool Sync { get; set; }
     }
 }

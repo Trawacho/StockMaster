@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace StockApp.BaseClasses
 {
-    public class StockTV : IEquatable<StockTV>
+    public class StockTV : IEquatable<StockTV>, IComparable<StockTV>
     {
         #region EventHandler
 
@@ -50,7 +50,7 @@ namespace StockApp.BaseClasses
 
         #endregion
 
-        #region IEquatable-Implementation
+        #region IEquatable- and ICompareable Implementation
 
         /// <summary>
         /// True if Hostname is equal
@@ -59,7 +59,23 @@ namespace StockApp.BaseClasses
         /// <returns></returns>
         public bool Equals(StockTV other)
         {
-            return this.HostName == other.HostName;
+            return this.HostName.Equals(other.HostName) &&
+                this.IPAddress.Equals(other.IPAddress) &&
+                this.TVSettings.Bahn.Equals(other.TVSettings.Bahn);
+        }
+
+        public int CompareTo(StockTV other)
+        {
+            var equalBahn = TVSettings.Bahn.CompareTo(other.TVSettings.Bahn);
+            if (equalBahn != 0)
+                return equalBahn;
+
+            var equalHostName = this.HostName.CompareTo(other.HostName);
+            if (equalHostName != 0)
+                return equalHostName;
+
+            return this.IPAddress.CompareTo(other.IPAddress);
+
         }
 
         #endregion
@@ -71,8 +87,6 @@ namespace StockApp.BaseClasses
 
         private StockTVService PublisherService;
         private StockTVSubscriberClient subscriberClient;
-
-        private readonly object _lock = new();
 
         private readonly List<string> _infos;
         public IEnumerable<string> Informationen => _infos;
@@ -95,7 +109,11 @@ namespace StockApp.BaseClasses
 
                 _isOnline = value;
 
-                if (_isOnline) __wasOnline = true;
+                if (_isOnline)
+                {
+                    __wasOnline = true;
+                    TVSettingsGet();
+                }
 
                 RaiseStockTVOnlineChanged();
 
@@ -146,18 +164,15 @@ namespace StockApp.BaseClasses
 
         private void UpdateInfos(IEnumerable<string> infos)
         {
-            lock (_lock)
+            LastMDnsUpdate = DateTime.Now;
+            foreach (var i in infos)
             {
-                LastMDnsUpdate = DateTime.Now;
-                foreach (var i in infos)
+                if (!_infos.Contains(i))
                 {
-                    if (!_infos.Contains(i))
+                    _infos.Add(i);
+                    if (i.StartsWith("pkg"))
                     {
-                        _infos.Add(i);
-                        if (i.StartsWith("pkg"))
-                        {
-                            FW = i.Split('=')[1];
-                        }
+                        FW = i.Split('=')[1];
                     }
                 }
             }
@@ -169,36 +184,33 @@ namespace StockApp.BaseClasses
 
             var service = new StockTVService(mDnsInfo);
             if (service == null) return;
-            lock (_lock)
+            if (service.IsApplicationService)
             {
-                if (service.IsApplicationService)
+                if (ApplicationService == null || !ApplicationService.Equals(service))
                 {
-                    if (ApplicationService == null || !ApplicationService.Equals(service))
-                    {
-                        ApplicationService = service;
-                        RaiseStockTVServiceAdded(service);
+                    ApplicationService = service;
+                    RaiseStockTVServiceAdded(service);
 
-                        if (appClient == null)
-                        {
-                            appClient = new StockTVAppClient(IPAddress, service.Port, HostName);
-                            appClient.StockTVOnlineChanged += AppClient_StockTVOnlineChanged;
-                            appClient.Start();
-                        }
+                    if (appClient == null)
+                    {
+                        appClient = new StockTVAppClient(IPAddress, service.Port, HostName);
+                        appClient.StockTVOnlineChanged += AppClient_StockTVOnlineChanged;
+                        appClient.Start();
                     }
                 }
-                else if (service.IsPublisherService)
+            }
+            else if (service.IsPublisherService)
+            {
+                if (PublisherService == null || !PublisherService.Equals(service))
                 {
-                    if (PublisherService == null || !PublisherService.Equals(service))
-                    {
-                        PublisherService = service;
-                        RaiseStockTVServiceAdded(service);
+                    PublisherService = service;
+                    RaiseStockTVServiceAdded(service);
 
-                        if (subscriberClient == null)
-                        {
-                            subscriberClient = new StockTVSubscriberClient(IPAddress, PublisherService.Port);
-                            subscriberClient.StockTVResultChanged += SubscriberClient_StockTVResultChanged;
-                            subscriberClient.Start();
-                        }
+                    if (subscriberClient == null)
+                    {
+                        subscriberClient = new StockTVSubscriberClient(IPAddress, PublisherService.Port);
+                        subscriberClient.StockTVResultChanged += SubscriberClient_StockTVResultChanged;
+                        subscriberClient.Start();
                     }
                 }
             }
@@ -307,6 +319,7 @@ namespace StockApp.BaseClasses
         {
             Debug.WriteLine($"Send TVSettings {IPAddress} -> [{TVSettings}]");
             appClient?.AddCommand(StockTVCommand.SendSettingsCommand(TVSettings));
+            RaiseStockTVSettingsChanged();
         }
 
 
@@ -322,8 +335,6 @@ namespace StockApp.BaseClasses
         private void AppClient_StockTVOnlineChanged(object sender, bool IsOnline)
         {
             this.IsOnline = IsOnline;
-            if (this.IsOnline)
-                TVSettingsGet();
         }
 
 
@@ -375,20 +386,35 @@ namespace StockApp.BaseClasses
         /// <returns></returns>
         public bool IsOutdated()
         {
-            if (IsOnline) return false;
-
-            if (appClient == null) return true;
-
             bool _tooOld = (DateTime.Now - LastMDnsUpdate).TotalMilliseconds > 10000;
 
-            if(!IsOnline && !_tooOld)
+            if (!__wasOnline)
             {
-                IsOnline = true;
+                if (!_tooOld)
+                {
+                    IsOnline = true;
+                }
+            }
+            else
+            {
+                if (_tooOld && IsOnline)
+                {
+                    IsOnline = false;
+                }
             }
 
-            return (__wasOnline && _tooOld);
+            return !IsOnline;
+            //if (!__wasOnline && !_tooOld)
+            //{
+            //    IsOnline = true;
+            //}
 
-            //return (DateTime.Now - LastMDnsUpdate).TotalMilliseconds > 10000;
+            //if (IsOnline) return false;
+
+            //return (__wasOnline && _tooOld);
+
         }
+
+
     }
 }

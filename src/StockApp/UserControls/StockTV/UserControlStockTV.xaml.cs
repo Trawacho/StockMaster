@@ -237,6 +237,8 @@ namespace StockApp.UserControls.StockTV
                 System.Diagnostics.Process.Start($"http://{StockTV.IPAddress}:8080/#Apps%20manager");
 
         }
+
+       
     }
 
 }

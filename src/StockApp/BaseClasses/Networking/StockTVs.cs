@@ -32,7 +32,6 @@ namespace StockApp.BaseClasses
         #region private Fields
 
         private readonly List<StockTV> stockTVs;
-        private readonly object _lock = new();
         readonly ServiceDiscovery serviceDiscovery;
         readonly DomainName stockAppDNS = new("_stockapp._tcp.local");
         readonly DomainName stockPubDNS = new("_stockpub._tcp.local");
@@ -63,30 +62,24 @@ namespace StockApp.BaseClasses
 
         public void Add(StockTV item)
         {
-            lock (_lock)
+            if (!stockTVs.Any(s => s.IPAddress == item.IPAddress))
             {
-                if (!stockTVs.Any(s => s.IPAddress == item.IPAddress))
-                {
-                    stockTVs.Add(item);
-                    RaiseStockTVCollectionAdded(item);
+                stockTVs.Add(item);
+                RaiseStockTVCollectionAdded(item);
 
-                }
             }
         }
 
         public bool Remove(StockTV item)
         {
-            lock (_lock)
+            if (stockTVs.Remove(item))
             {
-                if (stockTVs.Remove(item))
-                {
-                    RaiseStockTVCollectionRemoved(item);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                RaiseStockTVCollectionRemoved(item);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -175,7 +168,7 @@ namespace StockApp.BaseClasses
                 var pub = string.Join(".", stockPubDNS.Labels.Take(2));
                 serviceDiscovery.QueryServiceInstances(app);
                 serviceDiscovery.QueryServiceInstances(pub);
-                CheckLastOnlineMessage();
+                RemoveOutdatedStockTV();
             };
             discoveryTimer.Start();
         }
@@ -185,7 +178,7 @@ namespace StockApp.BaseClasses
         /// <br>the <see cref="StockTV.Stop"/> is called and the object is removed from internal list</br>
         /// <para>this function is called from <see cref="discoveryTimer"/></para>
         /// </summary>
-        private void CheckLastOnlineMessage()
+        private void RemoveOutdatedStockTV()
         {
             foreach (var item in this.Where(x => x.IsOutdated()))
                 item.Stop();
@@ -236,10 +229,7 @@ namespace StockApp.BaseClasses
         /// <param name="dnsInfo"></param>
         private void Remove(MDnsServiceInfo dnsInfo)
         {
-            lock (_lock)
-            {
-                this.FirstOrDefault(s => s.IPAddress == dnsInfo.IPAddress)?.RemoveStockTVService(dnsInfo);
-            };
+            this.FirstOrDefault(s => s.IPAddress == dnsInfo.IPAddress)?.RemoveStockTVService(dnsInfo);
         }
     }
 }
