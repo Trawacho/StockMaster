@@ -129,7 +129,7 @@ namespace StockApp.BaseClasses
                         if (topic.Equals("Settings") || topic.Equals("Result"))
                         {
                             //Debug.WriteLine($"Received from { Encoding.UTF8.GetString(e.Socket.Options.Identity) }: {msg.First().ConvertToString()} --> {string.Join(" ", msg.Last().ToByteArray().Select(x => x.ToString()))}");
-                            command.BackAction?.Invoke(msg.Last().ToByteArray());
+                            command.CallBackAction?.Invoke(msg.Last().ToByteArray());
                         }
                     }
                     else

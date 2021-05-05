@@ -8,7 +8,7 @@ namespace StockApp.BaseClasses
     public class StockTVCommand
     {
         readonly List<KeyValuePair<CommandTopics, string>> commandList;
-        public readonly Action<byte[]> BackAction;
+        public readonly Action<byte[]> CallBackAction;
 
         public string CommandString()
         {
@@ -19,9 +19,9 @@ namespace StockApp.BaseClasses
 
         #region Konstruktor
 
-        private StockTVCommand(CommandTopics topic, string value, Action<byte[]> action) : this(topic, value)
+        private StockTVCommand(CommandTopics topic, string value, Action<byte[]> callBackAction) : this(topic, value)
         {
-            BackAction = action;
+            CallBackAction = callBackAction;
         }
 
         private StockTVCommand(CommandTopics topic, string value) : this()
