@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using static StockApp.BaseClasses.StockTVCommand;
 
 namespace StockApp.BaseClasses
 {

@@ -18,8 +18,9 @@ namespace StockApp.ViewModels
             {
                 item.StockTVSettingsChanged += StockTV_StockTVSettingsChanged;
                 this.StockTVCollection.Add(item);
-                this.StockTVCollection.Sort();
             }
+            this.StockTVCollection.Sort();
+
         }
 
         private void StockTV_StockTVSettingsChanged(object sender, StockTVSettingsChangedEventArgs e)
