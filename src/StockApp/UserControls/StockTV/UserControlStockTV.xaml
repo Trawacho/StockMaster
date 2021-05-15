@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converter="clr-namespace:StockApp.Converters"
              x:Name="ucStockTV"
-             FontSize="10"
+             FontSize="14"
              mc:Ignorable="d" 
              >
     <d:DesignerProperties.DesignStyle>
@@ -18,7 +18,7 @@
         <converter:OnlineToBrushConverter x:Key="otbConverter"/>
     </UserControl.Resources>
 
-    <Border BorderThickness="2" BorderBrush="Blue" Margin="3" Height="300" Width="220">
+    <Border BorderThickness="2" BorderBrush="Blue" Margin="2" Height="350" Width="260">
         <Viewbox>
             <Grid Background="Azure">
 
