@@ -2,6 +2,9 @@
 
 namespace StockApp.BaseClasses
 {
+    /// <summary>
+    /// StockTV ServiceInformation with Name and Portnumber
+    /// </summary>
     public class StockTVService : IEquatable<StockTVService>
     {
         public StockTVService(MDnsServiceInfo mDnsInfo)

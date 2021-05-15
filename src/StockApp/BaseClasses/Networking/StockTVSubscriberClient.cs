@@ -4,8 +4,9 @@ using System;
 
 namespace StockApp.BaseClasses
 {
-    public delegate void NotifyStockTVResultChangedHandler(object sender, StockTVResult stockTVResult);
-
+    /// <summary>
+    /// NetMQ Subscriberclient to receive Push-Notificatoins from StockTV
+    /// </summary>
     public class StockTVSubscriberClient
     {
         public class ShimHandler : IShimHandler

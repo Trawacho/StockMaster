@@ -145,7 +145,6 @@
     <Compile Include="BaseClasses\Networking\StockTVServiceChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVCommand.cs" />
     <Compile Include="BaseClasses\Networking\StockTVSettings.cs" />
-    <Compile Include="BaseClasses\Networking\StockTVSettingsChangedEventArgs.cs" />
     <Compile Include="BaseClasses\Networking\StockTVSettingsMessage.cs" />
     <Compile Include="BaseClasses\Networking\MDnsServiceInfo.cs" />
     <Compile Include="BaseClasses\Networking\StockTVSubscriberClient.cs" />

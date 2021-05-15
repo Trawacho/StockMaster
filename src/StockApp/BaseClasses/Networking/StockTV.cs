@@ -1,14 +1,25 @@
 ﻿using Makaretu.Dns;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace StockApp.BaseClasses
 {
     public class StockTV : IEquatable<StockTV>, IComparable<StockTV>
     {
         #region EventHandler
+
+        public event TVSettingsSentEventHandler TVSettingsSent;
+        protected void RaiseTVSettingsSent()
+        {
+            var handler = TVSettingsSent;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+
 
         private event StockTVServiceChangedEventHandler StockTVServiceAdded;
         protected void RaiseStockTVServiceAdded(StockTVService service)
@@ -33,11 +44,15 @@ namespace StockApp.BaseClasses
         }
 
 
-        public event StockTVSettingsChangedHandler StockTVSettingsChanged;
-        protected void RaiseStockTVSettingsChanged()
+        public event PropertyChangedEventHandler StockTVSettingsChanged;
+        protected void RaiseStockTVSettingsChanged([CallerMemberName] string propertyName = null)
         {
             var handler = StockTVSettingsChanged;
-            handler?.Invoke(this, new StockTVSettingsChangedEventArgs(TVSettings));
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private void TvSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RaiseStockTVSettingsChanged(e.PropertyName);
         }
 
 
@@ -82,6 +97,7 @@ namespace StockApp.BaseClasses
 
         #region Fields and Properties
 
+        private readonly object _lock = new();
         private StockTVService ApplicationService;
         private StockTVAppClient appClient;
 
@@ -124,8 +140,6 @@ namespace StockApp.BaseClasses
         /// </summary>
         private bool __wasOnline;
 
-
-
         #endregion
 
         #region Konstruktor
@@ -133,7 +147,10 @@ namespace StockApp.BaseClasses
         {
             _infos = new List<string>();
             tvSettings = StockTVSettings.GetDefault(GameModis.Training);
+            tvSettings.PropertyChanged += TvSettings_PropertyChanged;
         }
+
+       
 
         /// <summary>
         /// for design only
@@ -184,60 +201,62 @@ namespace StockApp.BaseClasses
 
             var service = new StockTVService(mDnsInfo);
             if (service == null) return;
-            if (service.IsApplicationService)
-            {
-                if (ApplicationService == null || !ApplicationService.Equals(service))
-                {
-                    ApplicationService = service;
-                    RaiseStockTVServiceAdded(service);
 
-                    if (appClient == null)
+            lock (_lock)
+            {
+                if (service.IsApplicationService)
+                {
+                    if (ApplicationService == null || !ApplicationService.Equals(service))
                     {
-                        appClient = new StockTVAppClient(IPAddress, service.Port, HostName);
-                        appClient.StockTVOnlineChanged += AppClient_StockTVOnlineChanged;
-                        appClient.Start();
+                        ApplicationService = service;
+                        RaiseStockTVServiceAdded(service);
+
+                        if (appClient == null)
+                        {
+                            appClient = new StockTVAppClient(IPAddress, service.Port, HostName);
+                            appClient.StockTVOnlineChanged += AppClient_StockTVOnlineChanged;
+                            appClient.Start();
+                        }
                     }
                 }
-            }
-            else if (service.IsPublisherService)
-            {
-                if (PublisherService == null || !PublisherService.Equals(service))
+                else if (service.IsPublisherService)
                 {
-                    PublisherService = service;
-                    RaiseStockTVServiceAdded(service);
-
-                    if (subscriberClient == null)
+                    if (PublisherService == null || !PublisherService.Equals(service))
                     {
-                        subscriberClient = new StockTVSubscriberClient(IPAddress, PublisherService.Port);
-                        subscriberClient.StockTVResultChanged += SubscriberClient_StockTVResultChanged;
-                        subscriberClient.Start();
+                        PublisherService = service;
+                        RaiseStockTVServiceAdded(service);
+
+                        if (subscriberClient == null)
+                        {
+                            subscriberClient = new StockTVSubscriberClient(IPAddress, PublisherService.Port);
+                            subscriberClient.StockTVResultChanged += SubscriberClient_StockTVResultChanged;
+                            subscriberClient.Start();
+                        }
                     }
                 }
             }
         }
-
-
 
         public void RemoveStockTVService(MDnsServiceInfo mDnsInfo)
         {
             var service = new StockTVService(mDnsInfo);
-
-            if (service.IsApplicationService)
+            lock (_lock)
             {
-                ApplicationService = null;
-                StopAppClient();
+                if (service.IsApplicationService)
+                {
+                    ApplicationService = null;
+                    StopAppClient();
+                }
+                else if (service.IsPublisherService)
+                {
+                    PublisherService = null;
+                    StopSubscriberClient();
+                }
             }
-            else if (service.IsPublisherService)
-            {
-                PublisherService = null;
-                StopSubscriberClient();
-            }
-
             RaiseStockTVServiceRemove(service);
         }
 
         #endregion
-
 
         #region StockTVResult
 
@@ -283,7 +302,6 @@ namespace StockApp.BaseClasses
 
         #endregion
 
-
         #region StockTVSettings
 
         private readonly StockTVSettings tvSettings;
@@ -291,17 +309,6 @@ namespace StockApp.BaseClasses
         public StockTVSettings TVSettings
         {
             get => tvSettings;
-            //private set
-            //{
-            //    Debug.WriteLine($"Try to SET TVSettings {this.IPAddress}");
-            //    if (tvSettings == value) return;
-
-            //    tvSettings = value;
-
-            //    Debug.WriteLine($"SET TVSettings {this.IPAddress}");
-
-            //    RaiseStockTVSettingsChanged();
-            //}
         }
 
 
@@ -311,7 +318,6 @@ namespace StockApp.BaseClasses
             {
                 TVSettings.SetValues(byteArray);
                 Debug.WriteLine($"Get TVSettings {IPAddress} -> [{TVSettings}]");
-                RaiseStockTVSettingsChanged();
             }));
         }
 
@@ -319,7 +325,7 @@ namespace StockApp.BaseClasses
         {
             Debug.WriteLine($"Send TVSettings {IPAddress} -> [{TVSettings}]");
             appClient?.AddCommand(StockTVCommand.SendSettingsCommand(TVSettings));
-            RaiseStockTVSettingsChanged();
+            RaiseTVSettingsSent();
         }
 
 

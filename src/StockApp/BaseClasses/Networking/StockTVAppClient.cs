@@ -8,7 +8,9 @@ using System.Text;
 
 namespace StockApp.BaseClasses
 {
-
+    /// <summary>
+    /// NetMQ-client to communication with StockTV
+    /// </summary>
     public class StockTVAppClient
     {
         public event StockTVOnlineChangedEventHandler StockTVOnlineChanged;
@@ -63,7 +65,7 @@ namespace StockApp.BaseClasses
         public void Start()
         {
             if (Socket != null) return;
-
+            
             Socket = new RequestSocket(GetConnectionString());
             Socket.Options.Identity = Encoding.UTF8.GetBytes(this.Identifier);
             Socket.SendReady += Socket_SendReady;
@@ -119,22 +121,19 @@ namespace StockApp.BaseClasses
                 if (sendQueue.TryDequeue(out StockTVCommand command, TimeSpan.FromSeconds(50)))
                 {
                     e.Socket.SendFrame(command.CommandString(), false);
-                    //Debug.WriteLine($"{Encoding.UTF8.GetString(e.Socket.Options.Identity)} sent [{command.CommandString()}] successfully {sendQueue.Count}");
-
-                    var msg = e.Socket.ReceiveMultipartMessage();
-                    //Debug.WriteLine($"Message received");
-                    if (msg.FrameCount == 2)
+                    // var msg = e.Socket.ReceiveMultipartMessage();
+                    
+                    var msg = new NetMQMessage();
+                    if (e.Socket.TryReceiveMultipartMessage(TimeSpan.FromSeconds(2), ref msg))
                     {
-                        string topic = msg.First().ConvertToString();
-                        if (topic.Equals("Settings") || topic.Equals("Result"))
+                        if (msg.FrameCount == 2)
                         {
-                            //Debug.WriteLine($"Received from { Encoding.UTF8.GetString(e.Socket.Options.Identity) }: {msg.First().ConvertToString()} --> {string.Join(" ", msg.Last().ToByteArray().Select(x => x.ToString()))}");
-                            command.CallBackAction?.Invoke(msg.Last().ToByteArray());
+                            string topic = msg.First().ConvertToString();
+                            if (topic.Equals("Settings") || topic.Equals("Result"))
+                            {
+                                command.CallBackAction?.Invoke(msg.Last().ToByteArray());
+                            }
                         }
-                    }
-                    else
-                    {
-                        //Debug.WriteLine($"Received from { Encoding.UTF8.GetString(e.Socket.Options.Identity) }: {string.Join(" ", msg.First().ToByteArray().Select(x => x.ToString()))}");
                     }
                 }
 

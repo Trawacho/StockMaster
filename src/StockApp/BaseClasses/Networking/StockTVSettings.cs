@@ -1,10 +1,18 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text;
 
 namespace StockApp.BaseClasses
 {
-    public class StockTVSettings : IEquatable<StockTVSettings>
+    public class StockTVSettings : TBaseClass, IEquatable<StockTVSettings>
     {
+        private int bahn;
+        private int pointsPerTurn;
+        private int turnsPerGame;
+        private NextBahnModis nextBahnModus;
+        private GameModis gameModus;
+        private ColorModis colorModus;
+
         public static StockTVSettings GetDefault(GameModis modus)
         {
             var s = new StockTVSettings()
@@ -49,15 +57,12 @@ namespace StockApp.BaseClasses
             SetValues(valueString);
         }
 
-        public int Bahn { get; set; }
-        public int PointsPerTurn { get; set; }
-        public int TurnsPerGame { get; set; }
-
-        
-        public NextBahnModis NextBahnModus { get; set; }
-
-        public GameModis GameModus { get; set; }
-        public ColorModis ColorModus { get; set; }
+        public int Bahn { get => bahn; set => SetProperty(ref bahn, value); }
+        public int PointsPerTurn { get => pointsPerTurn; set => SetProperty(ref pointsPerTurn, value); }
+        public int TurnsPerGame { get => turnsPerGame; set => SetProperty(ref turnsPerGame, value); }
+        public NextBahnModis NextBahnModus { get => nextBahnModus; set => SetProperty(ref nextBahnModus, value); }
+        public GameModis GameModus { get => gameModus; set => SetProperty(ref gameModus, value); }
+        public ColorModis ColorModus { get => colorModus; set => SetProperty(ref colorModus, value); }
 
         public bool Equals(StockTVSettings other)
         {
@@ -69,7 +74,24 @@ namespace StockApp.BaseClasses
                 && ColorModus == other.ColorModus;
         }
 
-        public void SetValues(string valueString)
+        /// <summary>
+        /// Copies Settings except of Bahn
+        /// </summary>
+        /// <param name="s"></param>
+        internal void CopyFrom(StockTVSettings s)
+        {
+            this.PointsPerTurn = s.PointsPerTurn;
+            this.TurnsPerGame = s.TurnsPerGame;
+            this.NextBahnModus = s.NextBahnModus;
+            this.GameModus = s.GameModus;
+            this.ColorModus = s.ColorModus;
+        }
+
+        /// <summary>
+        /// Splits the parameter on ";" and set every property
+        /// </summary>
+        /// <param name="valueString"></param>
+        private void SetValues(string valueString)
         {
             var parts = valueString.TrimEnd(';').Split(';');
 

@@ -11,7 +11,7 @@
              d:DataContext="{d:DesignInstance 
                             Type=viewmodels:StockTVCollectionDesignViewModel, 
                             IsDesignTimeCreatable=True}">
-    
+
     <d:DesignerProperties.DesignStyle>
         <Style TargetType="UserControl">
             <Setter Property="Background" Value="White"/>
@@ -24,16 +24,23 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Label Content="Einstellungen StockTV" Margin="0,0,0,20" FontWeight="Bold"/>
 
-            <CheckBox Content="Synchronisation der Einstellungen" Grid.Row="1"
-                      IsChecked="{Binding Path=Sync, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox Content="Synchronisation der Einstellungen" Grid.Row="1"
+                  IsChecked="{Binding Path=Sync, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Content="Neu Sortieren" Grid.Row="2" 
+                Command="{Binding Path=ReOrderStockTVCollectionCommand}"
+                Margin="10,5" Padding="5,2"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalAlignment="Left"/>
 
-
-        <ListView ItemsSource="{Binding Path=StockTVCollection}" Grid.Row="2"   BorderThickness="0">
+        <ListView ItemsSource="{Binding Path=StockTVCollection}" Grid.Row="3"   
+                  BorderThickness="0">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>
@@ -48,7 +55,7 @@
                     <usercontrols:UserControlStockTV StockTV="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            
-        </ListView> 
+
+        </ListView>
     </Grid>
 </UserControl>

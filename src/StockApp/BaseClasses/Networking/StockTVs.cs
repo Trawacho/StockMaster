@@ -31,6 +31,7 @@ namespace StockApp.BaseClasses
 
         #region private Fields
 
+        private readonly object _lock = new();
         private readonly List<StockTV> stockTVs;
         readonly ServiceDiscovery serviceDiscovery;
         readonly DomainName stockAppDNS = new("_stockapp._tcp.local");
@@ -52,7 +53,8 @@ namespace StockApp.BaseClasses
 
         public void CopyTo(StockTV[] array, int arrayIndex)
         {
-            stockTVs.CopyTo(array, arrayIndex);
+            lock (_lock)
+                stockTVs.CopyTo(array, arrayIndex);
         }
 
         public int IndexOf(StockTV item)
@@ -62,30 +64,35 @@ namespace StockApp.BaseClasses
 
         public void Add(StockTV item)
         {
-            if (!stockTVs.Any(s => s.IPAddress == item.IPAddress))
+            lock (_lock)
             {
-                stockTVs.Add(item);
-                RaiseStockTVCollectionAdded(item);
-
+                if (!stockTVs.Any(s => s.IPAddress == item.IPAddress))
+                {
+                    stockTVs.Add(item);
+                    RaiseStockTVCollectionAdded(item);
+                }
             }
         }
 
         public bool Remove(StockTV item)
         {
-            if (stockTVs.Remove(item))
-            {
+            bool _removed = false;
+
+            lock (_lock)
+                _removed = stockTVs.Remove(item);
+
+            if (_removed)
                 RaiseStockTVCollectionRemoved(item);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+
+            return _removed;
+
         }
 
         public void Clear()
         {
-            stockTVs.Clear();
+            lock (_lock)
+                stockTVs.Clear();
+
             RaiseStockTVCollectionRemoved(null);
         }
 
@@ -99,7 +106,11 @@ namespace StockApp.BaseClasses
             return stockTVs.GetEnumerator();
         }
 
-        public StockTV this[int index] { get => ((IList<StockTV>)stockTVs)[index]; set => ((IList<StockTV>)stockTVs)[index] = value; }
+        public StockTV this[int index]
+        {
+            get => ((IList<StockTV>)stockTVs)[index];
+            set => ((IList<StockTV>)stockTVs)[index] = value;
+        }
 
 
         #endregion
@@ -113,8 +124,6 @@ namespace StockApp.BaseClasses
 
             serviceDiscovery.ServiceInstanceDiscovered += Discovery_ServiceInstanceDiscovered;
             serviceDiscovery.ServiceInstanceShutdown += Discovery_ServiceInstanceShutdown;
-
-
         }
 
         #endregion
@@ -180,10 +189,14 @@ namespace StockApp.BaseClasses
         /// </summary>
         private void RemoveOutdatedStockTV()
         {
-            foreach (var item in this.Where(x => x.IsOutdated()))
-                item.Stop();
+            int x = 0;
+            lock (_lock)
+            {
+                foreach (StockTV item in this.Where(x => x.IsOutdated()))
+                    item.Stop();
 
-            var x = this.stockTVs.RemoveAll(t => t.IsOutdated());
+                x = this.stockTVs.RemoveAll(t => t.IsOutdated());
+            }
 
             if (x > 0)
                 RaiseStockTVCollectionRemoved(null);
@@ -203,10 +216,11 @@ namespace StockApp.BaseClasses
         internal void StopAllServices()
         {
             StopDiscovery();
-            foreach (var tv in stockTVs)
-            {
-                tv.Stop();
-            }
+            lock (_lock)
+                foreach (StockTV tv in this)
+                {
+                    tv.Stop();
+                }
         }
 
         /// <summary>

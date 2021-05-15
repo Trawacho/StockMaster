@@ -13,8 +13,40 @@ namespace StockApp.UserControls.StockTV
     /// <summary>
     /// Interaction logic for UserControlStockTV.xaml
     /// </summary>
-    public partial class UserControlStockTV : UserControl, INotifyPropertyChanged
+    public partial class UserControlStockTV : UserControl, INotifyPropertyChanged, IEquatable<UserControlStockTV>, IComparable<UserControlStockTV>
     {
+       
+        #region IEquatable- and ICompareable Implementation
+
+        /// <summary>
+        /// True if Hostname is equal
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(UserControlStockTV other)
+        {
+            return this.StockTV.HostName.Equals(other.StockTV.HostName) &&
+                this.StockTV.IPAddress.Equals(other.StockTV.IPAddress) &&
+                this.StockTV.TVSettings.Bahn.Equals(other.StockTV.TVSettings.Bahn);
+        }
+
+        public int CompareTo(UserControlStockTV other)
+        {
+            var equalBahn = StockTV.TVSettings.Bahn.CompareTo(other.StockTV.TVSettings.Bahn);
+            if (equalBahn != 0)
+                return equalBahn;
+
+            var equalHostName = this.StockTV.HostName.CompareTo(other.StockTV.HostName);
+            if (equalHostName != 0)
+                return equalHostName;
+
+            return this.StockTV.IPAddress.CompareTo(other.StockTV.IPAddress);
+
+        }
+
+        #endregion
+
+
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,6 +62,7 @@ namespace StockApp.UserControls.StockTV
                 RaisePropertyChanged(p.Name);
             }
         }
+     
         #endregion
 
         #region Konstruktor
@@ -145,20 +178,23 @@ namespace StockApp.UserControls.StockTV
 
         #region Events
 
-        private void StockTV_StockTVSettingsChanged(object sender, BaseClasses.StockTVSettingsChangedEventArgs stockTVSettings)
+        private void StockTV_StockTVSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
             RaiseAllPropertiesChanged();
         }
 
         private static void StockTVChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is BaseClasses.StockTV tv)
+            if (e.NewValue is BaseClasses.StockTV tv && 
+                o is UserControlStockTV ucTv)
             {
-                tv.StockTVSettingsChanged += (o as UserControlStockTV).StockTV_StockTVSettingsChanged;
-                tv.StockTVOnlineChanged += (o as UserControlStockTV).StockTV_StockTVOnlineChanged;
-                (o as UserControlStockTV).RaiseAllPropertiesChanged();
+                tv.StockTVSettingsChanged += ucTv.StockTV_StockTVSettingsChanged;
+                tv.StockTVOnlineChanged += ucTv.StockTV_StockTVOnlineChanged;
+                ucTv.RaiseAllPropertiesChanged();
             }
         }
+
+        
 
         private void StockTV_StockTVOnlineChanged(object sender, bool IsOnline)
         {

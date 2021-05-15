@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockApp.BaseClasses
 {
     public static class ExtensionMethods
     {
 
-        public static void Sort<T>(this ObservableCollection<T> collection)
+        public static void Sort<T>(this ObservableCollection<T> collection, bool asc)
             where T : IComparable<T>, IEquatable<T>
         {
-            List<T> sorted = collection.OrderBy(x => x).ToList();
+            List<T> sorted = asc ? collection.OrderBy(x => x).ToList() : collection.OrderByDescending(x => x).ToList();
 
             int ptr = 0;
             while (ptr < sorted.Count - 1)

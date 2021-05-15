@@ -32,10 +32,6 @@ namespace StockApp.BaseClasses
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, args);
-
-#if DEBUG
-            System.Diagnostics.Debug.Print($"{this.GetType().Name} {args.PropertyName} changed");
-#endif
         }
 
 
