@@ -58,7 +58,7 @@ namespace StockApp.ViewModels
                 AddStockTVsToCollection(e.StockTV);
             });
         }
-        
+
         #endregion
 
         #region StockTV - Based
@@ -113,7 +113,7 @@ namespace StockApp.ViewModels
         }
 
         #endregion
-      
+
         #endregion
 
         #region Properties and Commands to Bind 
@@ -132,7 +132,7 @@ namespace StockApp.ViewModels
                     {
                         StockTVCollection.Sort(StockTVCollection.FirstOrDefault()?.TVSettings.NextBahnModus == NextBahnModis.Right);
                     },
-                    (p) => StockTVCollection.Count > 1
+                    (p) => true
                     );
             }
         }
